@@ -105,12 +105,10 @@ double width, double space){
     Rect(Plot, Paint->width, Paint->width, Paint->cx, Paint->cy, 
     HeatMapColor(BoundDouble(0.0, P->matrix[ref], 1.0), color, CLR));
     Paint->cx += Paint->width + Paint->space;
-    // TEXT HAS 16 PX -> CALCULATE AVERAGE POSITION
-    Text   (Plot, Paint->cx + 4, (Paint->cy+Paint->width/2)+6, P->files[ref]);
-    Text90d(Plot, 4-DEFAULT_CX, (Paint->cy+Paint->width/2)+10, 
-    P->files[P->nFiles-1-ref]);
-    Paint->cx =  DEFAULT_CX;
-    Paint->cy += Paint->width + Paint->space;
+    if((ref + 1) % 20 == 0){
+      Paint->cx = DEFAULT_CX;
+      Paint->cy += Paint->width + Paint->space;
+      }
     }
   
   PrintFinal(Plot);
