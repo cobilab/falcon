@@ -35,12 +35,8 @@ void ReadMatrixSize(char *fn){
   FILE *F = Fopen(fn, "r");
   char c;
   P->nFiles = 0;
-  while((c = fgetc(F)) != '\n'){
-    if(c == EOF){
-      fclose(F);
-      break;
-      }
-    if(c == '\t')
+  while((c = fgetc(F)) != EOF){
+    if(c == '\n' || c == '\t')
       ++P->nFiles;
     }
   if(P->nFiles == 0){
