@@ -378,7 +378,7 @@ int32_t main(int argc, char *argv[]){
     }
   fprintf(stderr,"----------\n| TOP 20 |\n----------\n");
   for(n = 0 ; n < P->nFiles && n < 20 ; ++n)
-    printf("| %3u | %10.6g | %s\n", n+1, (1.0-P->matrix[n])*100.0, P->files[idx[n]]);
+    printf("| %2u | %10.6g | %s\n", n+1, (1.0-P->matrix[n])*100.0, P->files[idx[n]]);
 
   fprintf(stderr, "\n");
 
