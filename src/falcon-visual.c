@@ -59,11 +59,9 @@ void ReadMatrix(char *fn){
   FILE *F = Fopen(fn, "r");
   uint32_t n, k;
   for(n = 0 ; n < P->nFiles ; ++n){
-    for(k = 0 ; k < P->nFiles ; ++k){
-      if(!fscanf(F, "%lf", &P->matrix[n][k])){
-        fclose(F); 
-        return;
-        }
+    if(!fscanf(F, "%lf", &P->matrix[n])){
+      fclose(F); 
+      return;
       }
     }
   fclose(F);
@@ -107,12 +105,10 @@ double width, double space){
   Text   (Plot, DEFAULT_CX-(Paint->width*2 + 14), Paint->cy+size, "0");
 
   for(ref = 0 ; ref < P->nFiles ; ++ref){
-    for(tar = P->nFiles ; tar-- ; ){ // INVERT LOOP: INCREASE SPEED OF LEARNING
-      char color[12];
-      Rect(Plot, Paint->width, Paint->width, Paint->cx, Paint->cy, 
-      HeatMapColor(BoundDouble(0.0, P->matrix[ref][tar], 1.0), color, CLR));
-      Paint->cx += Paint->width + Paint->space;
-      }
+    char color[12];
+    Rect(Plot, Paint->width, Paint->width, Paint->cx, Paint->cy, 
+    HeatMapColor(BoundDouble(0.0, P->matrix[ref], 1.0), color, CLR));
+    Paint->cx += Paint->width + Paint->space;
     // TEXT HAS 16 PX -> CALCULATE AVERAGE POSITION
     Text   (Plot, Paint->cx + 4, (Paint->cy+Paint->width/2)+6, P->files[ref]);
     Text90d(Plot, 4-DEFAULT_CX, (Paint->cy+Paint->width/2)+10, 
@@ -177,11 +173,10 @@ int32_t main(int argc, char *argv[]){
 
   fprintf(stderr, "==[ PROCESSING ]====================\n");
   ReadMatrixSize(argv[argc-1]);
-  P->matrix = (double  **) Calloc(P->nFiles, sizeof(double *));
+  P->matrix = (double   *) Calloc(P->nFiles, sizeof(double));
   P->files  = (char    **) Calloc(P->nFiles, sizeof(char   *));
   for(n = 0 ; n < P->nFiles ; ++n){
-    P->matrix[n] = (double *) Calloc(P->nFiles, sizeof(double));
-    P->files [n] = (char   *) Calloc(MAX_LABEL, sizeof(char  ));
+    P->files[n]     = (char   *) Calloc(MAX_LABEL, sizeof(char  ));
     P->files[n][0]  = '?'; 
     P->files[n][1]  = '\0'; 
     }

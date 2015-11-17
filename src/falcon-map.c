@@ -341,15 +341,32 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ RESULTS ]=======================\n");
-  fprintf(stderr, "Normalized Dissimilarity Rate:\n");
+  fprintf(stderr, "Normalized Relative Compression:\n");
   for(n = 0 ; n < P->nFiles ; ++n){
     fprintf(stderr, "%.4lf\n", P->matrix[n]);
     fprintf(OUTPUT, "%.4lf\n", P->matrix[n]);
     fprintf(LABELS, "%s\n", P->files[n]);
     }
+  uint32_t idx[P->nFiles], i, j, idxTmp;
+  for(n = 0 ; n < P->nFiles ; ++n)
+    idx[n] = n;
+  for(i = 1 ; i < P->nFiles ; ++i){
+    for(j = 0 ; j < P->nFiles-1 ; ++j){
+      if(P->matrix[j] > P->matrix[j+1]){
+        double tmp     = P->matrix[j];
+        P->matrix[j]   = P->matrix[j+1];
+        P->matrix[j+1] = tmp;
+        idxTmp         = idx[j];
+        idx[j]         = idx[j+1];
+        idx[j+1]       = idxTmp;
+        }
+      }
+    }
+  fprintf(stderr,"----------\n| TOP 20 |\n----------\n");
+  for(n = 0 ; n < P->nFiles && n < 20 ; ++n)
+    printf("| %u | %.6g | %s\n", n+1, (1.0-P->matrix[n])*100.0, P->files[idx[n]]);
+
   fprintf(stderr, "\n");
-  //TODO: X
-  //TODO: CREATE TOP 50.
 
   fprintf(stderr, "==[ STATISTICS ]====================\n");
   StopCalcAll(Time, clock());
