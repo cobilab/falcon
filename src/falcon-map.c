@@ -67,14 +67,21 @@ void CompressTarget(Threads T){
       if(ParseSym(PA, (sym = readBuf[idxPos])) == -1) continue;
       symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
 
+      #ifdef PROGRESSIVE
+     
+      #else
       memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
-
+      #endif
+ 
       n = 0;
       pos = &symBuf->buf[symBuf->idx-1];
       for(cModel = 0 ; cModel < P->nModels ; ++cModel){
         GetPModelIdx(pos, Shadow[cModel]);
         ComputePModel(Models[cModel], pModel[n], Shadow[cModel]->pModelIdx,
         Shadow[cModel]->alphaDen);
+        #ifdef PROGRESSIVE
+        
+        #else
         ComputeWeightedFreqs(cModelWeight[n], pModel[n], PT);
         if(Shadow[cModel]->edits != 0){
           ++n;
@@ -87,8 +94,14 @@ void CompressTarget(Threads T){
           ComputeWeightedFreqs(cModelWeight[n], pModel[n], PT);
           }
         ++n;
+        #endif
         }
 
+      #ifdef PROGRESSIVE
+    
+
+      nBase++;
+      #else
       MX->sum  = (MX->freqs[0] = 1 + (unsigned) (PT->freqs[0] * MX_PMODEL));
       MX->sum += (MX->freqs[1] = 1 + (unsigned) (PT->freqs[1] * MX_PMODEL));
       MX->sum += (MX->freqs[2] = 1 + (unsigned) (PT->freqs[2] * MX_PMODEL));
@@ -113,6 +126,7 @@ void CompressTarget(Threads T){
           }
         ++n;
         }
+      #endif
 
       UpdateCBuffer(symBuf);
       }
@@ -364,7 +378,7 @@ int32_t main(int argc, char *argv[]){
     }
   fprintf(stderr,"----------\n| TOP 20 |\n----------\n");
   for(n = 0 ; n < P->nFiles && n < 20 ; ++n)
-    printf("| %u | %.6g | %s\n", n+1, (1.0-P->matrix[n])*100.0, P->files[idx[n]]);
+    printf("| %u | %10.6g | %s\n", n+1, (1.0-P->matrix[n])*100.0, P->files[idx[n]]);
 
   fprintf(stderr, "\n");
 
