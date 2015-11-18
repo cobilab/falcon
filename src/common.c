@@ -528,33 +528,6 @@ int32_t StrToArgv(char *s, char ***v){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-uint32_t ReadFNames(Parameters *P, char *arg)
-  {
-  uint32_t nFiles = 1, k = 0, argLen;
-  
-  argLen = strlen(arg);
-  for( ; k != argLen ; ++k)
-    if(arg[k] == ':')
-      ++nFiles;
-
-  if(nFiles < 2){
-    fprintf(stderr, "Error: you need at least two input files!\n");
-    exit(1);
-    }
-
-  P->files = (char **) Malloc(nFiles * sizeof(char *));
-  P->files[0] = strtok(arg, ":");
-  TestReadFile(P->files[0]);
-  for(k = 1 ; k < nFiles ; ++k){
-    P->files[k] = strtok(NULL, ":");
-    TestReadFile(P->files[k]);
-    }
-
-  return nFiles;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 inline void CalcProgress(uint64_t size, uint64_t i)
   {
   if(i % (size / 100) == 0 && size > 1000)
@@ -579,7 +552,7 @@ uint8_t CmpCheckSum(uint32_t cs, uint32_t checksum)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void PrintArgs(Parameters *P, Threads T, char *ref){
+void PrintArgs(Parameters *P, Threads T, char *ref, char *tar){
   uint32_t n;
 
   fprintf(stderr, "==[ CONFIGURATION ]=================\n");
@@ -605,13 +578,9 @@ void PrintArgs(Parameters *P, Threads T, char *ref){
     }
   fprintf(stderr, "Gamma .............................. %.2lf\n", P->gamma);
   fprintf(stderr, "Maximum Collisions ................. %u\n", P->col);
-  fprintf(stderr, "Reference filename ................. %s\n", ref);
-  fprintf(stderr, "Target files (%u):\n", P->nFiles);
-  for(n = 0 ; n < P->nFiles ; ++n)
-    fprintf(stderr, "  [+] Target filename %-2u ........... %s\n", n + 1, 
-    P->files[n]);
   fprintf(stderr, "Matrix filename .................... %s\n", P->output);
-  fprintf(stderr, "Labels filename .................... %s\n", P->labels);
+  fprintf(stderr, "Reference filename ................. %s\n", ref);
+  fprintf(stderr, "Target file ........................ %s\n", tar);
   fprintf(stderr, "\n");
   }
 

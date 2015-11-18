@@ -29,7 +29,7 @@ CModel **Models;  // MEMORY SHARED BY THREADING
 // - - - - - - - - - - - - - - C O M P R E S S I N G - - - - - - - - - - - - - 
 
 void CompressTarget(Threads T){
-  FILE        *Reader  = Fopen(P->files[T.id], "r");
+  FILE        *Reader  = Fopen(P->base, "r");
   double      *cModelWeight, cModelTotalWeight = 0, bits = 0, instance = 0;
   uint64_t    nBase = 0;
   uint32_t    n, k, idxPos, totModels, cModel;
@@ -129,6 +129,10 @@ void CompressTarget(Threads T){
       #endif
 
       UpdateCBuffer(symBuf);
+
+      // IF IT REACHED THE END, THEN: TODO
+//      P->values[T.id] = nBase == 0 ? 101 : bits / 2 / nBase; // 101 -> nan
+ 
       }
 
   Free(cModelWeight);
@@ -144,8 +148,6 @@ void CompressTarget(Threads T){
   RemoveCBuffer(symBuf);
   RemoveParser(PA);
   fclose(Reader);
-
-  P->matrix[T.id] = nBase == 0 ? 101 : bits / 2 / nBase; // 101 -> nan
   }
 
 
@@ -202,7 +204,7 @@ void LoadReference(char *refName){
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - C O M P R E S S O R - - - - - - - - - - - - - -
 
-void CompressAction(Threads *T, char *refName){
+void CompressAction(Threads *T, char *refName, char *baseName){
   uint32_t n, k, ref = 0, file = 0;
   pthread_t t[P->nThreads];
 
@@ -216,26 +218,12 @@ void CompressAction(Threads *T, char *refName){
   LoadReference(refName);
   fprintf(stderr, "Done!\n");
 
-  fprintf(stderr, "  [+] Compressing %u targets:\n", P->nFiles);
-  do{
-    for(n = 0 ; n < P->nThreads ; ++n){
-      fprintf(stderr, "      [+] File: %s\n", P->files[file++]);
-      pthread_create(&(t[n+1]), NULL, CompressThread, (void *) &(T[ref+n]));
-      }
-    for(n = 0 ; n < P->nThreads ; ++n) // DO NOT JOIN FORS!
-      pthread_join(t[n+1], NULL);
-    }
-  while((ref += P->nThreads) < P->nFiles && ref + P->nThreads <= P->nFiles);
-
-  if(ref < P->nFiles){ // EXTRA - OUT OF THE MAIN LOOP
-    for(n = ref, k = 0 ; n < P->nFiles ; ++n){
-      fprintf(stderr, "      [+] File: %s\n", P->files[file++]);
-      pthread_create(&(t[++k]), NULL, CompressThread, (void *) &(T[n]));
-      }
-    for(n = ref, k = 0 ; n < P->nFiles ; ++n) // DO NOT JOIN FORS!
-      pthread_join(t[++k], NULL);
-    }
-  fprintf(stderr, "  [+] Done!\n");
+  fprintf(stderr, "  [+] Compressing target ... ");
+  for(n = 0 ; n < P->nThreads ; ++n)
+    pthread_create(&(t[n+1]), NULL, CompressThread, (void *) &(T[n]));
+  for(n = 0 ; n < P->nThreads ; ++n) // DO NOT JOIN FORS!
+    pthread_join(t[n+1], NULL);
+  fprintf(stderr, "Done!\n");
 
   for(n = 0 ; n < P->nModels ; ++n)
     FreeCModel(Models[n]);
@@ -274,7 +262,7 @@ int32_t main(int argc, char *argv[]){
   P->verbose  = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v" );
   P->force    = ArgsState  (DEFAULT_FORCE,   p, argc, "-F" );
   P->level    = ArgsNum    (0,               p, argc, "-l", MIN_LEV, MAX_LEV);
-  P->top      = ArgsNum    (DEF_TOP,         p, argc, "-t", MIN_TOP, MAX_TOP);
+  P->top.size = ArgsNum    (DEF_TOP,         p, argc, "-t", MIN_TOP, MAX_TOP);
   P->nThreads = ArgsNum    (DEFAULT_THREADS, p, argc, "-n", MIN_THREADS, 
   MAX_THREADS);
 
@@ -308,11 +296,8 @@ int32_t main(int argc, char *argv[]){
   P->col       = ArgsNum    (col,   p, argc, "-c", 1, 200);
   P->gamma     = ArgsDouble (gamma, p, argc, "-g");
   P->gamma     = ((int)(P->gamma * 65536)) / 65536.0;
-  P->nFiles    = ReadFNames (P, argv[argc-1]);
-  P->output    = ArgsFileGen(p, argc, "-x", "matrix", ".csv");
-  P->labels    = ArgsFileGen(p, argc, "-o", "labels", ".csv");
+  P->output    = ArgsFileGen(p, argc, "-x", "top", ".csv");
   FILE *OUTPUT = Fopen(P->output, "w");
-  FILE *LABELS = Fopen(P->labels, "w");
 
   if(P->nModels == 0){
     fprintf(stderr, "Error: at least you need to use a context model!\n");
@@ -320,10 +305,15 @@ int32_t main(int argc, char *argv[]){
     }
 
   // READ MODEL PARAMETERS FROM XARGS & ARGS
-  T = (Threads *) Calloc(P->nFiles, sizeof(Threads));
-  for(ref = 0 ; ref < P->nFiles ; ++ref){
+  T = (Threads *) Calloc(P->nThreads, sizeof(Threads));
+  for(ref = 0 ; ref < P->nThreads ; ++ref){
     T[ref].model = (ModelPar *) Calloc(P->nModels, sizeof(ModelPar));
     T[ref].id = ref;
+    T[ref].top.size = P->top.size;
+    T[ref].top.values = (double   *) Calloc(P->top.size, sizeof(double));
+    T[ref].top.names  = (uint8_t **) Calloc(P->top.size, sizeof(uint8_t *));
+    for(n = 0 ; n < P->top.size ; ++n)
+      T[ref].top.names[n] = (uint8_t *) Calloc(MAX_STR, sizeof(uint8_t));
     k = 0;
     for(n = 1 ; n < argc ; ++n)
       if(strcmp(argv[n], "-m") == 0)
@@ -336,37 +326,29 @@ int32_t main(int argc, char *argv[]){
     }
 
   fprintf(stderr, "\n");
-  if(P->verbose) PrintArgs(P, T[0], argv[argc-2]);
+  if(P->verbose) PrintArgs(P, T[0], argv[argc-2], argv[argc-1]);
 
-  P->matrix = (double   *) Calloc(P->nFiles, sizeof(double));
-  P->size   = (uint64_t *) Calloc(P->nFiles, sizeof(uint64_t));
-  for(n = 0 ; n < P->nFiles ; ++n)
-    P->size[n] = FopenBytesInFile(P->files[n]);
-
-  if(P->nThreads > P->nFiles){
-    fprintf(stderr, "Error: the number of threads must not be higher than the "
-    "number of files\n");
-    exit(1);
-    }
+  P->top.values = (double *) Calloc(P->top.size, sizeof(double));
 
   fprintf(stderr, "==[ PROCESSING ]====================\n");
   TIME *Time = CreateClock(clock());
-  CompressAction(T, argv[argc-2]);
+  P->base = argv[argc-1];
+  CompressAction(T, argv[argc-2], P->base);
   StopTimeNDRM(Time, clock());
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ RESULTS ]=======================\n");
   fprintf(stderr, "Normalized Relative Compression:\n");
-  for(n = 0 ; n < P->nFiles ; ++n){
+/*
+  for(n = 0 ; n < P->top ; ++n){
     fprintf(stderr, "%.4lf\n", P->matrix[n]);
     fprintf(OUTPUT, "%.4lf\n", P->matrix[n]);
-    fprintf(LABELS, "%s\n", P->files[n]);
     }
-  uint32_t idx[P->nFiles], i, j, idxTmp;
-  for(n = 0 ; n < P->nFiles ; ++n)
+  uint32_t idx[P->top], i, j, idxTmp;
+  for(n = 0 ; n < P->top.size ; ++n)
     idx[n] = n;
-  for(i = 1 ; i < P->nFiles ; ++i){
-    for(j = 0 ; j < P->nFiles-1 ; ++j){
+  for(i = 1 ; i < P->top.size ; ++i){
+    for(j = 0 ; j < P->top.size-1 ; ++j){
       if(P->matrix[j] > P->matrix[j+1]){
         double tmp     = P->matrix[j];
         P->matrix[j]   = P->matrix[j+1];
@@ -377,23 +359,21 @@ int32_t main(int argc, char *argv[]){
         }
       }
     }
-  fprintf(stderr,"TOP %u:\n", P->top);
-  for(n = 0 ; n < P->nFiles && n < P->top ; ++n)
-    printf("| %2u | %10.6g | %s\n", n+1, (1.0-P->matrix[n])*100.0, P->files[idx[n]]);
-
+  fprintf(stderr,"TOP %u:\n", P->top.size);
+  for(n = 0 ; n < P->top.size ; ++n)
+    printf("| %2u | %10.6g | %s\n", n+1, (1.0-P->P->values[n])*100.0, "xxxxx");
+*/
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ STATISTICS ]====================\n");
   StopCalcAll(Time, clock());
   fprintf(stderr, "\n");
 
-  // STOP & 
   RemoveClock(Time);
-  for(ref = 0 ; ref < P->nFiles ; ++ref)
+  for(ref = 0 ; ref < P->nThreads ; ++ref)
     Free(T[ref].model);
   Free(T);
   if(!OUTPUT) fclose(OUTPUT);
-  if(!LABELS) fclose(LABELS);
 
   return EXIT_SUCCESS;
   }

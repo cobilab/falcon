@@ -7,6 +7,13 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 typedef struct{
+  uint32_t size;
+  uint8_t  **names;
+  double   *values;
+  }
+Top;
+
+typedef struct{
   U32    ctx;
   U32    den;
   U32    ir;
@@ -32,13 +39,10 @@ typedef struct{
   U32      nThreads;
   U8       nFiles;
   U64      *size;
-  char     **files;
-  double   *matrix;
+  Top      top;
   uint8_t  *image;
-  uint8_t  *labels;
   uint8_t  *output;
-  uint32_t top;
-  uint32_t ref;
+  char     *base;
   }
 Parameters;
 
@@ -47,6 +51,7 @@ typedef struct{
   uint32_t tar;
   uint32_t ref;
   uint64_t min;
+  Top      top;
   ModelPar *model;
   }
 Threads;
