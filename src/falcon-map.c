@@ -273,7 +273,8 @@ int32_t main(int argc, char *argv[]){
 
   P->verbose  = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v" );
   P->force    = ArgsState  (DEFAULT_FORCE,   p, argc, "-F" );
-  P->level    = ArgsNum    (0, p, argc, "-l", MIN_LEVEL, MAX_LEVEL);
+  P->level    = ArgsNum    (0,               p, argc, "-l", MIN_LEV, MAX_LEV);
+  P->top      = ArgsNum    (DEF_TOP,         p, argc, "-t", MIN_TOP, MAX_TOP);
   P->nThreads = ArgsNum    (DEFAULT_THREADS, p, argc, "-n", MIN_THREADS, 
   MAX_THREADS);
 
@@ -376,8 +377,8 @@ int32_t main(int argc, char *argv[]){
         }
       }
     }
-  fprintf(stderr,"----------\n| TOP 20 |\n----------\n");
-  for(n = 0 ; n < P->nFiles && n < 20 ; ++n)
+  fprintf(stderr,"TOP %u:\n", P->top);
+  for(n = 0 ; n < P->nFiles && n < P->top ; ++n)
     printf("| %2u | %10.6g | %s\n", n+1, (1.0-P->matrix[n])*100.0, P->files[idx[n]]);
 
   fprintf(stderr, "\n");

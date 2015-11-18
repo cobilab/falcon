@@ -19,7 +19,7 @@ void ModelsExplanation(void){
 
 void PrintMenu(void){
   fprintf(stderr,
-  "Usage: falcon-map [OPTION]... [FILE] [FILE1]:[FILE2]:...                 \n"
+  "Usage: falcon-map [OPTION]... [FILE] [FILE]                              \n"
   "Genomic similarity detection according to a reference                    \n"
   "                                                                         \n"
   "Non-mandatory arguments:                                                 \n"
@@ -29,15 +29,15 @@ void PrintMenu(void){
   "  -v                       verbose mode (more information),              \n"
   "  -s                       how compression levels,                       \n"
   "  -l <level>               compression level [1;30],                     \n"
+  "  -t <top>                 top of similarity,                            \n"
   "  -n <nThreads>            number of threads,                            \n"
   "  -x <FILE>                similarity matrix filename,                   \n"
   "  -o <FILE>                labels filename,                              \n"
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
   "                                                                         \n"
-  "  <FILE>                   reference file,                               \n"
-  "  <FILE>:<FILE>:<...>      input files (last arguments).                 \n"
-  "                           Use \":\" for file splitting.                 \n"
+  "  <FILE>                   sequenced file,                               \n"
+  "  <FILE>                   base file (ex. from NCBI).                    \n"
   "                                                                         \n"
   "Report bugs to <{pratas,ap,pjf}@ua.pt>.                                \n");
   }

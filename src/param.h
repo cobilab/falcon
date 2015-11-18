@@ -37,6 +37,7 @@ typedef struct{
   uint8_t  *image;
   uint8_t  *labels;
   uint8_t  *output;
+  uint32_t top;
   uint32_t ref;
   }
 Parameters;
