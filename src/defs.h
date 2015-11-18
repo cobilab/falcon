@@ -44,7 +44,7 @@ typedef int8_t   I8;
 #define DEFAULT_MINBLOCK       100
 #define MAX_LEV                32
 #define MIN_LEV                1
-#define DEF_TOP                30
+#define DEF_TOP                100
 #define MIN_TOP                1
 #define MAX_TOP                99999999
 
