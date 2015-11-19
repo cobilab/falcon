@@ -67,9 +67,6 @@ void CompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            //ResetAllRMs(Mod, Head, nBaseRelative, nBaseAbsolute, conName, Writter);
-//            for(cModel = 0 ; cModel < P->nModels ; ++cModel)
-//              ResetCModelIdx(Shadow[cModel]);
             r = 0;
           break;
           case -2: // IT IS THE '\n' HEADER END
