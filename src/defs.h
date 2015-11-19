@@ -47,6 +47,7 @@ typedef int8_t   I8;
 #define DEF_TOP                100
 #define MIN_TOP                1
 #define MAX_TOP                99999999
+#define MAX_NAME               5000
 
 #define MIN_THREADS            1
 #define MAX_THREADS            500

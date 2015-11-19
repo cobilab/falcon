@@ -13,6 +13,7 @@ typedef struct{
   uint8_t  header;
   uint8_t  line;
   uint8_t  dna;
+  uint64_t nRead;
   }
 PARSER;
 
@@ -21,6 +22,7 @@ PARSER;
 void     FileType      (PARSER *, FILE *);
 PARSER   *CreateParser (void);
 int32_t  ParseSym      (PARSER *, uint8_t);
+int32_t  ParseMF       (PARSER *, uint8_t);
 void     RemoveParser  (PARSER *);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -11,6 +11,7 @@ PARSER *CreateParser(void){
   PA->type   = 0;
   PA->header = 0;
   PA->line   = 0;
+  PA->nRead  = 0;
   PA->dna    = 0;
   return PA;
   }
@@ -65,6 +66,38 @@ int32_t ParseSym(PARSER *PA, uint8_t sym){
 
   return sym;
   }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// PARSE MULTI-FASTA
+//
+int32_t ParseMF(PARSER *PA, uint8_t sym){
+
+  switch(sym){
+    case '>':
+      PA->header = 1;
+      ++PA->nRead;
+      return -1;
+    case '\n':
+      if(PA->header == 0){
+        PA->header = 0;
+        return -99;
+        }
+      else{
+        PA->header = 0;
+        return -2;
+        }
+    default:
+      if(PA->header == 1)
+        return -3;
+    }
+
+  // NUCLEOTIDE PARSE
+  if(sym != 'A' && sym != 'C' && sym != 'G' && sym != 'T')
+    return 'N'; // MAP EXTRA INTO 'N'
+
+  return sym;
+  }
+
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // REMOVE PARSER

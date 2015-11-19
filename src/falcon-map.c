@@ -31,7 +31,7 @@ CModel **Models;  // MEMORY SHARED BY THREADING
 void CompressTarget(Threads T){
   FILE        *Reader  = Fopen(P->base, "r");
   double      *cModelWeight, cModelTotalWeight = 0, bits = 0, instance = 0;
-  uint64_t    nBase = 0;
+  uint64_t    nBase = 0, r = 0;
   uint32_t    n, k, idxPos, totModels, cModel;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
@@ -40,6 +40,8 @@ void CompressTarget(Threads T){
   PModel      **pModel, *MX;
   CModel      **Shadow;
   FloatPModel *PT;
+  uint8_t     conName[MAX_NAME];
+  int         action;
 
   totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
   for(n = 0 ; n < P->nModels ; ++n) 
@@ -59,80 +61,100 @@ void CompressTarget(Threads T){
   for(n = 0 ; n < totModels ; ++n)
     cModelWeight[n] = 1.0 / totModels;
 
-  FileType(PA, Reader);
-
   nBase = 0;
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
-      if(ParseSym(PA, (sym = readBuf[idxPos])) == -1) continue;
-      symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
+      if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
+        switch(action){
+          case -1: // IT IS THE BEGGINING OF THE HEADER
+            //ResetAllRMs(Mod, Head, nBaseRelative, nBaseAbsolute, conName, Writter);
+//            for(cModel = 0 ; cModel < P->nModels ; ++cModel)
+//              ResetCModelIdx(Shadow[cModel]);
+            r = 0;
+          break;
+          case -2: // IT IS THE '\n' HEADER END
+            conName[r] = '\0';
+          break;
+          case -3: // IF IS A SYMBOL OF THE HEADER
+            if(r >= MAX_NAME-1)
+              conName[r] = '\0';
+            else{
+              if(sym == ' '){
+                if(r == 0) continue;
+                else       sym = '_'; // PROTECT SPACES WITH UNDERL
+                }
+              conName[r++] = sym;
+              }
+          break;
+          case -99: // IF IS A SIMPLE FORMAT BREAK
+          break;
+          default:
+            fprintf(stderr, "ERROR: Unknown action!\n");
+            exit(1);
+          }
+        continue; // GO TO NEXT SYMBOL
+        }
 
-      #ifdef PROGRESSIVE
-     
-      #else
-      memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
-      #endif
- 
-      n = 0;
-      pos = &symBuf->buf[symBuf->idx-1];
-      for(cModel = 0 ; cModel < P->nModels ; ++cModel){
-        GetPModelIdx(pos, Shadow[cModel]);
-        ComputePModel(Models[cModel], pModel[n], Shadow[cModel]->pModelIdx,
-        Shadow[cModel]->alphaDen);
-        #ifdef PROGRESSIVE
-        
-        #else
-        ComputeWeightedFreqs(cModelWeight[n], pModel[n], PT);
-        if(Shadow[cModel]->edits != 0){
-          ++n;
-          Shadow[cModel]->SUBS.seq->buf[Shadow[cModel]->SUBS.seq->idx] = sym;
-          Shadow[cModel]->SUBS.idx = GetPModelIdxCorr(Shadow[cModel]->SUBS.
-          seq->buf+Shadow[cModel]->SUBS.seq->idx-1, Shadow[cModel], Shadow
-          [cModel]->SUBS.idx);
-          ComputePModel(Models[cModel], pModel[n], Shadow[cModel]->SUBS.idx, 
-          Shadow[cModel]->SUBS.eDen);
+      if((sym = DNASymToNum(sym)) == 4){
+        // TODO: DO SOMETHING!
+        continue;
+        }
+
+      if(PA->nRead % P->nThreads == T.id){
+
+        symBuf->buf[symBuf->idx] = sym;
+
+        memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
+        n = 0;
+        pos = &symBuf->buf[symBuf->idx-1];
+        for(cModel = 0 ; cModel < P->nModels ; ++cModel){
+          GetPModelIdx(pos, Shadow[cModel]);
+          ComputePModel(Models[cModel], pModel[n], Shadow[cModel]->pModelIdx,
+          Shadow[cModel]->alphaDen);
           ComputeWeightedFreqs(cModelWeight[n], pModel[n], PT);
+          if(Shadow[cModel]->edits != 0){
+            ++n;
+            Shadow[cModel]->SUBS.seq->buf[Shadow[cModel]->SUBS.seq->idx] = sym;
+            Shadow[cModel]->SUBS.idx = GetPModelIdxCorr(Shadow[cModel]->SUBS.
+            seq->buf+Shadow[cModel]->SUBS.seq->idx-1, Shadow[cModel], Shadow
+            [cModel]->SUBS.idx);
+            ComputePModel(Models[cModel], pModel[n], Shadow[cModel]->SUBS.idx, 
+            Shadow[cModel]->SUBS.eDen);
+            ComputeWeightedFreqs(cModelWeight[n], pModel[n], PT);
+            }
+          ++n;
           }
-        ++n;
-        #endif
-        }
 
-      #ifdef PROGRESSIVE
-    
+        MX->sum  = (MX->freqs[0] = 1 + (unsigned) (PT->freqs[0] * MX_PMODEL));
+        MX->sum += (MX->freqs[1] = 1 + (unsigned) (PT->freqs[1] * MX_PMODEL));
+        MX->sum += (MX->freqs[2] = 1 + (unsigned) (PT->freqs[2] * MX_PMODEL));
+        MX->sum += (MX->freqs[3] = 1 + (unsigned) (PT->freqs[3] * MX_PMODEL));
+        bits += (instance = PModelSymbolLog(MX, sym));
+        nBase++;
 
-      nBase++;
-      #else
-      MX->sum  = (MX->freqs[0] = 1 + (unsigned) (PT->freqs[0] * MX_PMODEL));
-      MX->sum += (MX->freqs[1] = 1 + (unsigned) (PT->freqs[1] * MX_PMODEL));
-      MX->sum += (MX->freqs[2] = 1 + (unsigned) (PT->freqs[2] * MX_PMODEL));
-      MX->sum += (MX->freqs[3] = 1 + (unsigned) (PT->freqs[3] * MX_PMODEL));
-      bits += (instance = PModelSymbolLog(MX, sym));
-      nBase++;
-
-      cModelTotalWeight = 0;
-      for(n = 0 ; n < totModels ; ++n){
-        cModelWeight[n] = Power(cModelWeight[n], P->gamma) * (double) 
-        pModel[n]->freqs[sym] / pModel[n]->sum;
-        cModelTotalWeight += cModelWeight[n];
-        }
-
-      for(n = 0 ; n < totModels ; ++n)
-        cModelWeight[n] /= cModelTotalWeight; // RENORMALIZE THE WEIGHTS
-
-      n = 0;
-      for(cModel = 0 ; cModel < P->nModels ; ++cModel){
-        if(Shadow[cModel]->edits != 0){
-          CorrectCModelSUBS(Shadow[cModel], pModel[++n], sym);
+        cModelTotalWeight = 0;
+        for(n = 0 ; n < totModels ; ++n){
+          cModelWeight[n] = Power(cModelWeight[n], P->gamma) * (double) 
+          pModel[n]->freqs[sym] / pModel[n]->sum;
+          cModelTotalWeight += cModelWeight[n];
           }
-        ++n;
-        }
-      #endif
 
-      UpdateCBuffer(symBuf);
+        for(n = 0 ; n < totModels ; ++n)
+          cModelWeight[n] /= cModelTotalWeight; // RENORMALIZE THE WEIGHTS
+
+        n = 0;
+        for(cModel = 0 ; cModel < P->nModels ; ++cModel){
+          if(Shadow[cModel]->edits != 0){
+            CorrectCModelSUBS(Shadow[cModel], pModel[++n], sym);
+            }
+          ++n;
+          }
+
+        UpdateCBuffer(symBuf);
+        }
 
       // IF IT REACHED THE END, THEN: TODO
 //      P->values[T.id] = nBase == 0 ? 101 : bits / 2 / nBase; // 101 -> nan
- 
       }
 
   Free(cModelWeight);
