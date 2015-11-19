@@ -65,8 +65,7 @@ void CompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            r = 0;
-            if(calc == 1){
+            if(calc == 1){   // TODO : FAZER O MESMO NO FIM PARA O ULTIMO READ! (APÒS LOOP)
               if(T.top.id < T.top.size){
                 T.top.values[T.top.id] = bits;
                 //T.top.names [T.top.id] = bits;
@@ -77,9 +76,10 @@ void CompressTarget(Threads T){
                   }
                 }
               T.top.id++;
-              nBase = 0;
-              bits  = 0;
               }
+            r     = 0;
+            nBase = 0;
+            bits  = 0;
           break;
           case -2: // IT IS THE '\n' HEADER END
             conName[r] = '\0';
