@@ -126,7 +126,7 @@ void CompressTarget(Threads T){
         MX->sum += (MX->freqs[1] = 1 + (unsigned) (PT->freqs[1] * MX_PMODEL));
         MX->sum += (MX->freqs[2] = 1 + (unsigned) (PT->freqs[2] * MX_PMODEL));
         MX->sum += (MX->freqs[3] = 1 + (unsigned) (PT->freqs[3] * MX_PMODEL));
-        bits += (instance = PModelSymbolLog(MX, sym));
+        bits    += (instance = PModelSymbolLog(MX, sym));
         nBase++;
 
         cModelTotalWeight = 0;
