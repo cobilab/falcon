@@ -75,7 +75,11 @@ void CompressTarget(Threads T){
                 }
               else{
                 if(bits > T.top.values[0]){
-                  //TODO: REORDER
+                  //TODO: ORDER
+          
+
+
+                  //-----------
                   }
                 }
               T.top.id++;
