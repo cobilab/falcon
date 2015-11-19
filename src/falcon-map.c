@@ -68,7 +68,10 @@ void CompressTarget(Threads T){
             if(calc == 1){   // TODO : FAZER O MESMO NO FIM PARA O ULTIMO READ! (APÒS LOOP)
               if(T.top.id < T.top.size){
                 T.top.values[T.top.id] = bits;
-                //T.top.names [T.top.id] = bits;
+                for(r = 0 ; r < MAX_NAME-1 ; ++r){
+                  T.top.names[T.top.id][r] = conName[r];
+                  if(conName[r] == '\0') break;
+                  }
                 }
               else{
                 if(bits > T.top.values[0]){
@@ -344,7 +347,7 @@ int32_t main(int argc, char *argv[]){
     T[ref].top.values = (double   *) Calloc(P->top.size, sizeof(double));
     T[ref].top.names  = (uint8_t **) Calloc(P->top.size, sizeof(uint8_t *));
     for(n = 0 ; n < P->top.size ; ++n)
-      T[ref].top.names[n] = (uint8_t *) Calloc(MAX_STR, sizeof(uint8_t));
+      T[ref].top.names[n] = (uint8_t *) Calloc(MAX_NAME, sizeof(uint8_t));
     k = 0;
     for(n = 1 ; n < argc ; ++n)
       if(strcmp(argv[n], "-m") == 0)
