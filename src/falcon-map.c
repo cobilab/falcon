@@ -65,9 +65,18 @@ void CompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            r     = 0;
+            r = 0;
             if(calc == 1){
-              //...
+              if(T.top.id < T.top.size){
+                T.top.values[T.top.id] = bits;
+                //T.top.names [T.top.id] = bits;
+                }
+              else{
+                if(bits > T.top.values[0]){
+                  //TODO: REORDER
+                  }
+                }
+              T.top.id++;
               nBase = 0;
               bits  = 0;
               }
@@ -330,6 +339,7 @@ int32_t main(int argc, char *argv[]){
   for(ref = 0 ; ref < P->nThreads ; ++ref){
     T[ref].model = (ModelPar *) Calloc(P->nModels, sizeof(ModelPar));
     T[ref].id = ref;
+    T[ref].top.id   = 0;
     T[ref].top.size = P->top.size;
     T[ref].top.values = (double   *) Calloc(P->top.size, sizeof(double));
     T[ref].top.names  = (uint8_t **) Calloc(P->top.size, sizeof(uint8_t *));

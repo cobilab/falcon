@@ -8,6 +8,7 @@
 
 typedef struct{
   uint32_t size;
+  uint32_t id;
   uint8_t  **names;
   double   *values;
   }
