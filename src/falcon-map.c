@@ -36,12 +36,11 @@ void CompressTarget(Threads T){
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t     sym, *pos;
+  uint8_t     sym, *pos, conName[MAX_NAME];
   PModel      **pModel, *MX;
   CModel      **Shadow;
   FloatPModel *PT;
-  uint8_t     conName[MAX_NAME];
-  int         action;
+  int         action, calc = 0;
 
   totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
   for(n = 0 ; n < P->nModels ; ++n) 
@@ -61,13 +60,17 @@ void CompressTarget(Threads T){
   for(n = 0 ; n < totModels ; ++n)
     cModelWeight[n] = 1.0 / totModels;
 
-  nBase = 0;
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            r = 0;
+            r     = 0;
+            if(calc == 1){
+              //...
+              nBase = 0;
+              bits  = 0;
+              }
           break;
           case -2: // IT IS THE '\n' HEADER END
             conName[r] = '\0';
@@ -98,9 +101,8 @@ void CompressTarget(Threads T){
         }
 
       if(PA->nRead % P->nThreads == T.id){
-
+        calc = 1;
         symBuf->buf[symBuf->idx] = sym;
-
         memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
         n = 0;
         pos = &symBuf->buf[symBuf->idx-1];
