@@ -406,23 +406,6 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ RESULTS ]=======================\n");
-  fprintf(stderr, "Normalized Relative Compression:\n");
-/*  uint32_t idx[P->top], i, j, idxTmp;
-  for(n = 0 ; n < P->top.size ; ++n)
-    idx[n] = n;
-  for(i = 1 ; i < P->top.size ; ++i){
-    for(j = 0 ; j < P->top.size-1 ; ++j){
-      if(P->matrix[j] > P->matrix[j+1]){
-        double tmp     = P->matrix[j];
-        P->matrix[j]   = P->matrix[j+1];
-        P->matrix[j+1] = tmp;
-        idxTmp         = idx[j];
-        idx[j]         = idx[j+1];
-        idx[j+1]       = idxTmp;
-        }
-      }
-    }
-*/
   for(ref = 0 ; ref < P->nThreads ; ++ref){
     fprintf(stderr,"TOP %u of thread %u:\n", T[ref].top->size, ref+1);
     for(n = 0 ; n < T[ref].top->size ; ++n)
