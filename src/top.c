@@ -3,6 +3,16 @@
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+void CopyStringPart(uint8_t *a, uint8_t *b){
+  uint32_t r;
+  for(r = 0 ; r < MAX_NAME-1 ; ++r){
+    a[r] = b[r];
+    if(b[r] == '\0') break;
+    }
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 int SortByValue(const void *a, const void *b){ 
   VT *ia = (VT *) a;
   VT *ib = (VT *) b;
@@ -29,25 +39,17 @@ void UpdateTop(double bits, uint8_t *nm, TOP *T){
   uint32_t r;
   if(T->id < T->size){
     T->V[T->id].value = bits;
-    for(r = 0 ; r < MAX_NAME-1 ; ++r){
-      T->V[T->id].name[r] = nm[r];
-      if(nm[r] == '\0') break;
-      }
+    CopyStringPart(T->V[T->id].name, nm);
+    }
+  else if(T->id == T->size){
+    qsort(T->V, T->size, sizeof(VT), SortByValue);
     }
   else{
-/*
-    if(bits > T->V[0].value || T->id == T->size){
-      if(T->id == T->size){
-        // ORDER ALL
-*/
-        qsort(T->V, T->size, sizeof(VT), SortByValue);
-/*
-        }
-      else{
-        // ORDER ONLY BY ONE ELEMENT
-        }
+    if(bits > T->V[0].value){
+      T->V[0].value = bits;
+      CopyStringPart(T->V[0].name, nm);
+      qsort(T->V, T->size, sizeof(VT), SortByValue);
       }
-*/
     }
   T->id++;
   }
