@@ -74,48 +74,10 @@ void CompressTarget(Threads T){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
             if((PA->nRead-1) % P->nThreads == T.id){ // IT WAS THE PREVIOUS READ ?
-
-
-
-
-              if(calc == 1){   // TODO : FAZER O MESMO NO FIM PARA O ULTIMO READ! (APÒS LOOP)
+              if(calc == 1)  // TODO : FAZER O MESMO NO FIM PARA O ULTIMO READ! (APÒS LOOP)
                 UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
- 
-
-/*
-                bits = BoundDouble(0.0, bits/2/nBase, 1.0); 
-                if(T.top->id < T.top->size){
-                  T.top->V[T.top->id].value = bits;
-                  for(r = 0 ; r < MAX_NAME-1 ; ++r){
-                    T.top->V[T.top->id].name[r] = conName[r];
-                    if(conName[r] == '\0') break;
-                    }
-                  }
-                else{
-                  if(bits > T.top->V[0].value || T.top->id == T.top->size){
-
-                    if(T.top->id == T.top->size){
-                      // ORDER ALL
-  //                    qsort(T->top, T->top.size, sizeof(struct Top), SortByValue);
-                      }
-                    else{
-                      // ORDER ONLY BY ONE ELEMENT
-                      }
-                    }
-                  }
-                T.top->id++;
-*/
-                }
-
-
-
-
-
-
               }
-              r     = 0;
-              nBase = 0;
-              bits  = 0;
+              r = nBase = bits = 0;
           break;
           case -2: // IT IS THE '\n' HEADER END
             conName[r] = '\0';
