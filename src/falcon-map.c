@@ -155,7 +155,7 @@ void CompressTarget(Threads T){
 
         ComputeMXProbs(PT, MX);
         bits += (instance = PModelSymbolLog(MX, sym));
-        nBase++;
+        ++nBase;
 
         cModelTotalWeight = 0;
         for(n = 0 ; n < totModels ; ++n){
