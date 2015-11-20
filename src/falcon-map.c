@@ -25,14 +25,6 @@
 
 CModel **Models;  // MEMORY SHARED BY THREADING
 
-/*
-int SortByValue(const void *a, const void *b){ 
-  struct TOP *ia = (struct Top *)a;
-  struct TOP *ib = (struct Top *)b;
-  return strcmp(ia->value, ib->value);
-  } 
-*/
-
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - C O M P R E S S I N G - - - - - - - - - - - - - 
 
@@ -73,8 +65,8 @@ void CompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if((PA->nRead-1) % P->nThreads == T.id){ // IT WAS THE PREVIOUS READ ?
-              if(calc == 1)  // TODO : FAZER O MESMO NO FIM PARA O ULTIMO READ! (APÒS LOOP)
+            if((PA->nRead-1) % P->nThreads == T.id){ // THE PREVIOUS READ ?
+              if(calc == 1) 
                 UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
               }
               r = nBase = bits = 0;
@@ -153,6 +145,9 @@ void CompressTarget(Threads T){
         UpdateCBuffer(symBuf);
         }
       }
+               
+  // XXX: SHOULD THIS BE FOR ALL ? ONLY FOR THE LAST THREAD ?
+  UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
 
   Free(cModelWeight);
   for(n = 0 ; n < totModels ; ++n)

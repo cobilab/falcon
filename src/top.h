@@ -21,6 +21,7 @@ TOP;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 TOP        *CreateTop     (uint32_t);
+int        SortByValue    (const void *, const void *);
 void       UpdateTop      (double, uint8_t *, TOP *);
 void       DeleteTop      (TOP *);
 
