@@ -46,7 +46,7 @@ void CompressTarget(Threads T){
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
   uint8_t     sym, *pos, conName[MAX_NAME];
   PModel      **pModel, *MX;
-  CModel      **Shadow;
+  CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
   FloatPModel *PT;
   int         action, calc = 0;
 
