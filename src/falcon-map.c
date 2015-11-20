@@ -74,7 +74,15 @@ void CompressTarget(Threads T){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
             if((PA->nRead-1) % P->nThreads == T.id){ // IT WAS THE PREVIOUS READ ?
+
+
+
+
               if(calc == 1){   // TODO : FAZER O MESMO NO FIM PARA O ULTIMO READ! (APÒS LOOP)
+                UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
+ 
+
+/*
                 bits = BoundDouble(0.0, bits/2/nBase, 1.0); 
                 if(T.top->id < T.top->size){
                   T.top->V[T.top->id].value = bits;
@@ -96,7 +104,14 @@ void CompressTarget(Threads T){
                     }
                   }
                 T.top->id++;
+*/
                 }
+
+
+
+
+
+
               }
               r     = 0;
               nBase = 0;

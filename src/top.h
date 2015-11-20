@@ -20,8 +20,9 @@ TOP;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-TOP   *CreateTop(uint32_t);
-void  DeleteTop(TOP *T);
+TOP        *CreateTop     (uint32_t);
+void       UpdateTop      (double, uint8_t *, TOP *);
+void       DeleteTop      (TOP *);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

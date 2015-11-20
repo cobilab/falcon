@@ -15,6 +15,31 @@ TOP *CreateTop(uint32_t size){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+void UpdateTop(double bits, uint8_t *nm, TOP *T){
+  uint32_t r;
+  if(T->id < T->size){
+    T->V[T->id].value = bits;
+    for(r = 0 ; r < MAX_NAME-1 ; ++r){
+      T->V[T->id].name[r] = nm[r];
+      if(nm[r] == '\0') break;
+      }
+    }
+  else{
+    if(bits > T->V[0].value || T->id == T->size){
+      if(T->id == T->size){
+        // ORDER ALL
+        // qsort(T->top, T->top.size, sizeof(struct Top), SortByValue);
+        }
+      else{
+        // ORDER ONLY BY ONE ELEMENT
+        }
+      }
+    }
+  T->id++;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 void DeleteTop(TOP *T){
   uint32_t n;
   for(n = 0 ; n < T->size ; ++n)
