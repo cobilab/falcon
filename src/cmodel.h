@@ -110,6 +110,7 @@ void            ResetCModelIdx       (CModel *);
 void            UpdateCModelCounter  (CModel *, U32, U64);
 CModel          *CreateCModel        (U32, U32, U32, U8, U32, U32, U32);
 CModel          *CreateShadowModel   (CModel *);
+inline void     ComputeMXProbs       (FloatPModel *, PModel *);
 inline void     ComputePModel        (CModel *, PModel *, uint64_t, uint32_t);
 inline void     ComputeWeightedFreqs (double, PModel *, FloatPModel *);
 double          PModelSymbolLog      (PModel *, U32);

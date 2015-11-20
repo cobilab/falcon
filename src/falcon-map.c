@@ -27,8 +27,8 @@ CModel **Models;  // MEMORY SHARED BY THREADING
 
 /*
 int SortByValue(const void *a, const void *b){ 
-  struct Top *ia = (struct Top *)a;
-  struct Top *ib = (struct Top *)b;
+  struct TOP *ia = (struct Top *)a;
+  struct TOP *ib = (struct Top *)b;
   return strcmp(ia->value, ib->value);
   } 
 */
@@ -57,13 +57,13 @@ void CompressTarget(Threads T){
 
   Shadow = (CModel **) Calloc(P->nModels, sizeof(CModel *));
   for(n = 0 ; n < P->nModels ; ++n)
-    Shadow[n] = CreateShadowModel(Models[n]); 
-  pModel        = (PModel  **) Calloc(totModels, sizeof(PModel *));
+    Shadow[n]  = CreateShadowModel(Models[n]); 
+  pModel       = (PModel  **) Calloc(totModels, sizeof(PModel *));
   for(n = 0 ; n < totModels ; ++n)
-    pModel[n]   = CreatePModel(ALPHABET_SIZE);
-  MX            = CreatePModel(ALPHABET_SIZE);
-  PT            = CreateFloatPModel(ALPHABET_SIZE);
-  cModelWeight  = (double   *) Calloc(totModels, sizeof(double));
+    pModel[n]  = CreatePModel(ALPHABET_SIZE);
+  MX           = CreatePModel(ALPHABET_SIZE);
+  PT           = CreateFloatPModel(ALPHABET_SIZE);
+  cModelWeight = (double   *) Calloc(totModels, sizeof(double));
 
   for(n = 0 ; n < totModels ; ++n)
     cModelWeight[n] = 1.0 / totModels;
@@ -73,7 +73,7 @@ void CompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if(PA->nRead % P->nThreads == T.id){
+            if((PA->nRead-1) % P->nThreads == T.id){ // IT WAS THE PREVIOUS READ ?
               if(calc == 1){   // TODO : FAZER O MESMO NO FIM PARA O ULTIMO READ! (APÒS LOOP)
                 bits = BoundDouble(0.0, bits/2/nBase, 1.0); 
                 if(T.top->id < T.top->size){
@@ -88,33 +88,11 @@ void CompressTarget(Threads T){
 
                     if(T.top->id == T.top->size){
                       // ORDER ALL
-                      //qsort(T.top, T.top.size, sizeof(struct Top), SortByValue);
+  //                    qsort(T->top, T->top.size, sizeof(struct Top), SortByValue);
                       }
                     else{
                       // ORDER ONLY BY ONE ELEMENT
                       }
-
-/*                  
-                  uint32_t idx[P->top], i, j, idxTmp;
-                  for(n = 0 ; n < P->top.size ; ++n)
-                    idx[n] = n;
-
-                  for(i = 1 ; i < P->top.size ; ++i){
-                    for(j = 0 ; j < P->top.size-1 ; ++j){
-                      if(P->matrix[j] > P->matrix[j+1]){
-                        double tmp     = P->matrix[j];
-                        P->matrix[j]   = P->matrix[j+1];
-                        P->matrix[j+1] = tmp;
-                        idxTmp         = idx[j];
-                        idx[j]         = idx[j+1];
-                        idx[j+1]       = idxTmp;
-                        }
-                      }
-                    }
-*/
-
-
-                    //-----------
                     }
                   }
                 T.top->id++;
@@ -148,8 +126,7 @@ void CompressTarget(Threads T){
         }
 
       if((sym = DNASymToNum(sym)) == 4){
-        // TODO: DO SOMETHING!?
-        continue;
+        continue; // IT IGNORES EXTRA SYMBOLS
         }
 
       if(PA->nRead % P->nThreads == T.id){
@@ -176,11 +153,8 @@ void CompressTarget(Threads T){
           ++n;
           }
 
-        MX->sum  = (MX->freqs[0] = 1 + (unsigned) (PT->freqs[0] * MX_PMODEL));
-        MX->sum += (MX->freqs[1] = 1 + (unsigned) (PT->freqs[1] * MX_PMODEL));
-        MX->sum += (MX->freqs[2] = 1 + (unsigned) (PT->freqs[2] * MX_PMODEL));
-        MX->sum += (MX->freqs[3] = 1 + (unsigned) (PT->freqs[3] * MX_PMODEL));
-        bits    += (instance = PModelSymbolLog(MX, sym));
+        ComputeMXProbs(PT, MX);
+        bits += (instance = PModelSymbolLog(MX, sym));
         nBase++;
 
         cModelTotalWeight = 0;
@@ -190,22 +164,17 @@ void CompressTarget(Threads T){
           cModelTotalWeight += cModelWeight[n];
           }
 
-        for(n = 0 ; n < totModels ; ++n)
-          cModelWeight[n] /= cModelTotalWeight; // RENORMALIZE THE WEIGHTS
+        for(n = 0 ; n < totModels ; ++n) cModelWeight[n] /= cModelTotalWeight;
 
         n = 0;
         for(cModel = 0 ; cModel < P->nModels ; ++cModel){
-          if(Shadow[cModel]->edits != 0){
+          if(Shadow[cModel]->edits != 0)
             CorrectCModelSUBS(Shadow[cModel], pModel[++n], sym);
-            }
           ++n;
           }
 
         UpdateCBuffer(symBuf);
         }
-
-      // IF IT REACHED THE END, THEN: TODO
-//      P->values[T.id] = nBase == 0 ? 101 : bits / 2 / nBase; // 101 -> nan
       }
 
   Free(cModelWeight);
@@ -412,7 +381,6 @@ int32_t main(int argc, char *argv[]){
       fprintf(stderr, "| %2u | %10.6g | %s\n", n+1, (1.0-BoundDouble(0.0, 
       T[ref].top->V[n].value, 1.0))*100.0, T[ref].top->V[n].name);
     }
-
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ STATISTICS ]====================\n");
