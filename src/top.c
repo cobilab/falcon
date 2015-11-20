@@ -45,9 +45,10 @@ void UpdateTop(double bits, uint8_t *nm, TOP *T){
     qsort(T->V, T->size, sizeof(VT), SortByValue);
     }
   else{
-    if(bits > T->V[0].value){
-      T->V[0].value = bits;
-      CopyStringPart(T->V[0].name, nm);
+    uint32_t last = T->size-1;
+    if(bits > T->V[last].value){
+      T->V[last].value = bits;
+      CopyStringPart(T->V[last].name, nm);
       qsort(T->V, T->size, sizeof(VT), SortByValue);
       }
     }
