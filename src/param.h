@@ -3,16 +3,9 @@
 
 #include "defs.h"
 #include "cmodel.h"
+#include "top.h"
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-typedef struct{
-  uint32_t size;
-  uint32_t id;
-  uint8_t  **names;
-  double   *values;
-  }
-Top;
 
 typedef struct{
   U32    ctx;
@@ -40,7 +33,7 @@ typedef struct{
   U32      nThreads;
   U8       nFiles;
   U64      *size;
-  Top      top;
+  TOP      *top;
   uint8_t  *image;
   uint8_t  *output;
   char     *base;
@@ -52,7 +45,7 @@ typedef struct{
   uint32_t tar;
   uint32_t ref;
   uint64_t min;
-  Top      top;
+  TOP      *top;
   ModelPar *model;
   }
 Threads;

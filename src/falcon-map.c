@@ -25,6 +25,14 @@
 
 CModel **Models;  // MEMORY SHARED BY THREADING
 
+/*
+int SortByValue(const void *a, const void *b){ 
+  struct Top *ia = (struct Top *)a;
+  struct Top *ib = (struct Top *)b;
+  return strcmp(ia->value, ib->value);
+  } 
+*/
+
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - C O M P R E S S I N G - - - - - - - - - - - - - 
 
@@ -65,21 +73,26 @@ void CompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if(calc == 1){   // TODO : FAZER O MESMO NO FIM PARA O ULTIMO READ! (APÒS LOOP)
-              bits = BoundDouble(0.0, bits, 1.0); 
-              if(T.top.id < T.top.size){
-                T.top.values[T.top.id] = bits;
-                for(r = 0 ; r < MAX_NAME-1 ; ++r){
-                  T.top.names[T.top.id][r] = conName[r];
-                  if(conName[r] == '\0') break;
-                  }
-                }
-              else{
-                if(bits > T.top.values[0] || T.top.id == T.top.size){
-
-                  if(T.top.id == T.top.size){
-
+            if(PA->nRead % P->nThreads == T.id){
+              if(calc == 1){   // TODO : FAZER O MESMO NO FIM PARA O ULTIMO READ! (APÒS LOOP)
+                bits = BoundDouble(0.0, bits/2/nBase, 1.0); 
+                if(T.top->id < T.top->size){
+                  T.top->V[T.top->id].value = bits;
+                  for(r = 0 ; r < MAX_NAME-1 ; ++r){
+                    T.top->V[T.top->id].name[r] = conName[r];
+                    if(conName[r] == '\0') break;
                     }
+                  }
+                else{
+                  if(bits > T.top->V[0].value || T.top->id == T.top->size){
+
+                    if(T.top->id == T.top->size){
+                      // ORDER ALL
+                      //qsort(T.top, T.top.size, sizeof(struct Top), SortByValue);
+                      }
+                    else{
+                      // ORDER ONLY BY ONE ELEMENT
+                      }
 
 /*                  
                   uint32_t idx[P->top], i, j, idxTmp;
@@ -101,14 +114,15 @@ void CompressTarget(Threads T){
 */
 
 
-                  //-----------
+                    //-----------
+                    }
                   }
+                T.top->id++;
                 }
-              T.top.id++;
               }
-            r     = 0;
-            nBase = 0;
-            bits  = 0;
+              r     = 0;
+              nBase = 0;
+              bits  = 0;
           break;
           case -2: // IT IS THE '\n' HEADER END
             conName[r] = '\0';
@@ -298,7 +312,7 @@ void CompressAction(Threads *T, char *refName, char *baseName){
 int32_t main(int argc, char *argv[]){
   char        **p = *&argv, **xargv, *xpl = NULL;
   int32_t     xargc = 0;
-  uint32_t    n, k, col, ref, index;
+  uint32_t    n, k, col, ref, index, topSize;
   double      gamma, threshold;
   Threads     *T;
   
@@ -321,7 +335,7 @@ int32_t main(int argc, char *argv[]){
   P->verbose  = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v" );
   P->force    = ArgsState  (DEFAULT_FORCE,   p, argc, "-F" );
   P->level    = ArgsNum    (0,               p, argc, "-l", MIN_LEV, MAX_LEV);
-  P->top.size = ArgsNum    (DEF_TOP,         p, argc, "-t", MIN_TOP, MAX_TOP);
+  topSize     = ArgsNum    (DEF_TOP,         p, argc, "-t", MIN_TOP, MAX_TOP);
   P->nThreads = ArgsNum    (DEFAULT_THREADS, p, argc, "-n", MIN_THREADS, 
   MAX_THREADS);
 
@@ -363,17 +377,13 @@ int32_t main(int argc, char *argv[]){
     return EXIT_FAILURE;
     }
 
+  P->top = CreateTop(topSize);
   // READ MODEL PARAMETERS FROM XARGS & ARGS
   T = (Threads *) Calloc(P->nThreads, sizeof(Threads));
   for(ref = 0 ; ref < P->nThreads ; ++ref){
     T[ref].model = (ModelPar *) Calloc(P->nModels, sizeof(ModelPar));
-    T[ref].id = ref;
-    T[ref].top.id   = 0;
-    T[ref].top.size = P->top.size;
-    T[ref].top.values = (double   *) Calloc(P->top.size, sizeof(double));
-    T[ref].top.names  = (uint8_t **) Calloc(P->top.size, sizeof(uint8_t *));
-    for(n = 0 ; n < P->top.size ; ++n)
-      T[ref].top.names[n] = (uint8_t *) Calloc(MAX_NAME, sizeof(uint8_t));
+    T[ref].id    = ref;
+    T[ref].top   = CreateTop(topSize);
     k = 0;
     for(n = 1 ; n < argc ; ++n)
       if(strcmp(argv[n], "-m") == 0)
@@ -387,8 +397,6 @@ int32_t main(int argc, char *argv[]){
 
   fprintf(stderr, "\n");
   if(P->verbose) PrintArgs(P, T[0], argv[argc-2], argv[argc-1]);
-
-  P->top.values = (double *) Calloc(P->top.size, sizeof(double));
 
   fprintf(stderr, "==[ PROCESSING ]====================\n");
   TIME *Time = CreateClock(clock());
@@ -415,9 +423,12 @@ int32_t main(int argc, char *argv[]){
       }
     }
 */
-  fprintf(stderr,"TOP %u:\n", T[0].top.size);
-  for(n = 0 ; n < T[0].top.size ; ++n)
-    printf("| %2u | %10.6g | %s\n", n+1, (1.0-BoundDouble(0.0, T[0].top.values[n], 1.0))*100.0, T[0].top.names[n]);
+  for(ref = 0 ; ref < P->nThreads ; ++ref){
+    fprintf(stderr,"TOP %u of thread %u:\n", T[ref].top->size, ref+1);
+    for(n = 0 ; n < T[ref].top->size ; ++n)
+      fprintf(stderr, "| %2u | %10.6g | %s\n", n+1, (1.0-BoundDouble(0.0, 
+      T[ref].top->V[n].value, 1.0))*100.0, T[ref].top->V[n].name);
+    }
 
   fprintf(stderr, "\n");
 
@@ -426,8 +437,10 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "\n");
 
   RemoveClock(Time);
-  for(ref = 0 ; ref < P->nThreads ; ++ref)
+  for(ref = 0 ; ref < P->nThreads ; ++ref){
+    Free(T[ref].top);
     Free(T[ref].model);
+    }
   Free(T);
   if(!OUTPUT) fclose(OUTPUT);
 
