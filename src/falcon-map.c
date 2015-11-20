@@ -66,6 +66,7 @@ void CompressTarget(Threads T){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
             if(calc == 1){   // TODO : FAZER O MESMO NO FIM PARA O ULTIMO READ! (APÒS LOOP)
+              bits = BoundDouble(0.0, bits, 1.0); 
               if(T.top.id < T.top.size){
                 T.top.values[T.top.id] = bits;
                 for(r = 0 ; r < MAX_NAME-1 ; ++r){
@@ -74,9 +75,30 @@ void CompressTarget(Threads T){
                   }
                 }
               else{
-                if(bits > T.top.values[0]){
-                  //TODO: ORDER
-          
+                if(bits > T.top.values[0] || T.top.id == T.top.size){
+
+                  if(T.top.id == T.top.size){
+
+                    }
+
+/*                  
+                  uint32_t idx[P->top], i, j, idxTmp;
+                  for(n = 0 ; n < P->top.size ; ++n)
+                    idx[n] = n;
+
+                  for(i = 1 ; i < P->top.size ; ++i){
+                    for(j = 0 ; j < P->top.size-1 ; ++j){
+                      if(P->matrix[j] > P->matrix[j+1]){
+                        double tmp     = P->matrix[j];
+                        P->matrix[j]   = P->matrix[j+1];
+                        P->matrix[j+1] = tmp;
+                        idxTmp         = idx[j];
+                        idx[j]         = idx[j+1];
+                        idx[j+1]       = idxTmp;
+                        }
+                      }
+                    }
+*/
 
 
                   //-----------
@@ -112,7 +134,7 @@ void CompressTarget(Threads T){
         }
 
       if((sym = DNASymToNum(sym)) == 4){
-        // TODO: DO SOMETHING!
+        // TODO: DO SOMETHING!?
         continue;
         }
 
@@ -377,12 +399,7 @@ int32_t main(int argc, char *argv[]){
 
   fprintf(stderr, "==[ RESULTS ]=======================\n");
   fprintf(stderr, "Normalized Relative Compression:\n");
-/*
-  for(n = 0 ; n < P->top ; ++n){
-    fprintf(stderr, "%.4lf\n", P->matrix[n]);
-    fprintf(OUTPUT, "%.4lf\n", P->matrix[n]);
-    }
-  uint32_t idx[P->top], i, j, idxTmp;
+/*  uint32_t idx[P->top], i, j, idxTmp;
   for(n = 0 ; n < P->top.size ; ++n)
     idx[n] = n;
   for(i = 1 ; i < P->top.size ; ++i){
@@ -397,10 +414,11 @@ int32_t main(int argc, char *argv[]){
         }
       }
     }
-  fprintf(stderr,"TOP %u:\n", P->top.size);
-  for(n = 0 ; n < P->top.size ; ++n)
-    printf("| %2u | %10.6g | %s\n", n+1, (1.0-P->P->values[n])*100.0, "xxxxx");
 */
+  fprintf(stderr,"TOP %u:\n", T[0].top.size);
+  for(n = 0 ; n < T[0].top.size ; ++n)
+    printf("| %2u | %10.6g | %s\n", n+1, (1.0-BoundDouble(0.0, T[0].top.values[n], 1.0))*100.0, T[0].top.names[n]);
+
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ STATISTICS ]====================\n");
