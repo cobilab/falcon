@@ -349,9 +349,13 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "==[ RESULTS ]=======================\n");
   for(ref = 0 ; ref < P->nThreads ; ++ref){
     fprintf(stderr,"TOP %u of thread %u:\n", T[ref].top->size, ref+1);
-    for(n = 0 ; n < T[ref].top->size ; ++n)
+    for(n = 0 ; n < T[ref].top->size ; ++n){
       fprintf(stderr, "| %2u | %10.6g | %s\n", n+1, (1.0-BoundDouble(0.0, 
       T[ref].top->V[n].value, 1.0))*100.0, T[ref].top->V[n].name);
+      // WRITE TO OUTPUT FILE
+      fprintf(OUTPUT, "%2u\t%10.6g\t%s\n", n+1, (1.0-BoundDouble(0.0, 
+      T[ref].top->V[n].value, 1.0))*100.0, T[ref].top->V[n].name);
+      }
     }
   fprintf(stderr, "\n");
 
