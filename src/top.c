@@ -46,7 +46,7 @@ void UpdateTop(double bits, uint8_t *nm, TOP *T){
     }
   else{
     uint32_t last = T->size-1;
-    if(bits > T->V[last].value){
+    if(bits < T->V[last].value){ // real NRC = 1.0-bits
       T->V[last].value = bits;
       CopyStringPart(T->V[last].name, nm);
       qsort(T->V, T->size, sizeof(VT), SortByValue);
