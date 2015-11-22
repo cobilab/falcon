@@ -17,6 +17,8 @@
 #include "defs.h"
 #include "param.h"
 #include "msg.h"
+#include "top.h"
+#include "sort.h"
 #include "parser.h"
 #include "buffer.h"
 #include "levels.h"
@@ -65,11 +67,10 @@ void CompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if((PA->nRead-1) % P->nThreads == T.id){ // THE PREVIOUS READ ?
-              if(calc == 1) 
-                UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
-              }
-              r = nBase = bits = 0;
+            if(calc == 1 && ((PA->nRead-1) % P->nThreads == T.id)) // PREVIOUS ?
+              UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top);
+            r = nBase = 0;
+            bits = 0;
           break;
           case -2: // IT IS THE '\n' HEADER END
             conName[r] = '\0';
@@ -78,7 +79,7 @@ void CompressTarget(Threads T){
             if(r >= MAX_NAME-1)
               conName[r] = '\0';
             else{
-              if(sym == ' '){
+              if(sym == ' ' || sym < 32 || sym > 126){
                 if(r == 0) continue;
                 else       sym = '_'; // PROTECT SPACES WITH UNDERL
                 }
@@ -147,7 +148,7 @@ void CompressTarget(Threads T){
       }
                
   // XXX: SHOULD THIS BE FOR ALL ? ONLY FOR THE LAST THREAD ?
-  UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
+//  UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
 
   Free(cModelWeight);
   for(n = 0 ; n < totModels ; ++n)
@@ -349,7 +350,7 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "==[ RESULTS ]=======================\n");
   for(ref = 0 ; ref < P->nThreads ; ++ref){
     fprintf(stderr,"TOP %u of thread %u:\n", T[ref].top->size, ref+1);
-    for(n = 0 ; n < T[ref].top->size ; ++n){
+    for(n = 0 ; n < T[ref].top->size-1 ; ++n){
       fprintf(stderr, "| %2u | %10.6g | %s\n", n+1, (1.0-BoundDouble(0.0, 
       T[ref].top->V[n].value, 1.0))*100.0, T[ref].top->V[n].name);
       // WRITE TO OUTPUT FILE

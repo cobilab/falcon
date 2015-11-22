@@ -7,7 +7,8 @@ void CopyStringPart(uint8_t *a, uint8_t *b){
   uint32_t r;
   for(r = 0 ; r < MAX_NAME-1 ; ++r){
     a[r] = b[r];
-    if(b[r] == '\0') break;
+    if(b[r] == '\0') 
+      break;
     }
   }
 
@@ -26,9 +27,9 @@ int SortByValue(const void *a, const void *b){
 TOP *CreateTop(uint32_t size){
   uint32_t n;
   TOP *T  = (TOP *) Calloc(1, sizeof(TOP));
-  T->size = size;
-  T->V    = (VT  *) Calloc(size, sizeof(VT));
-  for(n = 0 ; n < size ; ++n)
+  T->size = size+1;
+  T->V    = (VT  *) Calloc(T->size, sizeof(VT));
+  for(n = 0 ; n < T->size ; ++n)
     T->V[n].name = (uint8_t *) Calloc(MAX_NAME, sizeof(uint8_t));
   return T;
   }
@@ -41,9 +42,6 @@ void UpdateTop(double bits, uint8_t *nm, TOP *T){
     T->V[T->id].value = bits;
     CopyStringPart(T->V[T->id].name, nm);
     }
-  else if(T->id == T->size){
-    qsort(T->V, T->size, sizeof(VT), SortByValue);
-    }
   else{
     uint32_t last = T->size-1;
     if(bits < T->V[last].value){ // real NRC = 1.0-bits
@@ -52,6 +50,7 @@ void UpdateTop(double bits, uint8_t *nm, TOP *T){
       qsort(T->V, T->size, sizeof(VT), SortByValue);
       }
     }
+    
   T->id++;
   }
 
@@ -59,7 +58,7 @@ void UpdateTop(double bits, uint8_t *nm, TOP *T){
 
 void DeleteTop(TOP *T){
   uint32_t n;
-  for(n = 0 ; n < T->size ; ++n)
+  for(n = 0 ; n < T->size+1 ; ++n)
     Free(T->V[n].name);
   Free(T->V);
   Free(T);
