@@ -19,7 +19,7 @@ void ModelsExplanation(void){
 
 void PrintMenu(void){
   fprintf(stderr,
-  "Usage: falcon-map [OPTION]... [FILE] [FILE]                              \n"
+  "Usage: FALCON-map [OPTION]... [FILE] [FILE]                              \n"
   "Genomic similarity detection according to a reference                    \n"
   "                                                                         \n"
   "Non-mandatory arguments:                                                 \n"
@@ -43,7 +43,7 @@ void PrintMenu(void){
 
 void PrintMenuVisual(void){
   fprintf(stderr,
-  "Usage: Falcon-visual [OPTION]... [FILE]                                  \n"
+  "Usage: FALCON-visual [OPTION]... [FILE]                                  \n"
   "A visual interpretation program for falcon-maps.                         \n"
   "                                                                         \n"
   "Non-mandatory arguments:                                                 \n"
@@ -70,10 +70,10 @@ void PrintVersion(void){
   fprintf(stderr,
   "                                                                         \n"
   "                        ======================                           \n"
-  "                        |   Falcon-map %u.%u   |                         \n"
+  "                        |   FALCON-map %u.%u   |                         \n"
   "                        ======================                           \n"
   "                                                                         \n"
-  "Falcon-map: a genomic similarity detector according to a reference.      \n"
+  "FALCON-map: a genomic similarity detector according to a reference.      \n"
   "Copyright (C) 2014-2016 University of Aveiro. This is a Free software.   \n"
   "You may redistribute copies of it under the terms of the GNU - General   \n"
   "Public License v2 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"
@@ -86,10 +86,10 @@ void PrintVersionVisual(void){
   fprintf(stderr,
   "                                                                         \n"
   "                       =========================                         \n"
-  "                       |   Falcon-visual %u.%u   |                       \n"
+  "                       |   FALCON-visual %u.%u   |                       \n"
   "                       =========================                         \n"
   "                                                                         \n"
-  "Falcon-visual: a visual interpretation program for falcon-maps.          \n"
+  "FALCON-visual: a visual interpretation program for falcon-maps.          \n"
   "Copyright (C) 2014-2016 University of Aveiro. This is a Free software.   \n"
   "You may redistribute copies of it under the terms of the GNU - General   \n"
   "Public License v2 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"

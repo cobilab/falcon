@@ -31,7 +31,7 @@ CModel **Models;  // MEMORY SHARED BY THREADING
 
 void CompressTarget(Threads T){
   FILE        *Reader  = Fopen(P->base, "r");
-  double      *cModelWeight, cModelTotalWeight = 0, bits = 0, instance = 0;
+  double      *cModelWeight, cModelTotalWeight = 0, bits = 0;
   uint64_t    nBase = 0, r = 0;
   uint32_t    n, k, idxPos, totModels, cModel;
   PARSER      *PA = CreateParser();
@@ -41,7 +41,7 @@ void CompressTarget(Threads T){
   PModel      **pModel, *MX;
   CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
   FloatPModel *PT;
-  int         action, calc = 0;
+  int         action;
 
   totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
   for(n = 0 ; n < P->nModels ; ++n) 
@@ -66,7 +66,7 @@ void CompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if(calc == 1 && ((PA->nRead-1) % P->nThreads == T.id)) // PREVIOUS ?
+            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)) // PREVIOUS ?
               UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top);
             r = nBase = 0;
             bits = 0;
@@ -80,7 +80,7 @@ void CompressTarget(Threads T){
             else{
               if(sym == ' ' || sym < 32 || sym > 126){
                 if(r == 0) continue;
-                else       sym = '_'; // PROTECT SPACES WITH UNDERL
+                else       sym = '_'; // PROTECT OUT SYM WITH UNDERL
                 }
               conName[r++] = sym;
               }
@@ -94,12 +94,9 @@ void CompressTarget(Threads T){
         continue; // GO TO NEXT SYMBOL
         }
 
-      if((sym = DNASymToNum(sym)) == 4){
-        continue; // IT IGNORES EXTRA SYMBOLS
-        }
-
       if(PA->nRead % P->nThreads == T.id){
-        calc = 1;
+
+        if((sym = DNASymToNum(sym)) == 4) continue; // IT IGNORES EXTRA SYMBOLS
         symBuf->buf[symBuf->idx] = sym;
         memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
         n = 0;
@@ -123,7 +120,7 @@ void CompressTarget(Threads T){
           }
 
         ComputeMXProbs(PT, MX);
-        bits += (instance = PModelSymbolLog(MX, sym));
+        bits += PModelSymbolLog(MX, sym);
         ++nBase;
 
         cModelTotalWeight = 0;

@@ -1,0 +1,46 @@
+#============================================================================#
+#                   FALCON, IEETA/DETI, UNIVERSITY OF AVEIRO                 #
+#============================================================================#
+BIN    = .
+CC     = gcc
+CPLP   = -fstrict-aliasing -ffast-math -msse2
+#-----------------------------------------------------------------------------
+CFLAGS = -O3 -Wall $(CPLP) -DPROGRESS 
+#-----------------------------------------------------------------------------
+LIBS   = -lm -lpthread
+DEPS   = defs.h param.h
+PROGS  = $(BIN)/FALCON-map
+OBJS   = mem.o context.o time.o msg.o parser.o common.o buffer.o levels.o \
+         cmodel.o top.o
+#-----------------------------------------------------------------------------
+all:
+	$(MAKE) progs
+progs: $(PROGS)
+$(BIN)/FALCON-map: falcon.c $(DEPS) $(OBJS)
+	$(CC) $(CFLAGS) -o $(BIN)/FALCON-map falcon.c $(OBJS) $(LIBS)
+mem.o: mem.c mem.h $(DEPS)
+	$(CC) -c $(CFLAGS) mem.c
+context.o: context.c context.h $(DEPS)
+	$(CC) -c $(CFLAGS) context.c
+time.o: time.c time.h $(DEPS)
+	$(CC) -c $(CFLAGS) time.c
+msg.o: msg.c msg.h $(DEPS)
+	$(CC) -c $(CFLAGS) msg.c
+parser.o: parser.c parser.h $(DEPS)
+	$(CC) -c $(CFLAGS) parser.c
+common.o: common.c common.h $(DEPS)
+	$(CC) -c $(CFLAGS) common.c
+buffer.o: buffer.c buffer.h $(DEPS)
+	$(CC) -c $(CFLAGS) buffer.c
+levels.o: levels.c levels.h $(DEPS)
+	$(CC) -c $(CFLAGS) levels.c
+cmodel.o: cmodel.c cmodel.h $(DEPS)
+	$(CC) -c $(CFLAGS) cmodel.c
+top.o: top.c top.h $(DEPS)
+	$(CC) -c $(CFLAGS) top.c
+#-----------------------------------------------------------------------------
+clean:
+	/bin/rm -f *.o
+cleanall:
+	/bin/rm -f *.o $(PROGS)
+#-----------------------------------------------------------------------------
