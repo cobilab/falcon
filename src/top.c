@@ -59,7 +59,7 @@ void UpdateTop(double bits, uint8_t *nm, TOP *T){
 
 void DeleteTop(TOP *T){
   uint32_t n;
-  for(n = 0 ; n < T->size+1 ; ++n)
+  for(n = 0 ; n < T->size ; ++n)
     Free(T->V[n].name);
   Free(T->V);
   Free(T);
