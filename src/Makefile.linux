@@ -16,8 +16,8 @@ OBJS   = mem.o context.o time.o msg.o parser.o common.o buffer.o levels.o \
 all:
 	$(MAKE) progs
 progs: $(PROGS)
-$(BIN)/FALCON-map: falcon.c $(DEPS) $(OBJS)
-	$(CC) $(CFLAGS) -o $(BIN)/FALCON-map falcon.c $(OBJS) $(LIBS)
+$(BIN)/FALCON-map: falcon-map.c $(DEPS) $(OBJS)
+	$(CC) $(CFLAGS) -o $(BIN)/FALCON-map falcon-map.c $(OBJS) $(LIBS)
 mem.o: mem.c mem.h $(DEPS)
 	$(CC) -c $(CFLAGS) mem.c
 context.o: context.c context.h $(DEPS)
