@@ -18,7 +18,6 @@
 #include "param.h"
 #include "msg.h"
 #include "top.h"
-#include "sort.h"
 #include "parser.h"
 #include "buffer.h"
 #include "levels.h"
@@ -353,7 +352,6 @@ int32_t main(int argc, char *argv[]){
     for(n = 0 ; n < T[ref].top->size-1 ; ++n){
       fprintf(stderr, "| %2u | %10.6g | %s\n", n+1, (1.0-BoundDouble(0.0, 
       T[ref].top->V[n].value, 1.0))*100.0, T[ref].top->V[n].name);
-      // WRITE TO OUTPUT FILE
       fprintf(OUTPUT, "%2u\t%10.6g\t%s\n", n+1, (1.0-BoundDouble(0.0, 
       T[ref].top->V[n].value, 1.0))*100.0, T[ref].top->V[n].name);
       }
