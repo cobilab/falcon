@@ -1,5 +1,7 @@
 #include "top.h"
 #include "mem.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -37,7 +39,6 @@ TOP *CreateTop(uint32_t size){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UpdateTop(double bits, uint8_t *nm, TOP *T){
-  uint32_t r;
   if(T->id < T->size){
     T->V[T->id].value = bits;
     CopyStringPart(T->V[T->id].name, nm);

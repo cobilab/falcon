@@ -216,8 +216,8 @@ void LoadReference(char *refName){
 // - - - - - - - - - - - - - - C O M P R E S S O R - - - - - - - - - - - - - -
 
 void CompressAction(Threads *T, char *refName, char *baseName){
-  uint32_t n, k, ref = 0, file = 0;
   pthread_t t[P->nThreads];
+  uint32_t n;
 
   Models = (CModel **) Malloc(P->nModels * sizeof(CModel *));
   for(n = 0 ; n < P->nModels ; ++n)
@@ -250,8 +250,8 @@ void CompressAction(Threads *T, char *refName, char *baseName){
 int32_t main(int argc, char *argv[]){
   char        **p = *&argv, **xargv, *xpl = NULL;
   int32_t     xargc = 0;
-  uint32_t    n, k, col, ref, index, topSize;
-  double      gamma, threshold;
+  uint32_t    n, k, col, ref, topSize;
+  double      gamma;
   Threads     *T;
   
   P = (Parameters *) Malloc(1 * sizeof(Parameters));

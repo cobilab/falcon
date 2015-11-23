@@ -35,7 +35,7 @@ typedef struct{
   U64      *size;
   TOP      *top;
   uint8_t  *image;
-  uint8_t  *output;
+  char     *output;
   char     *base;
   }
 Parameters;
