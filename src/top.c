@@ -29,7 +29,7 @@ int SortByValue(const void *a, const void *b){
 TOP *CreateTop(uint32_t size){
   uint32_t n;
   TOP *T  = (TOP *) Calloc(1, sizeof(TOP));
-  T->size = size+1;
+  T->size = size + 1;
   T->V    = (VT  *) Calloc(T->size, sizeof(VT));
   for(n = 0 ; n < T->size ; ++n)
     T->V[n].name = (uint8_t *) Calloc(MAX_NAME, sizeof(uint8_t));
@@ -39,19 +39,24 @@ TOP *CreateTop(uint32_t size){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UpdateTop(double bits, uint8_t *nm, TOP *T){
+  uint32_t last = T->size - 1;
   if(T->id < T->size){
     T->V[T->id].value = bits;
     CopyStringPart(T->V[T->id].name, nm);
+    qsort(T->V, T->id+1, sizeof(VT), SortByValue);
+    }
+  else if(T->id == T->size){
+    T->V[last].value = bits;
+    CopyStringPart(T->V[last].name, nm);
+    qsort(T->V, T->size, sizeof(VT), SortByValue);
     }
   else{
-    uint32_t last = T->size-1;
     if(bits < T->V[last].value){ // real NRC = 1.0-bits
       T->V[last].value = bits;
       CopyStringPart(T->V[last].name, nm);
       qsort(T->V, T->size, sizeof(VT), SortByValue);
       }
     }
-    
   T->id++;
   }
 
