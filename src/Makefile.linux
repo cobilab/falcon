@@ -10,8 +10,7 @@ CFLAGS = -O3 -Wall $(CPLP) -DPROGRESS
 LIBS   = -lm -lpthread
 DEPS   = defs.h param.h
 PROGS  = $(BIN)/FALCON-map
-OBJS   = mem.o context.o time.o msg.o parser.o common.o buffer.o levels.o \
-         cmodel.o top.o
+OBJS   = mem.o time.o msg.o parser.o common.o buffer.o levels.o cmodel.o top.o
 #-----------------------------------------------------------------------------
 all:
 	$(MAKE) progs
@@ -20,8 +19,6 @@ $(BIN)/FALCON-map: falcon-map.c $(DEPS) $(OBJS)
 	$(CC) $(CFLAGS) -o $(BIN)/FALCON-map falcon-map.c $(OBJS) $(LIBS)
 mem.o: mem.c mem.h $(DEPS)
 	$(CC) -c $(CFLAGS) mem.c
-context.o: context.c context.h $(DEPS)
-	$(CC) -c $(CFLAGS) context.c
 time.o: time.c time.h $(DEPS)
 	$(CC) -c $(CFLAGS) time.c
 msg.o: msg.c msg.h $(DEPS)
