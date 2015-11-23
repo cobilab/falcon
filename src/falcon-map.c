@@ -61,13 +61,16 @@ void CompressTarget(Threads T){
   for(n = 0 ; n < totModels ; ++n)
     cModelWeight[n] = 1.0 / totModels;
 
+  uint8_t topped = 0;
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)) // PREVIOUS ?
+            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){ // PREVIOUS ?
               UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top);
+              topped = 1;
+              }
             r = nBase = 0;
             bits = 0;
           break;
@@ -347,9 +350,9 @@ int32_t main(int argc, char *argv[]){
   for(ref = 0 ; ref < P->nThreads ; ++ref){
     fprintf(stderr,"TOP %u of thread %u:\n", T[ref].top->size, ref+1);
     for(n = 0 ; n < T[ref].top->size-1 ; ++n){
-      fprintf(stderr, "| %2u | %10.6g | %s\n", n+1, (1.0-BoundDouble(0.0, 
+      fprintf(stderr, "| %2u | %12.9g | %s\n", n+1, (1.0-BoundDouble(0.0, 
       T[ref].top->V[n].value, 1.0))*100.0, T[ref].top->V[n].name);
-      fprintf(OUTPUT, "%2u\t%10.6g\t%s\n", n+1, (1.0-BoundDouble(0.0, 
+      fprintf(OUTPUT, "%2u\t%12.9g\t%s\n", n+1, (1.0-BoundDouble(0.0, 
       T[ref].top->V[n].value, 1.0))*100.0, T[ref].top->V[n].name);
       }
     }
@@ -360,8 +363,9 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "\n");
 
   RemoveClock(Time);
+  DeleteTop(P->top);
   for(ref = 0 ; ref < P->nThreads ; ++ref){
-    Free(T[ref].top);
+    DeleteTop(T[ref].top);
     Free(T[ref].model);
     }
   Free(T);
