@@ -107,6 +107,7 @@ FloatPModel     *CreateFloatPModel   (U32);
 void            RemovePModel         (PModel *);
 void            RemoveFPModel        (FloatPModel *);
 void            ResetCModelIdx       (CModel *);
+void            ResetShadowModel     (CModel *);
 void            UpdateCModelCounter  (CModel *, U32, U64);
 CModel          *CreateCModel        (U32, U32, U32, U8, U32, U32, U32);
 CModel          *CreateShadowModel   (CModel *);

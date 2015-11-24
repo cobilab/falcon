@@ -72,7 +72,7 @@ void CompressTarget(Threads T){
             // TODO: ResetModels();
             ResetCBuffer(symBuf);
             for(n = 0 ; n < P->nModels ; ++n)
-              ResetCModelIdx(Shadow[n]);
+              ResetShadowModel(Shadow[n]);
             r = 0;
             nBase = 0;
             bits = 0;

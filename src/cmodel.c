@@ -40,7 +40,6 @@ void FreeCModel(CModel *M){
   if(M->edits != 0){
     Free(M->SUBS.mask);
     RemoveCBuffer(M->SUBS.seq);
-    //Free(M->SUBS.seq);
     }
   Free(M);
   }
@@ -51,7 +50,6 @@ void FreeShadow(CModel *M){
   if(M->edits != 0){
     Free(M->SUBS.mask);
     RemoveCBuffer(M->SUBS.seq);
-    //Free(M->SUBS.seq);
     }
   Free(M);
   }
@@ -297,6 +295,21 @@ CModel *CreateShadowModel(CModel *XP){
     }
 
   return M;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void ResetShadowModel(CModel *M){
+  M->pModelIdx   = 0;
+  M->pModelIdxIR = M->nPModels - 1;
+  if(M->edits != 0){
+    RemoveCBuffer(M->SUBS.seq);
+    M->SUBS.seq  = CreateCBuffer(BUFFER_SIZE, BGUARD);
+    M->SUBS.in   = 0;
+    M->SUBS.idx  = 0;
+    Free(M->SUBS.mask);
+    M->SUBS.mask = (uint8_t *) Calloc(BGUARD, sizeof(uint8_t));
+    }
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
