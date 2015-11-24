@@ -58,7 +58,7 @@ void CompressTarget(Threads T){
   PT           = CreateFloatPModel(ALPHABET_SIZE);
   cModelWeight = (double *) Calloc(totModels, sizeof(double));
 
-  for(n = 0 ; n < totModels ; ++n)
+  for(n = 0 ; n < totModels ; ++n) //XXX: REPEATED
     cModelWeight[n] = 1.0 / totModels;
 
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
@@ -69,12 +69,10 @@ void CompressTarget(Threads T){
             if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){
               UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top);
               }
-            // TODO: ResetModels();
+            // RESET MODELS :: XXX: REPEATED LINES -> SET FUNCTION 4 THIS
             ResetCBuffer(symBuf);
-            for(n = 0 ; n < P->nModels ; ++n){
+            for(n = 0 ; n < P->nModels ; ++n)
               ResetShadowModel(Shadow[n]);
-              }
-
             for(n = 0 ; n < totModels ; ++n)
               cModelWeight[n] = 1.0 / totModels;
             cModelTotalWeight = 0;
@@ -149,7 +147,8 @@ void CompressTarget(Threads T){
         UpdateCBuffer(symBuf);
         }
       }
-               
+         
+  // FIXME: LAST READ IS NOT COMPUTED...      
   // XXX: SHOULD THIS BE FOR ALL ? ONLY FOR THE LAST THREAD ?
 //  UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
 
