@@ -299,9 +299,15 @@ CModel *CreateShadowModel(CModel *XP){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void ResetShadowModel(CModel *M){
+void ResetCModelIdx(CModel *M){
   M->pModelIdx   = 0;
   M->pModelIdxIR = M->nPModels - 1;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void ResetShadowModel(CModel *M){
+  ResetCModelIdx(M);
   if(M->edits != 0){
     RemoveCBuffer(M->SUBS.seq);
     M->SUBS.seq  = CreateCBuffer(BUFFER_SIZE, BGUARD);
@@ -327,13 +333,6 @@ int32_t BestId(uint32_t *f, uint32_t sum){
   for(x = 0 ; x < 4 ; ++x) if(best != x && max == f[x]) return -1;
 
   return best;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-void ResetCModelIdx(CModel *M){
-  M->pModelIdx   = 0;
-  M->pModelIdxIR = M->nPModels - 1;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
