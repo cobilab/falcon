@@ -22,6 +22,7 @@ TOP;
 
 TOP        *CreateTop      (uint32_t);
 void       CopyStringPart  (uint8_t *, uint8_t *);
+void       AddElement      (VT *, double, uint8_t *);
 int        SortByValue     (const void *, const void *);
 void       UpdateTop       (double, uint8_t *, TOP *);
 void       DeleteTop       (TOP *);

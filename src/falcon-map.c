@@ -51,32 +51,33 @@ void CompressTarget(Threads T){
   Shadow = (CModel **) Calloc(P->nModels, sizeof(CModel *));
   for(n = 0 ; n < P->nModels ; ++n)
     Shadow[n]  = CreateShadowModel(Models[n]); 
-  pModel       = (PModel  **) Calloc(totModels, sizeof(PModel *));
+  pModel       = (PModel **) Calloc(totModels, sizeof(PModel *));
   for(n = 0 ; n < totModels ; ++n)
     pModel[n]  = CreatePModel(ALPHABET_SIZE);
   MX           = CreatePModel(ALPHABET_SIZE);
   PT           = CreateFloatPModel(ALPHABET_SIZE);
-  cModelWeight = (double   *) Calloc(totModels, sizeof(double));
+  cModelWeight = (double *) Calloc(totModels, sizeof(double));
 
   for(n = 0 ; n < totModels ; ++n)
     cModelWeight[n] = 1.0 / totModels;
 
-  uint8_t topped = 0;
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){ // PREVIOUS ?
+            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){
               UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top);
-              topped = 1;
               }
-            r = nBase = 0;
+            // TODO: ResetModels();
+            ResetCBuffer(symBuf);
+            for(n = 0 ; n < P->nModels ; ++n)
+              ResetCModelIdx(Shadow[n]);
+            r = 0;
+            nBase = 0;
             bits = 0;
           break;
-          case -2: // IT IS THE '\n' HEADER END
-            conName[r] = '\0';
-          break;
+          case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
           case -3: // IF IS A SYMBOL OF THE HEADER
             if(r >= MAX_NAME-1)
               conName[r] = '\0';
@@ -87,12 +88,9 @@ void CompressTarget(Threads T){
                 }
               conName[r++] = sym;
               }
-          break;
-          case -99: // IF IS A SIMPLE FORMAT BREAK
-          break;
-          default:
-            fprintf(stderr, "ERROR: Unknown action!\n");
-            exit(1);
+          break; 
+          case -99: break; // IF IS A SIMPLE FORMAT BREAK
+          default: exit(1);
           }
         continue; // GO TO NEXT SYMBOL
         }
@@ -347,15 +345,20 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ RESULTS ]=======================\n");
-  for(ref = 0 ; ref < P->nThreads ; ++ref){
-    fprintf(stderr,"TOP %u of thread %u:\n", T[ref].top->size, ref+1);
-    for(n = 0 ; n < T[ref].top->size-1 ; ++n){
-      fprintf(stderr, "| %2u | %12.9g | %s\n", n+1, (1.0-BoundDouble(0.0, 
-      T[ref].top->V[n].value, 1.0))*100.0, T[ref].top->V[n].name);
-      fprintf(OUTPUT, "%2u\t%12.9g\t%s\n", n+1, (1.0-BoundDouble(0.0, 
-      T[ref].top->V[n].value, 1.0))*100.0, T[ref].top->V[n].name);
+  if(P->verbose){
+    for(ref = 0 ; ref < P->nThreads ; ++ref){
+      fprintf(stderr,"TOP %u of thread %u:\n", T[ref].top->size-1, ref+1);
+      for(n = 0 ; n < T[ref].top->size-1 ; ++n)
+        fprintf(stderr, "| %2u | %12.9g | %s\n", n+1, 
+        (1.0-T[ref].top->V[n].value)*100.0, T[ref].top->V[n].name);
       }
     }
+
+  for(ref = 0 ; ref < P->nThreads ; ++ref)
+    for(n = 0 ; n < T[ref].top->size-1 ; ++n)
+      fprintf(OUTPUT, "%2u\t%12.9g\t%s\n", n+1, (1.0-T[ref].top->V[n].value)
+      *100.0, T[ref].top->V[n].name);
+
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ STATISTICS ]====================\n");

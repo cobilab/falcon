@@ -19,7 +19,7 @@ void CopyStringPart(uint8_t *a, uint8_t *b){
 int SortByValue(const void *a, const void *b){ 
   VT *ia = (VT *) a;
   VT *ib = (VT *) b;
-  if(ia->value < ib->value)      return -1;
+  if     (ia->value < ib->value) return -1;
   else if(ia->value > ib->value) return 1;
   else                           return 0;
   } 
@@ -38,22 +38,26 @@ TOP *CreateTop(uint32_t size){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+void AddElement(VT *Vt, double value, uint8_t *nm){
+  Vt->value = value;
+  CopyStringPart(Vt->name, nm);
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 void UpdateTop(double bits, uint8_t *nm, TOP *T){
   uint32_t last = T->size - 1;
-  if(T->id < T->size){
-    T->V[T->id].value = bits;
-    CopyStringPart(T->V[T->id].name, nm);
-    qsort(T->V, T->id+1, sizeof(VT), SortByValue);
+  if(T->id < last){
+    AddElement(&T->V[T->id], bits, nm);            //XXX
+    qsort(T->V, T->id+1, sizeof(VT), SortByValue); //XXX
     }
-  else if(T->id == T->size){
-    T->V[last].value = bits;
-    CopyStringPart(T->V[last].name, nm);
+  else if(T->id == last){
+    AddElement(&T->V[last], bits, nm);
     qsort(T->V, T->size, sizeof(VT), SortByValue);
     }
-  else{
-    if(bits < T->V[last].value){ // real NRC = 1.0-bits
-      T->V[last].value = bits;
-      CopyStringPart(T->V[last].name, nm);
+  else{ // real NRC = 1.0-bits
+    if(T->V[last].value > bits){
+      AddElement(&T->V[last], bits, nm);
       qsort(T->V, T->size, sizeof(VT), SortByValue);
       }
     }

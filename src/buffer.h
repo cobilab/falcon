@@ -29,6 +29,7 @@ CBUF     *CreateCBuffer (uint32_t, uint32_t);
 BUF      *CreateBuffer  (uint32_t);
 void     UpdateCBuffer  (CBUF *);
 void     UpdateBuffer   (BUF *);
+void     ResetCBuffer   (CBUF *);
 void     RemoveCBuffer  (CBUF *);
 void     RemoveBuffer   (BUF *);
 

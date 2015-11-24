@@ -45,6 +45,17 @@ void UpdateBuffer(BUF *B){
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// RESET CBUFFER
+// 
+void ResetCBuffer(CBUF *B){
+  //memset((void *)B->buf, 0, B->size * sizeof(uint8_t));
+  Free(B->buf-B->guard);
+  B->buf  = (uint8_t *) Calloc(B->size, sizeof(uint8_t));
+  B->buf += B->guard;
+  B->idx  = 0;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // REMOVE CONTEXT BUFFER
 //
 void RemoveCBuffer(CBUF *B){
