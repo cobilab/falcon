@@ -79,7 +79,7 @@ void CompressTarget(Threads T){
             if(r >= MAX_NAME-1)
               conName[r] = '\0';
             else{
-              if(sym == ' ' || sym < 32 || sym > 126){
+              if(sym == ' ' || sym < 32 || sym > 126){ // PROTECT INTERVAL
                 if(r == 0) continue;
                 else       sym = '_'; // PROTECT OUT SYM WITH UNDERL
                 }
@@ -134,9 +134,8 @@ void CompressTarget(Threads T){
         }
       }
          
-  // FIXME: LAST READ IS NOT COMPUTED...      
-  // XXX: SHOULD THIS BE FOR ALL ? ONLY FOR THE LAST THREAD ?
-//  UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
+  if((PA->nRead-1) % P->nThreads == T.id)
+    UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
 
   DeleteWeightModel(CMW);
   for(n = 0 ; n < totModels ; ++n)
