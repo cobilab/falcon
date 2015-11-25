@@ -2,6 +2,8 @@
 #define TOP_H_INCLUDED
 
 #include "defs.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -25,6 +27,7 @@ void       CopyStringPart  (uint8_t *, uint8_t *);
 void       AddElement      (VT *, double, uint8_t *);
 int        SortByValue     (const void *, const void *);
 void       UpdateTop       (double, uint8_t *, TOP *);
+void       PrintTop        (FILE *, TOP *, uint32_t);
 void       DeleteTop       (TOP *);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

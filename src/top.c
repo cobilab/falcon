@@ -68,6 +68,19 @@ void UpdateTop(double bits, uint8_t *nm, TOP *T){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+void PrintTop(FILE *F, TOP *Top, uint32_t size){
+  uint32_t n;
+  if(size > Top->size){
+    fprintf(stderr, "  [x] Error: top is larger than size!\n");
+    exit(1);
+    }
+  for(n = 0 ; n < size ; ++n)
+    fprintf(F, "%2u\t%12.9g\t%s\n", n+1, (1.0-Top->V[n].value)*100.0,
+    Top->V[n].name);
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 void DeleteTop(TOP *T){
   uint32_t n;
   for(n = 0 ; n < T->size ; ++n)

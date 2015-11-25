@@ -306,7 +306,6 @@ int32_t main(int argc, char *argv[]){
     return EXIT_FAILURE;
     }
 
-  P->top = CreateTop(topSize);
   // READ MODEL PARAMETERS FROM XARGS & ARGS
   T = (Threads *) Calloc(P->nThreads, sizeof(Threads));
   for(ref = 0 ; ref < P->nThreads ; ++ref){
@@ -325,7 +324,7 @@ int32_t main(int argc, char *argv[]){
     }
 
   fprintf(stderr, "\n");
-  if(P->verbose) PrintArgs(P, T[0], argv[argc-2], argv[argc-1]);
+  if(P->verbose) PrintArgs(P, T[0], argv[argc-2], argv[argc-1], topSize);
 
   fprintf(stderr, "==[ PROCESSING ]====================\n");
   TIME *Time = CreateClock(clock());
@@ -335,20 +334,29 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ RESULTS ]=======================\n");
-  if(P->verbose){
-    for(ref = 0 ; ref < P->nThreads ; ++ref){
-      fprintf(stderr,"TOP %u of thread %u:\n", T[ref].top->size-1, ref+1);
-      for(n = 0 ; n < T[ref].top->size-1 ; ++n)
-        fprintf(stderr, "| %2u | %12.9g | %s\n", n+1, 
-        (1.0-T[ref].top->V[n].value)*100.0, T[ref].top->V[n].name);
+
+  k = 0;
+  P->top = CreateTop(topSize * P->nThreads);
+  for(ref = 0 ; ref < P->nThreads ; ++ref){
+    for(n = 0 ; n < T[ref].top->size-1 ; ++n){
+      P->top->V[k].value = T[ref].top->V[n].value; 
+      CopyStringPart(P->top->V[k].name, T[ref].top->V[n].name);
+      ++k;
       }
     }
+  
+  fprintf(stderr, "  [+] Sorting ... ");
+  qsort(P->top->V, k, sizeof(VT), SortByValue);
+  fprintf(stderr, "Done!\n");
 
-  for(ref = 0 ; ref < P->nThreads ; ++ref)
-    for(n = 0 ; n < T[ref].top->size-1 ; ++n)
-      fprintf(OUTPUT, "%2u\t%12.9g\t%s\n", n+1, (1.0-T[ref].top->V[n].value)
-      *100.0, T[ref].top->V[n].name);
+  fprintf(stderr, "  [+] Printing to file: %s ... ", P->output);
+  PrintTop(OUTPUT, P->top, topSize);
+  fprintf(stderr, "Done!\n");
 
+  if(P->verbose && topSize <= 100){
+    fprintf(stderr, "TOP:\n");
+    PrintTop(stderr, P->top, topSize);
+    }
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ STATISTICS ]====================\n");
