@@ -50,8 +50,8 @@ void AddElement(VT *Vt, double value, uint8_t *nm){
 void UpdateTop(double bits, uint8_t *nm, TOP *T){
   uint32_t last = T->size - 1;
   if(T->id < last){
-    AddElement(&T->V[T->id], bits, nm);            //XXX
-    qsort(T->V, T->id+1, sizeof(VT), SortByValue); //XXX
+    AddElement(&T->V[T->id], bits, nm);
+    qsort(T->V, T->id+1, sizeof(VT), SortByValue); 
     }
   else if(T->id == last){
     AddElement(&T->V[last], bits, nm);
