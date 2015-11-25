@@ -72,9 +72,7 @@ void CompressTarget(Threads T){
             for(n = 0 ; n < P->nModels ; ++n)
               ResetShadowModel(Shadow[n]);
             ResetWeightModel(CMW);
-            r = 0;
-            nBase = 0;
-            bits = 0;
+            r = nBase = bits = 0;
           break;
           case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
           case -3: // IF IS A SYMBOL OF THE HEADER
@@ -122,7 +120,6 @@ void CompressTarget(Threads T){
         ComputeMXProbs(PT, MX);
         bits += PModelSymbolLog(MX, sym);
         ++nBase;
-
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
 
