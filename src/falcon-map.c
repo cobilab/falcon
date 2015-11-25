@@ -133,8 +133,8 @@ void CompressTarget(Threads T){
         UpdateCBuffer(symBuf);
         }
       }
-         
-  if((PA->nRead-1) % P->nThreads == T.id)
+        
+  if(PA->nRead % P->nThreads == T.id)
     UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
 
   DeleteWeightModel(CMW);
