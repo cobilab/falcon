@@ -11,7 +11,7 @@ SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 SET(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 SET(CMAKE_BUILD_TYPE Release)
 
-add_executable (FALCON-map falcon-map.c mem.c time.c msg.c parser.c common.c buffer.c levels.c cmodel.c top.c defs.h param.h) 
+add_executable (FALCON-map falcon-map.c mem.c time.c msg.c parser.c common.c buffer.c levels.c models.c top.c defs.h param.h) 
 #add_executable (falcon-visual falcon-visual.c mem.c msg.c parser.c common.c buffer.c top.c paint.c defs.h) 
 TARGET_LINK_LIBRARIES(FALCON-map pthread)
 #TARGET_LINK_LIBRARIES(falcon-visual)

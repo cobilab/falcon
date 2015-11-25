@@ -6,7 +6,7 @@
 #include "defs.h"
 #include "mem.h"
 #include "common.h"
-#include "cmodel.h"
+#include "models.h"
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -52,6 +52,55 @@ void FreeShadow(CModel *M){
     RemoveCBuffer(M->SUBS.seq);
     }
   Free(M);
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+CMWeight *CreateWeightModel(uint32_t size){
+  uint32_t n;
+  CMWeight *CMW    = (CMWeight *) Calloc(1, sizeof(CMWeight));
+  CMW->totModels   = size;
+  CMW->totalWeight = 0;
+  CMW->weight      = (double *) Calloc(CMW->totModels, sizeof(double));
+  for(n = 0 ; n < CMW->totModels ; ++n)
+    CMW->weight[n] = 1.0 / CMW->totModels;
+  return CMW;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void ResetWeightModel(CMWeight *CMW){
+  uint32_t n;
+  CMW->totalWeight = 0;
+  for(n = 0 ; n < CMW->totModels ; ++n)
+    CMW->weight[n] = 1.0 / CMW->totModels;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void RenormalizeWeights(CMWeight *CMW){
+  uint32_t n;
+  for(n = 0 ; n < CMW->totModels ; ++n) 
+    CMW->weight[n] /= CMW->totalWeight;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void CalcDecayment(CMWeight *CMW, PModel **PM, uint8_t sym, double gamma){
+  uint32_t n;
+  CMW->totalWeight = 0;
+  for(n = 0 ; n < CMW->totModels ; ++n){
+    CMW->weight[n] = Power(CMW->weight[n], gamma) * (double) PM[n]->freqs[sym] 
+    / PM[n]->sum;
+    CMW->totalWeight += CMW->weight[n];
+    }
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void DeleteWeightModel(CMWeight *CMW){
+  Free(CMW->weight);
+  Free(CMW);
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

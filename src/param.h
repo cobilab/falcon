@@ -2,7 +2,7 @@
 #define PARAM_H_INCLUDED
 
 #include "defs.h"
-#include "cmodel.h"
+#include "models.h"
 #include "top.h"
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

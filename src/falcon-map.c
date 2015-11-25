@@ -22,7 +22,7 @@
 #include "buffer.h"
 #include "levels.h"
 #include "common.h"
-#include "cmodel.h"
+#include "models.h"
 
 CModel **Models;  // MEMORY SHARED BY THREADING
 
@@ -31,7 +31,7 @@ CModel **Models;  // MEMORY SHARED BY THREADING
 
 void CompressTarget(Threads T){
   FILE        *Reader  = Fopen(P->base, "r");
-  double      *cModelWeight, cModelTotalWeight = 0, bits = 0;
+  double      bits = 0;
   uint64_t    nBase = 0, r = 0;
   uint32_t    n, k, idxPos, totModels, cModel;
   PARSER      *PA = CreateParser();
@@ -41,6 +41,7 @@ void CompressTarget(Threads T){
   PModel      **pModel, *MX;
   CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
   FloatPModel *PT;
+  CMWeight    *CMW;
   int         action;
 
   totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
@@ -48,18 +49,15 @@ void CompressTarget(Threads T){
     if(T.model[n].edits != 0)
       totModels += 1;
 
-  Shadow = (CModel **) Calloc(P->nModels, sizeof(CModel *));
+  Shadow      = (CModel **) Calloc(P->nModels, sizeof(CModel *));
   for(n = 0 ; n < P->nModels ; ++n)
-    Shadow[n]  = CreateShadowModel(Models[n]); 
-  pModel       = (PModel **) Calloc(totModels, sizeof(PModel *));
+    Shadow[n] = CreateShadowModel(Models[n]); 
+  pModel      = (PModel **) Calloc(totModels, sizeof(PModel *));
   for(n = 0 ; n < totModels ; ++n)
-    pModel[n]  = CreatePModel(ALPHABET_SIZE);
-  MX           = CreatePModel(ALPHABET_SIZE);
-  PT           = CreateFloatPModel(ALPHABET_SIZE);
-  cModelWeight = (double *) Calloc(totModels, sizeof(double));
-
-  for(n = 0 ; n < totModels ; ++n) //XXX: REPEATED
-    cModelWeight[n] = 1.0 / totModels;
+    pModel[n] = CreatePModel(ALPHABET_SIZE);
+  MX          = CreatePModel(ALPHABET_SIZE);
+  PT          = CreateFloatPModel(ALPHABET_SIZE);
+  CMW         = CreateWeightModel(totModels);
 
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
@@ -69,14 +67,11 @@ void CompressTarget(Threads T){
             if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){
               UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top);
               }
-            // RESET MODELS :: XXX: REPEATED LINES -> SET FUNCTION 4 THIS
+            // RESET MODELS 
             ResetCBuffer(symBuf);
             for(n = 0 ; n < P->nModels ; ++n)
               ResetShadowModel(Shadow[n]);
-            for(n = 0 ; n < totModels ; ++n)
-              cModelWeight[n] = 1.0 / totModels;
-            cModelTotalWeight = 0;
-            
+            ResetWeightModel(CMW);
             r = 0;
             nBase = 0;
             bits = 0;
@@ -110,7 +105,7 @@ void CompressTarget(Threads T){
           GetPModelIdx(pos, Shadow[cModel]);
           ComputePModel(Models[cModel], pModel[n], Shadow[cModel]->pModelIdx,
           Shadow[cModel]->alphaDen);
-          ComputeWeightedFreqs(cModelWeight[n], pModel[n], PT);
+          ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
           if(Shadow[cModel]->edits != 0){
             ++n;
             Shadow[cModel]->SUBS.seq->buf[Shadow[cModel]->SUBS.seq->idx] = sym;
@@ -119,7 +114,7 @@ void CompressTarget(Threads T){
             [cModel]->SUBS.idx);
             ComputePModel(Models[cModel], pModel[n], Shadow[cModel]->SUBS.idx, 
             Shadow[cModel]->SUBS.eDen);
-            ComputeWeightedFreqs(cModelWeight[n], pModel[n], PT);
+            ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
             }
           ++n;
           }
@@ -128,14 +123,8 @@ void CompressTarget(Threads T){
         bits += PModelSymbolLog(MX, sym);
         ++nBase;
 
-        cModelTotalWeight = 0;
-        for(n = 0 ; n < totModels ; ++n){
-          cModelWeight[n] = Power(cModelWeight[n], P->gamma) * (double) 
-          pModel[n]->freqs[sym] / pModel[n]->sum;
-          cModelTotalWeight += cModelWeight[n];
-          }
-
-        for(n = 0 ; n < totModels ; ++n) cModelWeight[n] /= cModelTotalWeight;
+        CalcDecayment(CMW, pModel, sym, P->gamma);
+        RenormalizeWeights(CMW);
 
         n = 0;
         for(cModel = 0 ; cModel < P->nModels ; ++cModel){
@@ -152,7 +141,7 @@ void CompressTarget(Threads T){
   // XXX: SHOULD THIS BE FOR ALL ? ONLY FOR THE LAST THREAD ?
 //  UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
 
-  Free(cModelWeight);
+  DeleteWeightModel(CMW);
   for(n = 0 ; n < totModels ; ++n)
     RemovePModel(pModel[n]);
   Free(pModel);

@@ -91,6 +91,13 @@ typedef struct{
   }
 FloatPModel;
 
+typedef struct{
+  uint32_t   totModels;
+  double     *weight;
+  double     totalWeight;
+  }
+CMWeight;
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int32_t         BestId               (uint32_t *, uint32_t);
@@ -115,6 +122,11 @@ inline void     ComputeMXProbs       (FloatPModel *, PModel *);
 inline void     ComputePModel        (CModel *, PModel *, uint64_t, uint32_t);
 inline void     ComputeWeightedFreqs (double, PModel *, FloatPModel *);
 double          PModelSymbolLog      (PModel *, U32);
+CMWeight        *CreateWeightModel   (uint32_t);
+void            ResetWeightModel     (CMWeight *);
+void            RenormalizeWeights   (CMWeight *);
+void            CalcDecayment        (CMWeight *, PModel **, uint8_t, double);
+void            DeleteWeightModel    (CMWeight *);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
