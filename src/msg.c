@@ -38,7 +38,7 @@ void PrintMenu(void){
   "  <FILE>                   sequenced file,                               \n"
   "  <FILE>                   base file (ex. from NCBI).                    \n"
   "                                                                         \n"
-  "Report bugs to <{pratas,ap,pjf}@ua.pt>.                                \n");
+  "Report bugs to <{pratas,ap,pjf,jmr}@ua.pt>.                              \n");
   }
 
 void PrintMenuVisual(void){
@@ -63,7 +63,7 @@ void PrintMenuVisual(void){
   "                                                                         \n"
   "  <FILE>                   input matrix file (last argument).            \n"
   "                                                                         \n"
-  "Report bugs to <{pratas,ap,pjf}@ua.pt>.                                \n");
+  "Report bugs to <{pratas,ap,pjf,jmr}@ua.pt>.                              \n");
   }
 
 void PrintVersion(void){
@@ -78,8 +78,8 @@ void PrintVersion(void){
   "You may redistribute copies of it under the terms of the GNU - General   \n"
   "Public License v2 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"
   "ANY WARRANTY, to the extent permitted by law. Developed and Written by   \n"
-  "Diogo Pratas, Armando J. Pinho and Paulo J. S. G. Ferreira.\n\n", VERSION,
-  RELEASE);
+  "Diogo Pratas, Armando J. Pinho, Paulo J. S. G. Ferreira and Joao M. O.   \n"
+  "S. Rodrigues.\n\n", VERSION, RELEASE);
   }
 
 void PrintVersionVisual(void){
@@ -94,8 +94,8 @@ void PrintVersionVisual(void){
   "You may redistribute copies of it under the terms of the GNU - General   \n"
   "Public License v2 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"
   "ANY WARRANTY, to the extent permitted by law. Developed and Written by   \n"
-  "Diogo Pratas, Armando J. Pinho and Paulo J. S. G. Ferreira.\n\n", VERSION,
-  RELEASE);
+  "Diogo Pratas, Armando J. Pinho, Paulo J. S. G. Ferreira and Joao M. O.   \n"
+  "S. Rodrigues.\n\n", VERSION, RELEASE);
   }
 
 
