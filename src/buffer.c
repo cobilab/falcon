@@ -48,10 +48,13 @@ void UpdateBuffer(BUF *B){
 // RESET CBUFFER
 // 
 void ResetCBuffer(CBUF *B){
-  //memset((void *)B->buf, 0, B->size * sizeof(uint8_t));
   Free(B->buf-B->guard);
   B->buf  = (uint8_t *) Calloc(B->size+B->guard, sizeof(uint8_t));
   B->buf += B->guard;
+
+//  memset((void *)B->buf, 0, (B->size + B->guard) * sizeof(uint8_t));
+//  B->buf += B->guard;
+
   B->idx  = 0;
   }
 

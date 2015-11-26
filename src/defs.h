@@ -31,7 +31,7 @@ typedef int8_t   I8;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #define MAX_LABEL              1024
-#define BUFFER_SIZE            262144      
+#define BUFFER_SIZE            65535
 #define DEF_VERSION            0
 #define DEF_EXAMPLE            0
 #define DEFAULT_HELP           0

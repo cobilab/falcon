@@ -71,9 +71,10 @@ CMWeight *CreateWeightModel(uint32_t size){
 
 void ResetWeightModel(CMWeight *CMW){
   uint32_t n;
+  double fraction = 1.0 / CMW->totModels;
   CMW->totalWeight = 0;
   for(n = 0 ; n < CMW->totModels ; ++n)
-    CMW->weight[n] = 1.0 / CMW->totModels;
+    CMW->weight[n] = fraction;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -362,8 +363,11 @@ void ResetShadowModel(CModel *M){
     M->SUBS.seq  = CreateCBuffer(BUFFER_SIZE, BGUARD);
     M->SUBS.in   = 0;
     M->SUBS.idx  = 0;
-    Free(M->SUBS.mask);
-    M->SUBS.mask = (uint8_t *) Calloc(BGUARD, sizeof(uint8_t));
+    uint32_t n;
+    for(n = 0 ; n < BGUARD ; ++n)
+      M->SUBS.mask[n] = 0;
+    // Free(M->SUBS.mask);
+    // M->SUBS.mask = (uint8_t *) Calloc(BGUARD, sizeof(uint8_t));
     }
   }
 
