@@ -33,7 +33,7 @@ void FalconCompressTarget(Threads T){
   FILE        *Reader  = Fopen(P->base, "r");
   double      bits = 0;
   uint64_t    nBase = 0, r = 0;
-  uint32_t    n, k, idxPos;
+  uint32_t    k, idxPos;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
