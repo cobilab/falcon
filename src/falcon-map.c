@@ -122,14 +122,7 @@ void CompressTarget(Threads T){
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
-
-        n = 0;
-        for(cModel = 0 ; cModel < P->nModels ; ++cModel){
-          if(Shadow[cModel]->edits != 0)
-            CorrectCModelSUBS(Shadow[cModel], pModel[++n], sym);
-          ++n;
-          }
-
+        CorrectXModels(Shadow, pModel, sym);
         UpdateCBuffer(symBuf);
         }
       }

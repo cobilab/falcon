@@ -124,6 +124,7 @@ inline void     ComputeWeightedFreqs (double, PModel *, FloatPModel *);
 double          PModelSymbolLog      (PModel *, U32);
 CMWeight        *CreateWeightModel   (uint32_t);
 void            ResetWeightModel     (CMWeight *);
+void            CorrectXModels       (CModel **, PModel **, uint8_t);    
 void            RenormalizeWeights   (CMWeight *);
 void            CalcDecayment        (CMWeight *, PModel **, uint8_t, double);
 void            DeleteWeightModel    (CMWeight *);

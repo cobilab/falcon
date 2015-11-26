@@ -452,6 +452,18 @@ void CorrectCModelSUBS(CModel *M, PModel *P, uint8_t sym){
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  
+void CorrectXModels(CModel **Shadow, PModel **PM, uint8_t sym){
+  uint32_t n = 0, m;
+        
+  for(m = 0 ; m < P->nModels ; ++m){
+    if(Shadow[m]->edits != 0)
+      CorrectCModelSUBS(Shadow[m], PM[++n], sym);
+    ++n;
+    }
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 inline void ComputePModel(CModel *M, PModel *P, uint64_t idx, uint32_t aDen){
   ACC *ac;
