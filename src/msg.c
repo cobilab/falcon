@@ -31,7 +31,7 @@ void PrintMenu(void){
   "  -l <level>               compression level [1;30],                     \n"
   "  -t <top>                 top of similarity,                            \n"
   "  -n <nThreads>            number of threads,                            \n"
-  "  -x <FILE>                similarity matrix filename,                   \n"
+  "  -x <FILE>                similarity top filename,                      \n"
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
   "                                                                         \n"
