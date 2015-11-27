@@ -29,6 +29,7 @@ void PrintMenu(void){
   "  -v                       verbose mode (more information),              \n"
   "  -s                       how compression levels,                       \n"
   "  -l <level>               compression level [1;30],                     \n"
+  "  -p <sample>              subsampling (default: 1),                     \n"
   "  -t <top>                 top of similarity,                            \n"
   "  -n <nThreads>            number of threads,                            \n"
   "  -x <FILE>                similarity top filename,                      \n"

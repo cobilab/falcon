@@ -27,6 +27,84 @@
 CModel **Models;  // MEMORY SHARED BY THREADING
 
 //////////////////////////////////////////////////////////////////////////////
+// - - - - - - - - - - - - S A M P L E   C O M P R E S S I O N - - - - - - - -
+
+void SamplingCompressTarget(Threads T){
+  FILE        *Reader  = Fopen(P->base, "r");
+  double      bits = 0;
+  uint64_t    nBase = 0, r = 0;
+  uint32_t    k, idxPos;
+  PARSER      *PA = CreateParser();
+  CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
+  uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
+  uint8_t     sym, *pos, conName[MAX_NAME];
+  PModel      **pModel;
+  CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
+  int         action;
+
+  Shadow      = (CModel **) Calloc(1, sizeof(CModel *));
+  Shadow[0]   = CreateShadowModel(Models[0]);
+  pModel      = (PModel **) Calloc(1, sizeof(PModel *));
+  pModel[0]   = CreatePModel(ALPHABET_SIZE);
+
+  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
+    for(idxPos = 0 ; idxPos < k ; ++idxPos){
+      if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
+        switch(action){
+          case -1: // IT IS THE BEGGINING OF THE HEADER
+            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){
+              UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top);
+              }
+            // RESET MODELS 
+            ResetCBuffer(symBuf);
+            ResetShadowModel(Shadow[0]);
+            r = nBase = bits = 0;
+          break;
+          case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
+          case -3: // IF IS A SYMBOL OF THE HEADER
+            if(r >= MAX_NAME-1)
+              conName[r] = '\0';
+            else{
+              if(sym == ' ' || sym < 32 || sym > 126){ // PROTECT INTERVAL
+                if(r == 0) continue;
+                else       sym = '_'; // PROTECT OUT SYM WITH UNDERL
+                }
+              conName[r++] = sym;
+              }
+          break;
+          case -99: break; // IF IS A SIMPLE FORMAT BREAK
+          default: exit(1);
+          }
+        continue; // GO TO NEXT SYMBOL
+        }
+
+      if(PA->nRead % P->nThreads == T.id){
+        if((sym = DNASymToNum(sym)) == 4) continue; // IT IGNORES EXTRA SYMBOLS
+        symBuf->buf[symBuf->idx] = sym;
+        pos = &symBuf->buf[symBuf->idx-1];
+        GetPModelIdx(pos, Shadow[0]);
+        ComputePModel(Models[0], pModel[0], Shadow[0]->pModelIdx,
+        Shadow[0]->alphaDen);
+        bits += PModelSymbolLog(pModel[0], sym);
+        ++nBase;
+        UpdateCBuffer(symBuf);
+        }
+      }
+
+  if(PA->nRead % P->nThreads == T.id)
+    UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top);
+
+  RemovePModel(pModel[0]);
+  Free(pModel);
+  FreeShadow(Shadow[0]);
+  Free(Shadow);
+  Free(readBuf);
+  RemoveCBuffer(symBuf);
+  RemoveParser(PA);
+  fclose(Reader);
+  }
+
+//////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - F A L C O N   C O M P R E S S I O N - - - - - - - -
 
 void FalconCompressTarget(Threads T){
@@ -83,7 +161,8 @@ void FalconCompressTarget(Threads T){
         symBuf->buf[symBuf->idx] = sym;
         pos = &symBuf->buf[symBuf->idx-1];
         GetPModelIdx(pos, Shadow[0]);
-        ComputePModel(Models[0], pModel[0], Shadow[0]->pModelIdx, Shadow[0]->alphaDen);
+        ComputePModel(Models[0], pModel[0], Shadow[0]->pModelIdx, 
+        Shadow[0]->alphaDen);
         bits += PModelSymbolLog(pModel[0], sym);
         ++nBase;
         UpdateCBuffer(symBuf);
@@ -230,6 +309,8 @@ void CompressTarget(Threads T){
 void *CompressThread(void *Thr){
   Threads *T = (Threads *) Thr;
 
+  SamplingCompressTarget(T[0]);
+
   if(P->nModels == 1 && T->model[0].edits == 0){
     FalconCompressTarget(T[0]);
     }
@@ -339,8 +420,9 @@ int32_t main(int argc, char *argv[]){
     return EXIT_SUCCESS;
     }
 
-  P->verbose  = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v" );
-  P->force    = ArgsState  (DEFAULT_FORCE,   p, argc, "-F" );
+  P->verbose  = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
+  P->force    = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
+  P->sample   = ArgsNum    (DEFAULT_SAMPLE,  p, argc, "-p", MIN_SAP, MAX_SAP);
   P->level    = ArgsNum    (0,               p, argc, "-l", MIN_LEV, MAX_LEV);
   topSize     = ArgsNum    (DEF_TOP,         p, argc, "-t", MIN_TOP, MAX_TOP);
   P->nThreads = ArgsNum    (DEFAULT_THREADS, p, argc, "-n", MIN_THREADS, 

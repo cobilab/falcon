@@ -23,6 +23,7 @@ typedef struct{
   U8       force;
   U8       estim;
   U8       level;
+  U32      sample;
   U32      col;
   U32      windowSize;
   U32      blockSize;

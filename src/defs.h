@@ -42,6 +42,9 @@ typedef int8_t   I8;
 #define DEFAULT_THREADS        1
 #define DEFAULT_FILTERSIZE     500
 #define DEFAULT_MINBLOCK       100
+#define DEFAULT_SAMPLE         1
+#define MIN_SAP                1
+#define MAX_SAP                99999999
 #define MAX_LEV                32
 #define MIN_LEV                1
 #define DEF_TOP                100

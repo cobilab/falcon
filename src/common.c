@@ -560,6 +560,8 @@ void PrintArgs(Parameters *P, Threads T, char *ref, char *tar, uint32_t top){
   ? "no" : "yes");
   fprintf(stderr, "Force mode ......................... %s\n", P->force == 0 ? 
   "no" : "yes");
+  fprintf(stderr, "Sampling mode ...................... %s\n", P->sample == 0 ? 
+  "no" : "yes");
   fprintf(stderr, "Compression level .................. %u\n", P->level);
   fprintf(stderr, "Number of threads .................. %u\n", P->nThreads);
   fprintf(stderr, "Top size ........................... %u\n", top);
