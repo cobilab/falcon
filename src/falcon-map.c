@@ -32,7 +32,7 @@ CModel **Models;  // MEMORY SHARED BY THREADING
 void SamplingCompressTarget(Threads T){
   FILE        *Reader  = Fopen(P->base, "r");
   double      bits = 0;
-  uint64_t    nBase = 0, r = 0;
+  uint64_t    nBase = 0, r = 0, idx = 0;
   uint32_t    k, idxPos;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
@@ -83,10 +83,14 @@ void SamplingCompressTarget(Threads T){
         symBuf->buf[symBuf->idx] = sym;
         pos = &symBuf->buf[symBuf->idx-1];
         GetPModelIdx(pos, Shadow[0]);
-        ComputePModel(Models[0], pModel[0], Shadow[0]->pModelIdx,
-        Shadow[0]->alphaDen);
-        bits += PModelSymbolLog(pModel[0], sym);
-        ++nBase;
+
+        if(idx++ % P->sample == 0){
+          ComputePModel(Models[0], pModel[0], Shadow[0]->pModelIdx,
+          Shadow[0]->alphaDen);
+          bits += PModelSymbolLog(pModel[0], sym);
+          ++nBase;
+          }
+
         UpdateCBuffer(symBuf);
         }
       }
@@ -309,10 +313,13 @@ void CompressTarget(Threads T){
 void *CompressThread(void *Thr){
   Threads *T = (Threads *) Thr;
 
-  SamplingCompressTarget(T[0]);
-
   if(P->nModels == 1 && T->model[0].edits == 0){
-    FalconCompressTarget(T[0]);
+    if(P->sample > 1){
+      SamplingCompressTarget(T[0]);
+      }
+    else{      
+      FalconCompressTarget(T[0]);
+      }
     }
   else{
     CompressTarget(T[0]);
