@@ -16,31 +16,24 @@ unzip master.zip
 cd falcon-master/src
 cmake .
 make
-cp FALCON-map ../../
-cp FALCON-visual ../../
+cp FALCON ../../
 cd ../../
 </pre>
-This will create two binary files: 
+This will create a binary file: 
 <pre>
-FALCON-map 
+FALCON 
 </pre>
-to measure the similarity between sequences and
-<pre>
-FALCON-visual
-</pre>
-to visualise the similarity in a heatmap scheme.
+to measure the similarity between sequences.
 
 ## USAGE ##
 
 To see the possible options type
 <pre>
-./FALCON-map
-./FALCON-visual
+./FALCON
 </pre>
 or
 <pre>
-./FALCON-map -h
-./FALCON-visual -h
+./FALCON -h
 </pre>
 These will print the parameters that are needed to run both tools.
 
