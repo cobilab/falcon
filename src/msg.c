@@ -19,8 +19,8 @@ void ModelsExplanation(void){
 
 void PrintMenu(void){
   fprintf(stderr,
-  "Usage: FALCON-map [OPTION]... [FILE] [FILE]                              \n"
-  "Genomic similarity detection according to a reference                    \n"
+  "Usage: FALCON [OPTION]... [FILE] [FILE]                                  \n"
+  "Measure a top similarity between genomic sequences.                      \n"
   "                                                                         \n"
   "Non-mandatory arguments:                                                 \n"
   "                                                                         \n"
@@ -36,45 +36,20 @@ void PrintMenu(void){
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
   "                                                                         \n"
-  "  <FILE>                   sequenced file,                               \n"
-  "  <FILE>                   base file (ex. from NCBI).                    \n"
+  "  <FILE>                   sequenced file (FASTA or FASTQ),              \n"
+  "  <FILE>                   base file (FASTA or Multi-FASTA).             \n"
   "                                                                         \n"
-  "Report bugs to <{pratas,ap,pjf,jmr}@ua.pt>.                              \n");
-  }
-
-void PrintMenuVisual(void){
-  fprintf(stderr,
-  "Usage: FALCON-visual [OPTION]... [FILE]                                  \n"
-  "A visual interpretation program for falcon-maps.                         \n"
-  "                                                                         \n"
-  "Non-mandatory arguments:                                                 \n"
-  "                                                                         \n"
-  "  -h                       give this help,                               \n"
-  "  -V                       display version number,                       \n"
-  "  -v                       verbose mode (more information),              \n"
-  "  -w                       square width (for each value),                \n"
-  "  -a                       square inter-space (between each value),      \n"
-  "  -s                       index color start,                            \n"
-  "  -r                       index color rotations,                        \n"
-  "  -u                       color hue,                                    \n"
-  "  -g                       color gamma,                                  \n"
-  "  -x <FILE>                heatmap filename,                             \n"
-  "                                                                         \n"
-  "Mandatory arguments:                                                     \n"
-  "                                                                         \n"
-  "  <FILE>                   input matrix file (last argument).            \n"
-  "                                                                         \n"
-  "Report bugs to <{pratas,ap,pjf,jmr}@ua.pt>.                              \n");
+  "Report issues to <{pratas,ap,pjf,jmr}@ua.pt>.                            \n");
   }
 
 void PrintVersion(void){
   fprintf(stderr,
   "                                                                         \n"
-  "                        ======================                           \n"
-  "                        |   FALCON-map %u.%u   |                         \n"
-  "                        ======================                           \n"
+  "                          ==================                             \n"
+  "                          |   FALCON %u.%u   |                           \n"
+  "                          ==================                             \n"
   "                                                                         \n"
-  "FALCON-map: a genomic similarity detector according to a reference.      \n"
+  "FALCON: a tool for measure a top similarity between genomic sequences.   \n"
   "Copyright (C) 2014-2016 University of Aveiro. This is a Free software.   \n"
   "You may redistribute copies of it under the terms of the GNU - General   \n"
   "Public License v2 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"
@@ -82,21 +57,4 @@ void PrintVersion(void){
   "Diogo Pratas, Armando J. Pinho, Paulo J. S. G. Ferreira and Joao M. O.   \n"
   "S. Rodrigues.\n\n", VERSION, RELEASE);
   }
-
-void PrintVersionVisual(void){
-  fprintf(stderr,
-  "                                                                         \n"
-  "                       =========================                         \n"
-  "                       |   FALCON-visual %u.%u   |                       \n"
-  "                       =========================                         \n"
-  "                                                                         \n"
-  "FALCON-visual: a visual interpretation program for falcon-maps.          \n"
-  "Copyright (C) 2014-2016 University of Aveiro. This is a Free software.   \n"
-  "You may redistribute copies of it under the terms of the GNU - General   \n"
-  "Public License v2 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"
-  "ANY WARRANTY, to the extent permitted by law. Developed and Written by   \n"
-  "Diogo Pratas, Armando J. Pinho, Paulo J. S. G. Ferreira and Joao M. O.   \n"
-  "S. Rodrigues.\n\n", VERSION, RELEASE);
-  }
-
 
