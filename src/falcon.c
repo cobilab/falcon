@@ -337,6 +337,7 @@ void *CompressThread(void *Thr){
 void LoadReference(char *refName){
   FILE     *Reader = Fopen(refName, "r");
   uint32_t n;
+  uint64_t idx = 0;
   PARSER   *PA = CreateParser();
   CBUF     *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t  sym, irSym, *readBuf;
@@ -350,14 +351,16 @@ void LoadReference(char *refName){
   size = s.st_size;
   readBuf = (uint8_t *) mmap(0, size, PROT_READ, MAP_PRIVATE, fd, 0);
   for(k = 0 ; k < size ; ++k){
-    if(ParseSym(PA, (sym = *readBuf++)) == -1) continue;
+    if(ParseSym(PA, (sym = *readBuf++)) == -1){ idx = 0; continue; }
     symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
     for(n = 0 ; n < P->nModels ; ++n){
       GetPModelIdx(symBuf->buf+symBuf->idx-1, Models[n]);
-      UpdateCModelCounter(Models[n], sym, Models[n]->pModelIdx);
-      if(Models[n]->ir == 1){                         // INVERTED REPEATS
-        irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, Models[n]);
-        UpdateCModelCounter(Models[n], irSym, Models[n]->pModelIdxIR);
+      if(idx++ >= Models[n]->ctx){
+        UpdateCModelCounter(Models[n], sym, Models[n]->pModelIdx);
+        if(Models[n]->ir == 1){                         // INVERTED REPEATS
+          irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, Models[n]);
+          UpdateCModelCounter(Models[n], irSym, Models[n]->pModelIdxIR);
+          }
         }
       }
     UpdateCBuffer(symBuf);
