@@ -19,6 +19,16 @@ make
 cp FALCON ../../
 cd ../../
 </pre>
+or alternatively to cmake, for Linux, use the following:
+<pre>
+wget https://github.com/pratas/falcon/archive/master.zip
+unzip master.zip
+cd falcon-master/src
+cp Makefile.linux Makefile
+make
+cp FALCON ../../
+cd ../../
+</pre>
 This will create a binary file: 
 <pre>
 FALCON 

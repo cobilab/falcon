@@ -36,7 +36,7 @@ void FileType(PARSER *PA, FILE *IN){
 int32_t ParseSym(PARSER *PA, uint8_t sym){
 
   switch(PA->type){
-    // IS A FASTA FILE
+    // IS A FASTA ">" FILE
     case 1:
       switch(sym){
         case '>':  PA->header = 1; return -1;
@@ -45,7 +45,7 @@ int32_t ParseSym(PARSER *PA, uint8_t sym){
         }
     break;
 
-    // IS A FASTQ FILE
+    // IS A FASTQ "@" FILE
     case 2:
       switch(PA->line){
         case 0: if(sym == '\n'){ PA->line = 1; PA->dna = 1; } break;
