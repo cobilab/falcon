@@ -27,7 +27,7 @@
 CModel **Models;  // MEMORY SHARED BY THREADING
 
 //////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - - - - - S A M P L E   C O M P R E S S I O N - - - - - - - -
+// - - - - - - - - - P E R E G R I N E   C O M P R E S S I O N - - - - - - - -
 
 void SamplingCompressTarget(Threads T){
   FILE        *Reader  = Fopen(P->base, "r");
@@ -58,7 +58,7 @@ void SamplingCompressTarget(Threads T){
             // RESET MODELS 
             ResetCBuffer(symBuf);
             ResetShadowModel(Shadow[0]);
-            r = nBase = bits = 0;
+            idx = r = nBase = bits = 0;
           break;
           case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
           case -3: // IF IS A SYMBOL OF THE HEADER
@@ -84,7 +84,7 @@ void SamplingCompressTarget(Threads T){
         pos = &symBuf->buf[symBuf->idx-1];
         GetPModelIdx(pos, Shadow[0]);
 
-        if(idx++ % P->sample == 0){
+        if(idx++ % P->sample == 0 && idx >= Shadow[0]->ctx){
           ComputePModel(Models[0], pModel[0], Shadow[0]->pModelIdx,
           Shadow[0]->alphaDen);
           bits += PModelSymbolLog(pModel[0], sym);
@@ -114,7 +114,7 @@ void SamplingCompressTarget(Threads T){
 void FalconCompressTarget(Threads T){
   FILE        *Reader  = Fopen(P->base, "r");
   double      bits = 0;
-  uint64_t    nBase = 0, r = 0;
+  uint64_t    nBase = 0, r = 0, idx = 0;
   uint32_t    k, idxPos;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
@@ -140,7 +140,7 @@ void FalconCompressTarget(Threads T){
             // RESET MODELS 
             ResetCBuffer(symBuf);
             ResetShadowModel(Shadow[0]);
-            r = nBase = bits = 0;
+            idx = r = nBase = bits = 0;
           break;
           case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
           case -3: // IF IS A SYMBOL OF THE HEADER
@@ -165,11 +165,13 @@ void FalconCompressTarget(Threads T){
         symBuf->buf[symBuf->idx] = sym;
         pos = &symBuf->buf[symBuf->idx-1];
         GetPModelIdx(pos, Shadow[0]);
-        ComputePModel(Models[0], pModel[0], Shadow[0]->pModelIdx, 
-        Shadow[0]->alphaDen);
-        bits += PModelSymbolLog(pModel[0], sym);
-        ++nBase;
-        UpdateCBuffer(symBuf);
+        if(idx++ >= Shadow[0]->ctx){
+          ComputePModel(Models[0], pModel[0], Shadow[0]->pModelIdx, 
+          Shadow[0]->alphaDen);
+          bits += PModelSymbolLog(pModel[0], sym);
+          ++nBase;
+          UpdateCBuffer(symBuf);
+          }
         }
       }
 
