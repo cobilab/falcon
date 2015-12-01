@@ -103,7 +103,7 @@ int32_t ParseMF(PARSER *PA, uint8_t sym){
         return -3;
     }
 
-  return FBasesPol(sym);
+  return (FBasesPol(sym) == -1 ? -99 : sym);
   }
 
 
