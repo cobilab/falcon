@@ -53,7 +53,8 @@ void SamplingCompressTarget(Threads T){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
             if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){
-              UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 0);
+              UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 
+              nBase);
               }
             // RESET MODELS 
             ResetCBuffer(symBuf);
@@ -96,7 +97,7 @@ void SamplingCompressTarget(Threads T){
       }
 
   if(PA->nRead % P->nThreads == T.id)
-    UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, 0);
+    UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, nBase);
 
   RemovePModel(pModel[0]);
   Free(pModel);
@@ -135,7 +136,8 @@ void FalconCompressTarget(Threads T){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
             if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){
-              UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 0);
+              UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 
+              nBase);
               }
             // RESET MODELS 
             ResetCBuffer(symBuf);
@@ -176,7 +178,7 @@ void FalconCompressTarget(Threads T){
       }
 
   if(PA->nRead % P->nThreads == T.id)
-    UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, 0);
+    UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, nBase);
 
   RemovePModel(pModel[0]);
   Free(pModel);
@@ -228,7 +230,8 @@ void CompressTarget(Threads T){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
             if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){
-              UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 0);
+              UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 
+              nBase);
               }
             // RESET MODELS 
             ResetCBuffer(symBuf);
@@ -291,7 +294,7 @@ void CompressTarget(Threads T){
       }
         
   if(PA->nRead % P->nThreads == T.id)
-    UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, 0);
+    UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, nBase);
 
   DeleteWeightModel(CMW);
   for(n = 0 ; n < totModels ; ++n)
@@ -512,6 +515,7 @@ int32_t main(int argc, char *argv[]){
   for(ref = 0 ; ref < P->nThreads ; ++ref){
     for(n = 0 ; n < T[ref].top->size-1 ; ++n){
       P->top->V[k].value = T[ref].top->V[n].value; 
+      P->top->V[k].size  = T[ref].top->V[n].size; 
       CopyStringPart(P->top->V[k].name, T[ref].top->V[n].name);
       ++k;
       }

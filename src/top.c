@@ -34,7 +34,7 @@ TOP *CreateTop(uint32_t size){
   for(n = 0 ; n < T->size ; ++n){
     T->V[n].value = 1.0;
     T->V[n].name  = (uint8_t *) Calloc(MAX_NAME, sizeof(uint8_t));
-    T->V[n].size  = 0;
+    T->V[n].size  = 1;
     }
   return T;
   }
