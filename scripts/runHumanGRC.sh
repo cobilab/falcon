@@ -1,6 +1,6 @@
 #!/bin/bash
 #==============================================================================
-# RUNNING: . runHuman.sh 
+# RUNNING: . runHumanGRC.sh 
 #==============================================================================
 THREADS="4";
 TOP="500";
@@ -9,12 +9,12 @@ CACHEHASH="25";
 LEVEL="31";
 #==============================================================================
 #. install.sh
-#. GetHumanCHMParse.sh
+#. GetHumanGRCParse.sh
 #perl download.pl
 for((x=1 ; x<=24; ++x));
   do
   echo "Running $x ... ";
   (time ./FALCON -v -l $LEVEL -c $CACHEHASH -p $SAMPLING -t $TOP -n $THREADS \
-  -x TOP$x CHM$x viruses.fa ) &> REPORT$x ;
+  -x TOP$x GRC$x viruses.fa ) &> REPORT$x ;
   done
 #==============================================================================
