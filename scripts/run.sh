@@ -1,3 +1,13 @@
 #!/bin/bash
-wget ftp://ftp.ncbi.nlm.nih.gov/genbank/gbbct1.seq.gz
-gunzip gbbct1.seq.gz
+#==============================================================================
+# RUNNING: . run.sh sequence.fq 
+#==============================================================================
+THREADS="4";
+TOP="4";
+SAMPLING="1";
+CACHEHASH="20";
+LEVEL="31";
+#==============================================================================
+. install.sh
+perl download.pl
+(time ./FALCON -v -l $LEVEL -c $CACHEHASH -p $SAMPLING -t $TOP -n $THREADS $1 viruses.fa ) &> REPORT
