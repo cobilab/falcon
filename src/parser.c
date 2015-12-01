@@ -30,6 +30,22 @@ void FileType(PARSER *PA, FILE *IN){
   rewind(IN);
   } 
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// FILTER BASES 6 POLITICS
+//
+int FBasesPol(int b){
+  switch(b){
+    case 'U': return 'T';
+    case 'a': return 'A';
+    case 'c': return 'C';
+    case 'g': return 'G';
+    case 't': return 'T';
+    }
+  if(b != 'A' && b != 'C' && b != 'G' && b != 'T') 
+    return -1;
+  return b;
+  }
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // PARSE SYM
 //
@@ -60,11 +76,7 @@ int32_t ParseSym(PARSER *PA, uint8_t sym){
     default: ; // DO NOTHING
     }
 
-  // NUCLEOTIDE PARSE
-  if(sym != 'A' && sym != 'C' && sym != 'G' && sym != 'T')
-    return -1;
-
-  return sym;
+  return FBasesPol(sym);
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -91,11 +103,7 @@ int32_t ParseMF(PARSER *PA, uint8_t sym){
         return -3;
     }
 
-  // NUCLEOTIDE PARSE
-  if(sym != 'A' && sym != 'C' && sym != 'G' && sym != 'T')
-    return 'N'; // MAP EXTRA INTO 'N'
-
-  return sym;
+  return FBasesPol(sym);
   }
 
 

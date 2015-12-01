@@ -20,6 +20,7 @@ PARSER;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void     FileType      (PARSER *, FILE *);
+int      FBasesPol     (int);
 PARSER   *CreateParser (void);
 int32_t  ParseSym      (PARSER *, uint8_t);
 int32_t  ParseMF       (PARSER *, uint8_t);
