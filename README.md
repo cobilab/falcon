@@ -5,7 +5,7 @@
 alt="FALCON" width="180" height="180" border="0" /></p>
 <br>
 
-FALCON is an alignment-free unsupervised tool to measure and visualise similarity, given a top defined, of multiple reads according to a reference sequence.
+FALCON is an alignment-free unsupervised tool to measure a similarity top of multiple reads according to a database.
 
 ## INSTALLATION ##
 
