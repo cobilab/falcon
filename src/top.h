@@ -10,6 +10,7 @@
 typedef struct{
   uint8_t  *name;
   double   value;
+  uint64_t size;
   }
 VT;
 
@@ -24,9 +25,9 @@ TOP;
 
 TOP        *CreateTop      (uint32_t);
 void       CopyStringPart  (uint8_t *, uint8_t *);
-void       AddElement      (VT *, double, uint8_t *);
+void       AddElement      (VT *, double, uint8_t *, uint64_t);
 int        SortByValue     (const void *, const void *);
-void       UpdateTop       (double, uint8_t *, TOP *);
+void       UpdateTop       (double, uint8_t *, TOP *, uint64_t);
 void       PrintTop        (FILE *, TOP *, uint32_t);
 void       DeleteTop       (TOP *);
 

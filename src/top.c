@@ -33,33 +33,35 @@ TOP *CreateTop(uint32_t size){
   T->V    = (VT  *) Calloc(T->size, sizeof(VT));
   for(n = 0 ; n < T->size ; ++n){
     T->V[n].value = 1.0;
-    T->V[n].name = (uint8_t *) Calloc(MAX_NAME, sizeof(uint8_t));
+    T->V[n].name  = (uint8_t *) Calloc(MAX_NAME, sizeof(uint8_t));
+    T->V[n].size  = 0;
     }
   return T;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void AddElement(VT *Vt, double value, uint8_t *nm){
+void AddElement(VT *Vt, double value, uint8_t *nm, uint64_t size){
   Vt->value = value;
   CopyStringPart(Vt->name, nm);
+  Vt->size  = size;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UpdateTop(double bits, uint8_t *nm, TOP *T){
+void UpdateTop(double bits, uint8_t *nm, TOP *T, uint64_t size){
   uint32_t last = T->size - 1;
   if(T->id < last){
-    AddElement(&T->V[T->id], bits, nm);
+    AddElement(&T->V[T->id], bits, nm, size);
     qsort(T->V, T->id+1, sizeof(VT), SortByValue); 
     }
   else if(T->id == last){
-    AddElement(&T->V[last], bits, nm);
+    AddElement(&T->V[last], bits, nm, size);
     qsort(T->V, T->size, sizeof(VT), SortByValue);
     }
   else{ // real NRC = 1.0-bits
     if(T->V[last].value > bits){
-      AddElement(&T->V[last], bits, nm);
+      AddElement(&T->V[last], bits, nm, size);
       qsort(T->V, T->size, sizeof(VT), SortByValue);
       }
     }
@@ -75,8 +77,8 @@ void PrintTop(FILE *F, TOP *Top, uint32_t size){
     exit(1);
     }
   for(n = 0 ; n < size ; ++n)
-    fprintf(F, "%2u\t%12.9g\t%s\n", n+1, (1.0-Top->V[n].value)*100.0,
-    Top->V[n].name);
+    fprintf(F, "%2u\t%"PRIu64"\t%12.9g\t%s\n", n+1, Top->V[n].size, 
+    (1.0-Top->V[n].value)*100.0, Top->V[n].name);
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
