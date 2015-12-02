@@ -5,7 +5,7 @@
 alt="FALCON" width="180" height="180" border="0" /></p>
 <br>
 
-FALCON is an alignment-free unsupervised tool to measure a similarity top of multiple reads according to a database. The core of the method is based on the relative algorithmic entropy, a notion that uses model-freezing and exclusive information from a reference, allowing to use much lower computational resources. Moreover, it uses variable multi-threading, without multiplying the memory for each thread, being able to run efficiently in a common laptop. 
+FALCON is an alignment-free unsupervised system to measure a similarity top of multiple reads according to a database. The core of the method is based on the relative algorithmic entropy, a notion that uses model-freezing and exclusive information from a reference, allowing to use much lower computational resources. Moreover, it uses variable multi-threading, without multiplying the memory for each thread, being able to run efficiently from a powerfull server to a common laptop. To measure the similarity, the system will build multiple finite-context (Markovian) models that at the end of the reference sequence will be kept frozen. The target reads will then be measured using a mixture of the frozen models. The mixture estimates de probabilities assuming dependency from model preformance, and thus, it will allow to adapt the usage of the models according to the nature of the target sequence. Furthermore, it uses fault tolerant (substitutions edits) Markovian models that bridge the gap between context sizes. Several running modes are available for differenthardware and speed specifications. The system is fully automatic. Just give a try :)
 
 ## INSTALLATION ##
 
