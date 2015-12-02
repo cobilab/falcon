@@ -6,7 +6,7 @@ THREADS="4";
 TOP="500";
 SAMPLING="1";
 CACHEHASH="25";
-LEVEL="4"; #"31";
+LEVEL="31";
 #==============================================================================
 #. install.sh
 #. GetHumanGRCParse.sh
