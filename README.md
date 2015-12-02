@@ -45,12 +45,35 @@ or
 <pre>
 ./FALCON -h
 </pre>
-These will print the parameters that are needed to run both tools.
+These will print the following options:
+<pre>
+<p>
+Usage: FALCON [OPTION]... [FILE] [FILE]                                  
+Measure a top similarity between genomic sequences.                      
+                                                                         
+Non-mandatory arguments:                                                 
+                                                                         
+  -h                       give this help,                               
+  -V                       display version number,                       
+  -v                       verbose mode (more information),              
+  -s                       how compression levels,                       
+  -l &#60level&#62               compression level [1;30],                     
+  -p &#60sample&#62              subsampling (default: 1),                     
+  -t &#60top&#62                 top of similarity,                            
+  -n &#60nThreads&#62            number of threads,                            
+  -x &#60FILE&#62                similarity top filename,                      
+                                                                         
+Mandatory arguments:                                                     
+                                                                         
+  [FILE]                   sequenced file (FASTA or FASTQ),              
+  [FILE]                   base file (FASTA or Multi-FASTA).             
+                                                                         
+Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
+</pre>
 
 ## CITATION ##
 
 On using this software/method please cite:
-
 paper: to submit..
 
 ## ISSUES ##
