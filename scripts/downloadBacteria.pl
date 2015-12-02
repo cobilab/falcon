@@ -1,6 +1,6 @@
 # This script downloads all viral genomes in RefSeq and puts them in viruses.fa
 # Script is taken from: http://www.ncbi.nlm.nih.gov/books/NBK25498/#chapter3.Application_3_Retrieving_large 
-# BY INTERFACE NCBI: http://www.ncbi.nlm.nih.gov/nuccore?term=%22Viruses%22[PORG]+AND+srcdb_refseq[PROP] , then sent to file: fasta.
+# BY INTERFACE NCBI: http://www.ncbi.nlm.nih.gov/nuccore?term=%22Bacteria%22[PORG]+AND+srcdb_refseq[PROP] , then sent to file: fasta.
 
 use LWP::Simple;
 
@@ -36,8 +36,8 @@ if($count == 0) {
 open(OUT, ">tmp.$organism.fa") || die "Can't open file!\n";
 
 
-#retrieve data in batches of 500
-$retmax = 500;
+#retrieve data in batches of 5000
+$retmax = 5000;
 for ($ret = 0; $ret < $count; ) {
     $efetch_url = $base ."efetch.fcgi?db=nucleotide&WebEnv=$web";
     $efetch_url .= "&query_key=$key&retstart=$ret";
