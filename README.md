@@ -5,7 +5,7 @@
 alt="FALCON" width="180" height="180" border="0" /></p>
 <br>
 
-FALCON is an alignment-free unsupervised tool to measure a similarity top of multiple reads according to a database.
+FALCON is an alignment-free unsupervised tool to measure a similarity top of multiple reads according to a database. The core of the method is based on the relative algorithmic entropy, a notion that uses model-freezing and exclusive information from a reference, allowing to use much lower computational resources. Moreover, it uses variable multi-threading, without multiplying the memory for each thread, being able to run efficiently in a common laptop. 
 
 ## INSTALLATION ##
 
