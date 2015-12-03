@@ -27,7 +27,7 @@ void PrintMenu(void){
   "  -h                       give this help,                               \n"
   "  -V                       display version number,                       \n"
   "  -v                       verbose mode (more information),              \n"
-  "  -s                       how compression levels,                       \n"
+  "  -s                       show compression levels,                      \n"
   "  -l <level>               compression level [1;30],                     \n"
   "  -p <sample>              subsampling (default: 1),                     \n"
   "  -t <top>                 top of similarity,                            \n"
