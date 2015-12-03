@@ -7,3 +7,4 @@ cp Makefile.linux Makefile
 make
 cp FALCON ../../
 cd ../../
+rm -fr master.zip falcon-master/
