@@ -35,15 +35,18 @@ void FileType(PARSER *PA, FILE *IN){
 //
 int FBasesPol(int b){
   switch(b){
+    case 'A': return 'A';
+    case 'C': return 'C';
+    case 'G': return 'G';
+    case 'T': return 'T';
     case 'U': return 'T';
     case 'a': return 'A';
     case 'c': return 'C';
     case 'g': return 'G';
     case 't': return 'T';
+    default: return -1;
     }
-  if(b != 'A' && b != 'C' && b != 'G' && b != 'T') 
-    return -1;
-  return b;
+  return -1;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
