@@ -73,7 +73,7 @@ Mandatory arguments:
 Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
 </pre>
 
-## Options meaning
+### Options meaning
 
 | Parameters          | Meaning                                                     |
 |---------------------|:------------------------------------------------------------|
@@ -81,11 +81,11 @@ Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
 | -V                  | It will print the FALCON version number, license type and authors.    |
 | -v                  | It will print progress information.    |
 | -s                  | It will show pre-defined running levels/modes.    |
-| -l &#60level&#62    | It will use the selected running levels/modes.    |
-| -p &#60sample&#62   | If FALCON is using a single model it will sample (or use) only this periodic value of bases.    |
-| -t &#60top&#62      | It will create a top with this size.              |
-| -n &#60nThreads&#62 | It will use multiple-threading. The time to accomplish the task will be much lower, without use more RAM memory.                   |
-| -x &#60FILE&#62     | Output top filename. |
+| -l &#60;level&#62;    | It will use the selected running levels/modes.    |
+| -p &#60;sample&#62;   | If FALCON is using a single model it will sample (or use) only this periodic value of bases.    |
+| -t &#60;top&#62;      | It will create a top with this size.              |
+| -n &#60;nThreads&#62; | It will use multiple-threading. The time to accomplish the task will be much lower, without use more RAM memory.                   |
+| -x &#60;FILE&#62;     | Output top filename. |
 | [FILE]           | The metagenomic filename. Possible file formats: FASTA, multi-FASTA, FASTQ or sequence [ACGTN]. |
 | [FILE]           | The BASE filename (e.g. virus or bacteria database). Possible file formats: FASTA, multi-FASTA or sequence [ACGTN]. |
 
