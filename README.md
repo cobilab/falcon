@@ -81,9 +81,7 @@ Mandatory arguments:
                                                                          
 Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
 </pre>
-
-### Options meaning
-
+All the parameters can be better explained trough the following table:
 | Parameters          | Meaning                                                     |
 |---------------------|:------------------------------------------------------------|
 | -h                  | It will print the parameters menu (help menu)                                        |
