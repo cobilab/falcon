@@ -14,13 +14,13 @@ void ModelsExplanation(void){
   "                        maximum allowed mutation on the context without  \n"
   "                        being discarded (usefull in deep contexts), under\n"
   "                        the estimator <e>.                               \n"
-  "                                                                       \n");
+  "                                                                         \n");
   }
 
 void PrintMenu(void){
   fprintf(stderr,
   "Usage: FALCON [OPTION]... [FILE] [FILE]                                  \n"
-  "Measure a top similarity between genomic sequences.                      \n"
+  "Machine learning system that classifies metagenomic samples              \n"
   "                                                                         \n"
   "Non-mandatory arguments:                                                 \n"
   "                                                                         \n"
@@ -49,7 +49,7 @@ void PrintVersion(void){
   "                          |   FALCON %u.%u   |                           \n"
   "                          ==================                             \n"
   "                                                                         \n"
-  "FALCON: a tool for measure a top similarity between genomic sequences.   \n"
+  "FALCON: a machine learning system that classifies metagenomic samples.   \n"
   "Copyright (C) 2014-2016 University of Aveiro. This is a Free software.   \n"
   "You may redistribute copies of it under the terms of the GNU - General   \n"
   "Public License v2 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"
