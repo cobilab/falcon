@@ -13,6 +13,13 @@ alt="FALCON" width="160" height="180" border="0" /></p>
 
 Cmake is needed for installation (http://www.cmake.org/) for systems not using Linux. You can download it directly from http://www.cmake.org/cmake/resources/software.html or use an appropriate packet manager. In the following instructions we show the procedure to install FALCON:
 <pre>
+git clone https://github.com/pratas/falcon.git
+cd falcon/src/
+cmake .
+make
+</pre>
+Alternatively to git use wget:
+<pre>
 wget https://github.com/pratas/falcon/archive/master.zip
 unzip master.zip
 cd falcon-master/src
