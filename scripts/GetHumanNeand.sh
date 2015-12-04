@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # ===========---------------------------------------------
-# | WARNING | THIS REQUIRES AT LEAST 200 GB OF FREE DISK |
+# | WARNING | THIS REQUIRES AT LEAST 300 GB OF FREE DISK |
 # ===========---------------------------------------------
 #
 # DEPENDECY: SAMTOOLS;
