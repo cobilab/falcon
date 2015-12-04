@@ -6,7 +6,7 @@ alt="FALCON" width="160" height="180" border="0" /></p>
 <br>
 
 <p align="justify">
-<b>FALCON is an alignment-free unsupervised system to measure a similarity top of multiple reads according to a database</b>. The core of the method is based on the <b>relative algorithmic entropy</b>, a notion that uses model-freezing and exclusive information from a reference, allowing to use <b>much lower computational resources</b>. Moreover, it uses <b>variable multi-threading</b>, without multiplying the memory for each thread, being able to <b>run efficiently from a powerful server to a common laptop</b>. To measure the similarity, the system will build <b>multiple finite-context (Markovian) models</b> that at the end of the reference sequence will be kept frozen. The target reads will then be measured using a mixture of the frozen models. The <b>mixture</b> estimates the probabilities assuming dependency from model performance, and thus, it will allow to adapt the usage of the models according to the nature of the target sequence. Furthermore, it uses <b>fault tolerant (substitutional edits) Markovian models</b> that bridge the gap between context sizes. <b>Several running modes</b> are available for different hardware and speed specifications. <b>The system is able to automatically learn</b> to measure similarity, whose properties are characteristics of the <b>Artificial Inteligence</b> field.
+<b>FALCON is an alignment-free unsupervised system to measure a similarity top of multiple reads according to a database</b>. The <b>machine learning system</b> can be used, for example, to <b>classify metagenomic samples</b>. The core of the method is based on the <b>relative algorithmic entropy</b>, a notion that uses model-freezing and exclusive information from a reference, allowing to use <b>much lower computational resources</b>. Moreover, it uses <b>variable multi-threading</b>, without multiplying the memory for each thread, being able to <b>run efficiently from a powerful server to a common laptop</b>. To measure the similarity, the system will build <b>multiple finite-context (Markovian) models</b> that at the end of the reference sequence will be kept frozen. The target reads will then be measured using a mixture of the frozen models. The <b>mixture</b> estimates the probabilities assuming dependency from model performance, and thus, it will allow to adapt the usage of the models according to the nature of the target sequence. Furthermore, it uses <b>fault tolerant (substitutional edits) Markovian models</b> that bridge the gap between context sizes. <b>Several running modes</b> are available for different hardware and speed specifications. <b>The system is able to automatically learn</b> to measure similarity, whose properties are characteristics of the <b>Artificial Inteligence</b> field.
 </p>
 
 ## INSTALLATION ##
@@ -51,7 +51,7 @@ These will print the following options:
 <pre>
 <p>
 Usage: FALCON [OPTION]... [FILE] [FILE]                                  
-Measure a top similarity between genomic sequences.                      
+Machine learning system that classifies metagenomic samples.                      
                                                                          
 Non-mandatory arguments:                                                 
                                                                          
