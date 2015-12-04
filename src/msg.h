@@ -5,9 +5,7 @@
 
 void ModelsExplanation  (void);
 void PrintMenu          (void);
-void PrintMenuVisual    (void);
 void PrintVersion       (void);
-void PrintVersionVisual (void);
 
 #endif
 
