@@ -347,12 +347,13 @@ void LoadReference(char *refName){
     if(ParseSym(PA, (sym = *readBuf++)) == -1){ idx = 0; continue; }
     symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
     for(n = 0 ; n < P->nModels ; ++n){
-      GetPModelIdx(symBuf->buf+symBuf->idx-1, Models[n]);
-      if(idx++ >= Models[n]->ctx){
-        UpdateCModelCounter(Models[n], sym, Models[n]->pModelIdx);
-        if(Models[n]->ir == 1){                         // INVERTED REPEATS
-          irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, Models[n]);
-          UpdateCModelCounter(Models[n], irSym, Models[n]->pModelIdxIR);
+      CModel *CM = Models[n];
+      GetPModelIdx(symBuf->buf+symBuf->idx-1, CM);
+      if(idx++ >= CM->ctx){
+        UpdateCModelCounter(CM, sym, CM->pModelIdx);
+        if(CM->ir == 1){                         // INVERTED REPEATS
+          irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, CM);
+          UpdateCModelCounter(CM, irSym, CM->pModelIdxIR);
           }
         }
       }
