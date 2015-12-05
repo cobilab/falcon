@@ -349,7 +349,7 @@ void LoadReference(char *refName){
     for(n = 0 ; n < P->nModels ; ++n){
       CModel *CM = Models[n];
       GetPModelIdx(symBuf->buf+symBuf->idx-1, CM);
-      if(idx++ >= CM->ctx){
+      if(++idx > CM->ctx){
         UpdateCModelCounter(CM, sym, CM->pModelIdx);
         if(CM->ir == 1){                         // INVERTED REPEATS
           irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, CM);
