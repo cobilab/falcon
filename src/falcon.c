@@ -83,7 +83,7 @@ void SamplingCompressTarget(Threads T){
         pos = &symBuf->buf[symBuf->idx-1];
         GetPModelIdx(pos, Shadow);
 
-        if(idx++ % P->sample == 0 && idx >= Shadow->ctx){
+        if(idx++ % P->sample == 0 && idx > Shadow->ctx){
           ComputePModel(Models[0], pModel, Shadow->pModelIdx, Shadow->alphaDen);
           bits += PModelSymbolLog(pModel, sym);
           ++nBase;
@@ -160,7 +160,7 @@ void FalconCompressTarget(Threads T){
         symBuf->buf[symBuf->idx] = sym;
         pos = &symBuf->buf[symBuf->idx-1];
         GetPModelIdx(pos, Shadow);
-        if(idx++ >= Shadow->ctx){
+        if(++idx > Shadow->ctx){
           ComputePModel(Models[0], pModel, Shadow->pModelIdx, Shadow->alphaDen);
           bits += PModelSymbolLog(pModel, sym);
           ++nBase;
