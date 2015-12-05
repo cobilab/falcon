@@ -8,9 +8,9 @@ MYMAIL="pratas@ua.pt";
 perl downloadViruses.pl
 echo "Downloaded virus base to sapiens ~/COMPLETE-NEANDERTHAL" | \
 mail -s "Downloaded virus base..." $MYMAIL
-perl downloadBacteria.pl
-echo "Downloaded bacteria base to sapiens ~/COMPLETE-NEANDERTHAL" | \
-mail -s "Downloaded bacteria base..." $MYMAIL
+#perl downloadBacteria.pl
+#echo "Downloaded bacteria base to sapiens ~/COMPLETE-NEANDERTHAL" | \
+#mail -s "Downloaded bacteria base..." $MYMAIL
 . GetHumanNean.sh
 echo "Downloaded neanderthal base to sapiens ~/COMPLETE-NEANDERTHAL" | \
 mail -s "Downloaded neanderthal base..." $MYMAIL
@@ -23,4 +23,4 @@ for((xi=1 ; xi<=56 ; ++xi));
   cat TOP$xi | mail -s "Neanderthal C$xi done! (COMPLETE-NEANDERTHAL)" $MYMAIL
   done
 #
-#==== =========================================================================
+#==============================================================================
