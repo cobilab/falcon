@@ -38,13 +38,12 @@ void SamplingCompressTarget(Threads T){
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
   uint8_t     sym, *pos, conName[MAX_NAME];
-  PModel      **pModel;
+  PModel      *pModel;
   CModel      *Shadow; // SHADOW FOR SUPPORTING MODEL WITH THREADING
   int         action;
 
-  Shadow      = CreateShadowModel(Models[0]);
-  pModel      = (PModel **) Calloc(1, sizeof(PModel *));
-  pModel[0]   = CreatePModel(ALPHABET_SIZE);
+  Shadow = CreateShadowModel(Models[0]);
+  pModel = CreatePModel(ALPHABET_SIZE);
 
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
@@ -85,9 +84,8 @@ void SamplingCompressTarget(Threads T){
         GetPModelIdx(pos, Shadow);
 
         if(idx++ % P->sample == 0 && idx >= Shadow->ctx){
-          ComputePModel(Models[0], pModel[0], Shadow->pModelIdx,
-          Shadow->alphaDen);
-          bits += PModelSymbolLog(pModel[0], sym);
+          ComputePModel(Models[0], pModel, Shadow->pModelIdx, Shadow->alphaDen);
+          bits += PModelSymbolLog(pModel, sym);
           ++nBase;
           }
 
@@ -98,8 +96,7 @@ void SamplingCompressTarget(Threads T){
   if(PA->nRead % P->nThreads == T.id)
     UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, nBase);
 
-  RemovePModel(pModel[0]);
-  Free(pModel);
+  RemovePModel(pModel);
   FreeShadow(Shadow);
   Free(readBuf);
   RemoveCBuffer(symBuf);
@@ -119,14 +116,12 @@ void FalconCompressTarget(Threads T){
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
   uint8_t     sym, *pos, conName[MAX_NAME];
-  PModel      **pModel;
-  CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
+  PModel      *pModel;
+  CModel      *Shadow; // SHADOW FOR SUPPORTING MODEL WITH THREADING
   int         action;
 
-  Shadow      = (CModel **) Calloc(1, sizeof(CModel *));
-  Shadow[0]   = CreateShadowModel(Models[0]);
-  pModel      = (PModel **) Calloc(1, sizeof(PModel *));
-  pModel[0]   = CreatePModel(ALPHABET_SIZE);
+  Shadow = CreateShadowModel(Models[0]);
+  pModel = CreatePModel(ALPHABET_SIZE);
 
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
@@ -139,7 +134,7 @@ void FalconCompressTarget(Threads T){
               }
             // RESET MODELS 
             ResetCBuffer(symBuf);
-            ResetShadowModel(Shadow[0]);
+            ResetShadowModel(Shadow);
             idx = r = nBase = bits = 0;
           break;
           case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
@@ -164,11 +159,10 @@ void FalconCompressTarget(Threads T){
         if((sym = DNASymToNum(sym)) == 4) continue; // IT IGNORES EXTRA SYMBOLS
         symBuf->buf[symBuf->idx] = sym;
         pos = &symBuf->buf[symBuf->idx-1];
-        GetPModelIdx(pos, Shadow[0]);
-        if(idx++ >= Shadow[0]->ctx){
-          ComputePModel(Models[0], pModel[0], Shadow[0]->pModelIdx, 
-          Shadow[0]->alphaDen);
-          bits += PModelSymbolLog(pModel[0], sym);
+        GetPModelIdx(pos, Shadow);
+        if(idx++ >= Shadow->ctx){
+          ComputePModel(Models[0], pModel, Shadow->pModelIdx, Shadow->alphaDen);
+          bits += PModelSymbolLog(pModel, sym);
           ++nBase;
           UpdateCBuffer(symBuf);
           }
@@ -178,10 +172,8 @@ void FalconCompressTarget(Threads T){
   if(PA->nRead % P->nThreads == T.id)
     UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, nBase);
 
-  RemovePModel(pModel[0]);
-  Free(pModel);
-  FreeShadow(Shadow[0]);
-  Free(Shadow);
+  RemovePModel(pModel);
+  FreeShadow(Shadow);
   Free(readBuf);
   RemoveCBuffer(symBuf);
   RemoveParser(PA);
