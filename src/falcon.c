@@ -256,18 +256,16 @@ void CompressTarget(Threads T){
         n = 0;
         pos = &symBuf->buf[symBuf->idx-1];
         for(cModel = 0 ; cModel < P->nModels ; ++cModel){
-          GetPModelIdx(pos, Shadow[cModel]);
-          ComputePModel(Models[cModel], pModel[n], Shadow[cModel]->pModelIdx,
-          Shadow[cModel]->alphaDen);
+          CModel *CM = Shadow[cModel];
+          GetPModelIdx(pos, CM);
+          ComputePModel(Models[cModel], pModel[n], CM->pModelIdx, CM->alphaDen);
           ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-          if(Shadow[cModel]->edits != 0){
+          if(CM->edits != 0){
             ++n;
-            Shadow[cModel]->SUBS.seq->buf[Shadow[cModel]->SUBS.seq->idx] = sym;
-            Shadow[cModel]->SUBS.idx = GetPModelIdxCorr(Shadow[cModel]->SUBS.
-            seq->buf+Shadow[cModel]->SUBS.seq->idx-1, Shadow[cModel], Shadow
-            [cModel]->SUBS.idx);
-            ComputePModel(Models[cModel], pModel[n], Shadow[cModel]->SUBS.idx, 
-            Shadow[cModel]->SUBS.eDen);
+            CM->SUBS.seq->buf[CM->SUBS.seq->idx] = sym;
+            CM->SUBS.idx = GetPModelIdxCorr(CM->SUBS.seq->buf+CM->SUBS.seq->idx
+            -1, CM, CM->SUBS.idx);
+            ComputePModel(Models[cModel], pModel[n], CM->SUBS.idx, CM->SUBS.eDen);
             ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
             }
           ++n;
