@@ -49,13 +49,13 @@ typedef struct{
 Array;
 
 typedef struct{
-  uint32_t in;
-  CBUF     *seq;      // BUFFER FOR EDITED SEQUENCE
-  uint8_t  *mask;     // BUFFER FOR FAILS & HITS
-  uint64_t idx;       // INDEX FOR UPDATE
-  uint64_t idx2;      // AUXILIAR INDEX FOR UPDATE
-  uint32_t threshold; // DISCARD ABOVE THIS VALUE
-  uint32_t eDen;      // ALPHA DENOMINATOR FOR THIS MODEL
+  uint32_t   in;
+  CBUF       *seq;      // BUFFER FOR EDITED SEQUENCE
+  uint8_t    *mask;     // BUFFER FOR FAILS & HITS
+  uint64_t   idx;       // INDEX FOR UPDATE
+  uint64_t   idx2;      // AUXILIAR INDEX FOR UPDATE
+  uint32_t   threshold; // DISCARD ABOVE THIS VALUE
+  uint32_t   eDen;      // ALPHA DENOMINATOR FOR THIS MODEL
   }
 Correct;
 
@@ -70,7 +70,6 @@ typedef struct{
   U32        mode;
   HashTable  hTable;
   Array      array;
-
   // INDEXES 
   U64        pModelIdx;
   U64        pModelIdxIR;
