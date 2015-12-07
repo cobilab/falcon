@@ -98,8 +98,7 @@ All the parameters can be better explained trough the following table:
 
 ## CITATION ##
 
-On using this software/method please cite:
-paper: to submit..
+On using this software/method please cite the url: https://github.com/pratas/falcon
 
 ## ISSUES ##
 
