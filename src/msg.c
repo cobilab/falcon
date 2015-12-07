@@ -31,7 +31,7 @@ void PrintMenu(void){
   "  -l <level>               compression level [%u;%u],                    \n"
   "  -p <sample>              subsampling (default: %u),                    \n"
   "  -t <top>                 top of similarity (default: %u),              \n"
-  "  -n <nThreads>            number of threads (dafault: %u),              \n"
+  "  -n <nThreads>            number of threads (default: %u),              \n"
   "  -x <FILE>                similarity top filename,                      \n"
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
