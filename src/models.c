@@ -138,12 +138,10 @@ inline void GetFreqsFromHCC(HCC c, uint32_t a, PModel *P){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 inline void ComputeMXProbs(FloatPModel *PT, PModel *MX){
-  PModel      MXT = MX->freqs[0];
-  FloatPModel PTX = PT->freqs[0];
-  MX->sum  = (MXT++ = 1 + (unsigned) (PTX++ * MX_PMODEL));
-  MX->sum += (MXT++ = 1 + (unsigned) (PTX++ * MX_PMODEL));
-  MX->sum += (MXT++ = 1 + (unsigned) (PTX++ * MX_PMODEL));
-  MX->sum += (MXT   = 1 + (unsigned) (PTX   * MX_PMODEL)); 
+  MX->sum  = (MX->freqs[0] = 1 + (unsigned) (PT->freqs[0] * MX_PMODEL));
+  MX->sum += (MX->freqs[1] = 1 + (unsigned) (PT->freqs[1] * MX_PMODEL));
+  MX->sum += (MX->freqs[2] = 1 + (unsigned) (PT->freqs[2] * MX_PMODEL));
+  MX->sum += (MX->freqs[3] = 1 + (unsigned) (PT->freqs[3] * MX_PMODEL)); 
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
