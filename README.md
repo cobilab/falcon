@@ -70,7 +70,7 @@ or
 These will print the following options:
 <pre>
 <p>
-Usage: FALCON [OPTION]... [FILE] [FILE]                                  
+Usage: FALCON [OPTION]... [FILE1] [FILE2]                                  
 Machine learning system that classifies metagenomic samples.                      
                                                                          
 Non-mandatory arguments:                                                 
@@ -79,16 +79,16 @@ Non-mandatory arguments:
   -V                       display version number,                       
   -v                       verbose mode (more information),              
   -s                       show compression levels,                       
-  -l &#60level&#62               compression level [1;30],                     
+  -l &#60level&#62               compression level [1;44],                     
   -p &#60sample&#62              subsampling (default: 1),                     
-  -t &#60top&#62                 top of similarity,                            
-  -n &#60nThreads&#62            number of threads,                            
+  -t &#60top&#62                 top of similarity (default: 20),                            
+  -n &#60nThreads&#62            number of threads (default: 2,                            
   -x &#60FILE&#62                similarity top filename,                      
                                                                          
 Mandatory arguments:                                                     
                                                                          
-  [FILE]                   sequenced file (FASTA or FASTQ),              
-  [FILE]                   base file (FASTA or Multi-FASTA).             
+  [FILE1]                  sequenced file (FASTA or FASTQ),              
+  [FILE2]                  base file (FASTA or Multi-FASTA).             
                                                                          
 Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
 </pre>

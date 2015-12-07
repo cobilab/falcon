@@ -41,7 +41,7 @@ typedef int8_t   I8;
 #define DEFAULT_FORCE          0
 #define DEFAULT_LEVEL          5
 #define DEFAULT_INDEX          2
-#define DEFAULT_THREADS        1
+#define DEFAULT_THREADS        2
 #define DEFAULT_FILTERSIZE     500
 #define DEFAULT_MINBLOCK       100
 #define DEFAULT_SAMPLE         1
