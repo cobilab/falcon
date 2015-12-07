@@ -45,6 +45,17 @@ FALCON
 </pre>
 to measure the similarity between sequences.
 
+## DEMO ##
+
+Search for the top 10 similar virus in Chimpanzee chromosome 7:
+<pre>
+cp scripts/downloadViruses.pl .
+perl downloadViruses.pl
+wget  --trust-server-names -q ftp://ftp.ncbi.nlm.nih.gov/genomes/Pan_troglodytes/CHR_07/ptr_ref_Pan_troglodytes-2.1.4_chr7.fa.gz -O PT7.fa.gz
+gunzip PT7.fa.gz
+./FALCON -v -t 10 -l 4 PT7.fa viruses.fa
+</pre>
+
 ## USAGE ##
 
 To see the possible options type
