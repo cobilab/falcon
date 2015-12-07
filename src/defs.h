@@ -49,13 +49,13 @@ typedef int8_t   I8;
 #define MAX_SAP                99999999
 #define MAX_LEV                44
 #define MIN_LEV                1
-#define DEF_TOP                100
+#define DEF_TOP                20
 #define MIN_TOP                1
 #define MAX_TOP                99999999
 #define MAX_NAME               5000
 
 #define MIN_THREADS            1
-#define MAX_THREADS            500
+#define MAX_THREADS            65535
 #define MAX_CTX                31
 #define MIN_CTX                1
 #define MAX_DEN                1000000

@@ -19,7 +19,7 @@ void ModelsExplanation(void){
 
 void PrintMenu(void){
   fprintf(stderr,
-  "Usage: FALCON [OPTION]... [FILE] [FILE]                                  \n"
+  "Usage: FALCON [OPTION]... [FILE1] [FILE2]                                \n"
   "Machine learning system that classifies metagenomic samples              \n"
   "                                                                         \n"
   "Non-mandatory arguments:                                                 \n"
@@ -29,18 +29,18 @@ void PrintMenu(void){
   "  -v                       verbose mode (more information),              \n"
   "  -s                       show compression levels,                      \n"
   "  -l <level>               compression level [%u;%u],                    \n"
-  "  -p <sample>              subsampling (default: 1),                     \n"
-  "  -t <top>                 top of similarity,                            \n"
-  "  -n <nThreads>            number of threads,                            \n"
+  "  -p <sample>              subsampling (default: %u),                    \n"
+  "  -t <top>                 top of similarity (default: %u),              \n"
+  "  -n <nThreads>            number of threads (dafault: %u),              \n"
   "  -x <FILE>                similarity top filename,                      \n"
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
   "                                                                         \n"
-  "  [FILE]                   sequenced file (FASTA or FASTQ),              \n"
-  "  [FILE]                   base file (FASTA or Multi-FASTA).             \n"
+  "  [FILE1]                  sequenced file (FASTA or FASTQ),              \n"
+  "  [FILE2]                  base file (FASTA or Multi-FASTA).             \n"
   "                                                                         \n"
   "Report issues to <{pratas,ap,pjf,jmr}@ua.pt>.                            \n",
-  MIN_LEV, MAX_LEV);
+  MIN_LEV, MAX_LEV, DEFAULT_SAMPLE, DEF_TOP, DEFAULT_THREADS);
   }
 
 void PrintVersion(void){
