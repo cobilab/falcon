@@ -28,7 +28,7 @@ void PrintMenu(void){
   "  -V                       display version number,                       \n"
   "  -v                       verbose mode (more information),              \n"
   "  -s                       show compression levels,                      \n"
-  "  -l <level>               compression level [1;30],                     \n"
+  "  -l <level>               compression level [%u;%u],                    \n"
   "  -p <sample>              subsampling (default: 1),                     \n"
   "  -t <top>                 top of similarity,                            \n"
   "  -n <nThreads>            number of threads,                            \n"
@@ -39,7 +39,8 @@ void PrintMenu(void){
   "  [FILE]                   sequenced file (FASTA or FASTQ),              \n"
   "  [FILE]                   base file (FASTA or Multi-FASTA).             \n"
   "                                                                         \n"
-  "Report issues to <{pratas,ap,pjf,jmr}@ua.pt>.                            \n");
+  "Report issues to <{pratas,ap,pjf,jmr}@ua.pt>.                            \n",
+  MIN_LEV, MAX_LEV);
   }
 
 void PrintVersion(void){
