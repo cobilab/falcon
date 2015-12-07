@@ -82,7 +82,7 @@ Non-mandatory arguments:
   -l &#60level&#62               compression level [1;44],                     
   -p &#60sample&#62              subsampling (default: 1),                     
   -t &#60top&#62                 top of similarity (default: 20),                            
-  -n &#60nThreads&#62            number of threads (default: 2,                            
+  -n &#60nThreads&#62            number of threads (default: 2),                            
   -x &#60FILE&#62                similarity top filename,                      
                                                                          
 Mandatory arguments:                                                     
