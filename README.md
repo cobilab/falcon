@@ -55,6 +55,7 @@ wget  --trust-server-names -q ftp://ftp.ncbi.nlm.nih.gov/genomes/Pan_troglodytes
 gunzip PT18.fa.gz
 ./FALCON -v -n 4 -c 20 -t 10 -l 18 PT18.fa viruses.fa
 </pre>
+It will use 4 GB of RAM memory and less than 2 minutes (in a common laptop) to run the FALCON.
 
 ## USAGE ##
 
