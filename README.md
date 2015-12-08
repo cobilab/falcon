@@ -2,7 +2,7 @@
 
 <br>
 <p align="center"><img src="imgs/logo1.png" 
-alt="FALCON" width="300" height="300" border="0" /></p>
+alt="FALCON" width="310" height="300" border="0" /></p>
 <br>
 
 <p align="justify">
