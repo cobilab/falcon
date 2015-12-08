@@ -18,7 +18,7 @@ mail -s "Downloaded neanderthal base..." $MYMAIL
 # RUN =========================================================================
 for((xi=1 ; xi<=56 ; ++xi));
   do
-  (time ./FALCON -v -l 23 -p 1 -t 500 -n 10 -c 50 -x TOP$xi HN-C$xi \
+  (time ./FALCON -v -l 29 -p 1 -t 500 -n 10 -c 50 -x TOP$xi HN-C$xi \
   viruses.fa) &> REPORT$xi;
   cat TOP$xi | mail -s "Neanderthal C$xi done! (COMPLETE-NEANDERTHAL)" $MYMAIL
   done
