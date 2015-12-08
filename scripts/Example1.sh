@@ -20,5 +20,5 @@ gunzip BE.fa.gz
 # GET VIRUSES =================================================================
 perl downloadViruses.pl
 # RUN FALCON ==================================================================
-./FALCON -v -l 4 -n 4 -t 10 -x top.csv BE.fa viruses.fa
+./FALCON -v -l 15 -n 4 -t 10 -x top.csv BE.fa viruses.fa
 # ============================================================================= 
