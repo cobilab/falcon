@@ -5,8 +5,8 @@
 THREADS="4";
 TOP="4";
 SAMPLING="1";
-CACHEHASH="20";
-LEVEL="31";
+CACHEHASH="25";
+LEVEL="14";
 #==============================================================================
 . install.sh
 perl downloadViruses.pl
