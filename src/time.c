@@ -6,12 +6,12 @@
 static void PrintCalc(char *text, clock_t t){
   uint32_t seconds = t / CLOCKS_PER_SEC;
   if(seconds <= 60)
-    fprintf(stdout, "%s cpu time: %u second(s).\n", text, seconds);
+    fprintf(stdout, "%s CPU time: %u second(s).\n", text, seconds);
   else if(seconds <= 3600)
-    fprintf(stdout, "%s cpu time: %u minute(s) and %u second(s).\n", text, 
+    fprintf(stdout, "%s CPU time: %u minute(s) and %u second(s).\n", text, 
     seconds / 60, seconds % 60);
   else
-    fprintf(stdout, "%s cpu time: %u hour(s) and %u minute(s).\n", text, 
+    fprintf(stdout, "%s CPU time: %u hour(s) and %u minute(s).\n", text, 
     seconds / 3600, seconds % 3600);
   }
 
@@ -33,7 +33,6 @@ void StopTimeNDRM(TIME *Time, clock_t t){
 
 void StopCalcAll(TIME *Time, clock_t t){
   Time->cpu_total = t - Time->cpu_start;
-  PrintCalc("NDRM ", Time->cpu_ndrm);
   PrintCalc("Total", Time->cpu_total);
   }
 
