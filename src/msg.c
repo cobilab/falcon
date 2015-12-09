@@ -36,7 +36,7 @@ void PrintMenu(void){
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
   "                                                                         \n"
-  "  [FILE1]                  sequenced file (FASTA or FASTQ),              \n"
+  "  [FILE1]                  metagenomic file (FASTA or FASTQ),            \n"
   "  [FILE2]                  base file (FASTA or Multi-FASTA).             \n"
   "                                                                         \n"
   "Report issues to <{pratas,ap,pjf,jmr}@ua.pt>.                            \n",
