@@ -106,7 +106,7 @@ All the parameters can be better explained trough the following table:
 | -n &#60;nThreads&#62; | It will use multiple-threading. The time to accomplish the task will be much lower, without use more RAM memory.                   |
 | -x &#60;FILE&#62;     | Output top filename. |
 | [FILE]           | The metagenomic filename (direct from the NGS sequencing platform). Possible file formats: FASTQ, multi-FASTA, FASTA or sequence [ACGTN]. |
-| [FILE]           | The BASE filename (e.g. virus or bacteria database). Possible file formats: FASTA, multi-FASTA or sequence [ACGTN]. |
+| [FILE]           | The BASE filename (e.g. virus or bacteria database). Possible file formats: FASTA, multi-FASTA or sequence [ACGTN]. There are several scripts, on directory scripts, to download several databases. |
 
 ## CITATION ##
 
