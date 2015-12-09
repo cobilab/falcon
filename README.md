@@ -1,7 +1,7 @@
 # FALCON #
 
 <br>
-<p align="center"><img src="imgs/logo1.png" 
+<p align="center"><img src="imgs/logot.png"
 alt="FALCON" width="310" height="300" border="0" /></p>
 <br>
 
