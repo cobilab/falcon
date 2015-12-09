@@ -87,7 +87,7 @@ Non-mandatory arguments:
                                                                          
 Mandatory arguments:                                                     
                                                                          
-  [FILE1]                  sequenced file (FASTA or FASTQ),              
+  [FILE1]                  metagenomic file (FASTA or FASTQ),              
   [FILE2]                  base file (FASTA or Multi-FASTA).             
                                                                          
 Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
@@ -105,7 +105,7 @@ All the parameters can be better explained trough the following table:
 | -t &#60;top&#62;      | It will create a top with this size.              |
 | -n &#60;nThreads&#62; | It will use multiple-threading. The time to accomplish the task will be much lower, without use more RAM memory.                   |
 | -x &#60;FILE&#62;     | Output top filename. |
-| [FILE]           | The metagenomic filename. Possible file formats: FASTA, multi-FASTA, FASTQ or sequence [ACGTN]. |
+| [FILE]           | The metagenomic filename (direct from the NGS sequencing platform). Possible file formats: FASTQ, multi-FASTA, FASTA or sequence [ACGTN]. |
 | [FILE]           | The BASE filename (e.g. virus or bacteria database). Possible file formats: FASTA, multi-FASTA or sequence [ACGTN]. |
 
 ## CITATION ##
