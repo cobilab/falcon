@@ -118,7 +118,7 @@ For any issue let us know at [issues link](https://github.com/pratas/falcon/issu
 
 ## LICENSE ##
 
-GPL v2.
+GPL v3.
 
-For more information:
-<pre>http://www.gnu.org/licenses/gpl-2.0.html</pre>
+For more information see LICENSE file or visit
+<pre>http://www.gnu.org/licenses/gpl-3.0.html</pre>
