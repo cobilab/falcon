@@ -53,7 +53,7 @@ void PrintVersion(void){
   "FALCON: a machine learning system that classifies metagenomic samples.   \n"
   "Copyright (C) 2014-2016 University of Aveiro. This is a Free software.   \n"
   "You may redistribute copies of it under the terms of the GNU - General   \n"
-  "Public License v2 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"
+  "Public License v3 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"
   "ANY WARRANTY, to the extent permitted by law. Developed and Written by   \n"
   "Diogo Pratas, Armando J. Pinho, Paulo J. S. G. Ferreira and Joao M. O.   \n"
   "S. Rodrigues.\n\n", VERSION, RELEASE);
