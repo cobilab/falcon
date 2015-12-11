@@ -440,7 +440,6 @@ int32_t main(int argc, char *argv[]){
   if(P->nModels == 0 && P->level == 0)
     P->level = DEFAULT_LEVEL;
 
-  P->nModels  = 0;
   if(P->level != 0){
     xpl = GetLevels(P->level);
     xargc = StrToArgv(xpl, &xargv);
