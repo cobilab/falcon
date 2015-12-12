@@ -586,8 +586,8 @@ void PrintArgs(Parameters *P, Threads T, char *ref, char *tar, uint32_t top){
   fprintf(stderr, "Gamma .............................. %.2lf\n", P->gamma);
   fprintf(stderr, "Maximum Collisions ................. %u\n", P->col);
   fprintf(stderr, "Matrix filename .................... %s\n", P->output);
-  fprintf(stderr, "Database filename .................. %s\n", ref);
-  fprintf(stderr, "Matagenomic file ................... %s\n", tar);
+  fprintf(stderr, "Metagenomic filename ............... %s\n", ref);
+  fprintf(stderr, "Database filename .................. %s\n", tar);
   fprintf(stderr, "\n");
   }
 
