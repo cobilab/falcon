@@ -379,11 +379,11 @@ void CompressAction(Threads *T, char *refName, char *baseName){
     T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits, 
     T[0].model[n].eDen);
 
-  fprintf(stderr, "  [+] Loading reference ... ");
+  fprintf(stderr, "  [+] Loading database ... ");
   LoadReference(refName);
   fprintf(stderr, "Done!\n");
 
-  fprintf(stderr, "  [+] Compressing target ... ");
+  fprintf(stderr, "  [+] Compressing metagenomic file ... ");
   for(n = 0 ; n < P->nThreads ; ++n)
     pthread_create(&(t[n+1]), NULL, CompressThread, (void *) &(T[n]));
   for(n = 0 ; n < P->nThreads ; ++n) // DO NOT JOIN FORS!
