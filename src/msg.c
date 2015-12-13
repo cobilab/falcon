@@ -20,7 +20,7 @@ void ModelsExplanation(void){
 void PrintMenu(void){
   fprintf(stderr,
   "Usage: FALCON [OPTION]... [FILE1] [FILE2]                                \n"
-  "Machine learning system that classifies metagenomic samples              \n"
+  "Machine learning system that classifies genomic & metagenomic samples    \n"
   "                                                                         \n"
   "Non-mandatory arguments:                                                 \n"
   "                                                                         \n"
@@ -36,8 +36,8 @@ void PrintMenu(void){
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
   "                                                                         \n"
-  "  [FILE1]                  metagenomic file (FASTA or FASTQ),            \n"
-  "  [FILE2]                  base file (FASTA or Multi-FASTA).             \n"
+  "  [FILE1]                  metagenomic filename (FASTA or FASTQ),        \n"
+  "  [FILE2]                  database filename (FASTA or Multi-FASTA).     \n"
   "                                                                         \n"
   "Report issues to <{pratas,ap,pjf,jmr}@ua.pt>.                            \n",
   MIN_LEV, MAX_LEV, DEFAULT_SAMPLE, DEF_TOP, DEFAULT_THREADS);
@@ -50,7 +50,7 @@ void PrintVersion(void){
   "                          |   FALCON %u.%u   |                           \n"
   "                          ==================                             \n"
   "                                                                         \n"
-  "FALCON: a machine learning system that classifies metagenomic samples.   \n"
+  "Machine learning system that classifies genomic & metagenomic samples.   \n"
   "Copyright (C) 2014-2016 University of Aveiro. This is a Free software.   \n"
   "You may redistribute copies of it under the terms of the GNU - General   \n"
   "Public License v3 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"
