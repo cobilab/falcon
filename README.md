@@ -71,7 +71,7 @@ These will print the following options:
 <pre>
 <p>
 Usage: FALCON [OPTION]... [FILE1] [FILE2]                                  
-Machine learning system that classifies genomic and metagenomic samples.                      
+Machine learning system that classifies genomic & metagenomic samples.                      
                                                                          
 Non-mandatory arguments:                                                 
                                                                          
