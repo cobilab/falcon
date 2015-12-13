@@ -71,7 +71,7 @@ These will print the following options:
 <pre>
 <p>
 Usage: FALCON [OPTION]... [FILE1] [FILE2]                                  
-Machine learning system that classifies metagenomic samples.                      
+Machine learning system that classifies genomic and metagenomic samples.                      
                                                                          
 Non-mandatory arguments:                                                 
                                                                          
@@ -87,8 +87,8 @@ Non-mandatory arguments:
                                                                          
 Mandatory arguments:                                                     
                                                                          
-  [FILE1]                  metagenomic file (FASTA or FASTQ),              
-  [FILE2]                  base file (FASTA or Multi-FASTA).             
+  [FILE1]                  metagenomic filename (FASTA or FASTQ),              
+  [FILE2]                  database filename (FASTA or Multi-FASTA).             
                                                                          
 Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
 </pre>
@@ -105,8 +105,8 @@ All the parameters can be better explained trough the following table:
 | -t &#60;top&#62;      | It will create a top with this size.              |
 | -n &#60;nThreads&#62; | It will use multiple-threading. The time to accomplish the task will be much lower, without use more RAM memory.                   |
 | -x &#60;FILE&#62;     | Output top filename. |
-| [FILE]           | The metagenomic filename (direct from the NGS sequencing platform). Possible file formats: FASTQ, multi-FASTA, FASTA or sequence [ACGTN]. |
-| [FILE]           | The BASE filename (e.g. virus or bacteria database). Possible file formats: FASTA, multi-FASTA or sequence [ACGTN]. There are several scripts, on directory scripts, to download several databases. |
+| [FILE1]           | The metagenomic filename (direct from the NGS sequencing platform). Possible file formats: FASTQ, multi-FASTA, FASTA or sequence [ACGTN]. |
+| [FILE2]           | The database filename (e.g. virus or bacteria database). Possible file formats: FASTA, multi-FASTA or sequence [ACGTN]. There are several scripts, on directory scripts, to download several databases. |
 
 ## CITATION ##
 
