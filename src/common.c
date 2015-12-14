@@ -212,6 +212,17 @@ uint64_t NDNASymInFastq(FILE *file){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+int FileExists(const char *fn){
+  FILE *F = NULL;
+  if((F = fopen(fn, "r")) != NULL){ 
+    fclose(F);
+    return 1;
+    }
+  return 0;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 uint64_t FopenBytesInFile(const char *fn){
   uint64_t size = 0;
   FILE *file = Fopen(fn, "r");

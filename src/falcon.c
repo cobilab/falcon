@@ -402,11 +402,11 @@ void CompressAction(Threads *T, char *refName, char *baseName){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int32_t main(int argc, char *argv[]){
-  char        **p = *&argv, **xargv, *xpl = NULL;
-  int32_t     xargc = 0;
-  uint32_t    n, k, col, ref, topSize;
-  double      gamma;
-  Threads     *T;
+  char     **p = *&argv, **xargv, *xpl = NULL;
+  int32_t  xargc = 0;
+  uint32_t n, k, col, ref, topSize;
+  double   gamma;
+  Threads  *T;
   
   P = (Parameters *) Malloc(1 * sizeof(Parameters));
   if((P->help = ArgsState(DEFAULT_HELP, p, argc, "-h")) == 1 || argc < 2){
@@ -462,7 +462,14 @@ int32_t main(int argc, char *argv[]){
   P->gamma     = ArgsDouble (gamma, p, argc, "-g");
   P->gamma     = ((int)(P->gamma * 65536)) / 65536.0;
   P->output    = ArgsFileGen(p, argc, "-x", "top", ".csv");
-  FILE *OUTPUT = Fopen(P->output, "w");
+
+  FILE *OUTPUT = NULL;
+  if(FileExists(P->output) == 1 && P->force == 1)
+    OUTPUT = Fopen(P->output, "w");
+  else{
+    fprintf(stderr, "  [x] File %s already exists!\n", P->output);
+    }
+    
 
   if(P->nModels == 0){
     fprintf(stderr, "Error: at least you need to use a context model!\n");
