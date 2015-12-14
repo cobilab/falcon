@@ -467,9 +467,10 @@ int32_t main(int argc, char *argv[]){
   if(FileExists(P->output) == 1 && P->force == 1)
     OUTPUT = Fopen(P->output, "w");
   else{
-    fprintf(stderr, "  [x] File %s already exists!\n", P->output);
+    fprintf(stderr, "[x] ERROR: file %s already exists!\n", P->output);
+    fprintf(stderr, "[x] ERROR: to force overwrite use flag \"-F\".\n");
+    exit(1); 
     }
-    
 
   if(P->nModels == 0){
     fprintf(stderr, "Error: at least you need to use a context model!\n");
