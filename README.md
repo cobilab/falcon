@@ -76,6 +76,7 @@ Machine learning system to detect pathogens in metagenomic samples.
 Non-mandatory arguments:                                                 
                                                                          
   -h                       give this help,                               
+  -F                       force mode (overwrites top file),
   -V                       display version number,                       
   -v                       verbose mode (more information),              
   -s                       show compression levels,                       
