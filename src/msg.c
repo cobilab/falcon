@@ -20,7 +20,7 @@ void ModelsExplanation(void){
 void PrintMenu(void){
   fprintf(stderr,
   "Usage: FALCON [OPTION]... [FILE1] [FILE2]                                \n"
-  "Machine learning system that classifies genomic & metagenomic samples    \n"
+  "Machine learning system to detect pathogens in metagenomic samples.      \n"
   "                                                                         \n"
   "Non-mandatory arguments:                                                 \n"
   "                                                                         \n"
@@ -50,7 +50,7 @@ void PrintVersion(void){
   "                          |   FALCON %u.%u   |                           \n"
   "                          ==================                             \n"
   "                                                                         \n"
-  "Machine learning system that classifies genomic & metagenomic samples.   \n"
+  "Machine learning system that detects pathogens in metagenomic samples.   \n"
   "Copyright (C) 2014-2016 University of Aveiro. This is a Free software.   \n"
   "You may redistribute copies of it under the terms of the GNU - General   \n"
   "Public License v3 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"
