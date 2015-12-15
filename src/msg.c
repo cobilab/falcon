@@ -25,6 +25,7 @@ void PrintMenu(void){
   "Non-mandatory arguments:                                                 \n"
   "                                                                         \n"
   "  -h                       give this help,                               \n"
+  "  -F                       force mode (overwrites top file),             \n"
   "  -V                       display version number,                       \n"
   "  -v                       verbose mode (more information),              \n"
   "  -s                       show compression levels,                      \n"
