@@ -98,6 +98,7 @@ All the parameters can be better explained trough the following table:
 | Parameters          | Meaning                                                     |
 |---------------------|:------------------------------------------------------------|
 | -h                  | It will print the parameters menu (help menu)                                        |
+| -F                  | It will use the force mode, namely overwriting the output top file.                                        |
 | -V                  | It will print the FALCON version number, license type and authors.    |
 | -v                  | It will print progress information.    |
 | -s                  | It will show pre-defined running levels/modes.    |
