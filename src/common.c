@@ -3,7 +3,6 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
-#include <unistd.h>
 #include "defs.h"
 #include "mem.h"
 #include "common.h"
