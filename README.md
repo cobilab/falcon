@@ -11,7 +11,7 @@ alt="FALCON" width="350" height="200" border="0" /></p>
 
 ## INSTALLATION ##
 
-[![Install and Demo Video](imgs/logo.png)](https://www.youtube.com/watch?v=eLqXE2ghFNk)
+[![Install and Demo Video](imgs/demo.png)](https://www.youtube.com/watch?v=eLqXE2ghFNk)
 
 Cmake is needed for installation (http://www.cmake.org/) for systems not using Linux. You can download it directly from http://www.cmake.org/cmake/resources/software.html or use an appropriate packet manager. In the following instructions we show the procedure to install FALCON:
 <pre>
