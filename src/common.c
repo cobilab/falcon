@@ -506,11 +506,11 @@ void FAccessWPerm(char *fn)
   {
   if(access(fn, F_OK) != -1)
     {
-    fprintf(stderr, "Error: file %s already exists!\n", fn);
+    fprintf(stderr, "[x] Error: file %s already exists!\n", fn);
     if(access(fn, W_OK) != -1)
-      fprintf(stderr, "Note: file %s has write permission.\nTip: to force "
-      "writing rerun with \"-f\" option.\nWarning: on forcing, the old (%s) "
-      "file will be deleted permanently.\n", fn, fn);
+      fprintf(stderr, "[i] Note: file %s has write permission.\n[i] Tip: to "
+      "force writing rerun with \"-F\" option.\n[i] Warning: on forcing, the"
+      " old (%s) file will be deleted permanently.\n", fn, fn);
     exit(1);
     }
   }
