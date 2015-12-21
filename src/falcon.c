@@ -340,7 +340,9 @@ void LoadReference(char *refName){
 
   fstat (fd, &s);
   size = s.st_size;
-  readBuf = (uint8_t *) mmap(0, size, PROT_READ, MAP_PRIVATE, fd, 0);
+  readBuf = (uint8_t *) mmap(0, size, PROT_READ, MAP_PRIVATE|MAP_POPULATE, 
+  fd, 0);
+  madvise(readBuf, s.st_size, MADV_SEQUENTIAL);
   for(k = 0 ; k < size ; ++k){
     if(ParseSym(PA, (sym = *readBuf++)) == -1){ idx = 0; continue; }
     symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
