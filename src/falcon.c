@@ -336,7 +336,12 @@ void LoadReference(char *refName){
   fclose(Reader);
   struct   stat s;
   size_t   size, k;
-  long     fd = open(refName, O_RDONLY);
+  long     fd;
+
+  if((fd = open(refName, O_RDONLY)) == -1){
+    fprintf(stderr, "[x] Error: unable to open file\n");
+    exit(1);
+    }
 
   fstat (fd, &s);
   size = s.st_size;
