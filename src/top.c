@@ -77,7 +77,21 @@ void PrintTop(FILE *F, TOP *Top, uint32_t size){
     exit(1);
     }
   for(n = 0 ; n < size ; ++n)
-    fprintf(F, "%2u\t%"PRIu64"\t%12.9g\t%s\n", n+1, Top->V[n].size, 
+    fprintf(F, "%u\t%"PRIu64"\t%12.9g\t%s\n", n+1, Top->V[n].size, 
+    (1.0-Top->V[n].value)*100.0, Top->V[n].name);
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void PrintTopInfo(TOP *Top, uint32_t size){
+  uint32_t n;
+  if(size > Top->size){
+    fprintf(stderr, "  [x] Error: top is larger than size!\n");
+    exit(1);
+    }
+  fprintf(stderr, "  [i] Top %u:\n", size);
+  for(n = 0 ; n < size ; ++n)
+    fprintf(stderr, "  [i] %u \t%"PRIu64"\t%12.9g\t%s\n", n+1, Top->V[n].size,
     (1.0-Top->V[n].value)*100.0, Top->V[n].name);
   }
 

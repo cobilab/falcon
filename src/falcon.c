@@ -529,8 +529,7 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "Done!\n");
 
   if(P->verbose && topSize <= 100){
-    fprintf(stderr, "TOP:\n");
-    PrintTop(stderr, P->top, topSize);
+    PrintTopInfo(P->top, topSize);
     }
   fprintf(stderr, "\n");
 

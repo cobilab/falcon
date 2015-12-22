@@ -29,6 +29,7 @@ void       AddElement      (VT *, double, uint8_t *, uint64_t);
 int        SortByValue     (const void *, const void *);
 void       UpdateTop       (double, uint8_t *, TOP *, uint64_t);
 void       PrintTop        (FILE *, TOP *, uint32_t);
+void       PrintTopInfo    (TOP *, uint32_t);
 void       DeleteTop       (TOP *);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
