@@ -1,7 +1,8 @@
 #!/bin/bash
 # 
 # AN EXAMPLE SHOWING THE DETECTION OF PATHOGENS IN THE NEANDERTHAL GENOME.
-# IT USES ~22 GB OF RAM, 16 THREADS and at least 300 GB OF DISK.
+#
+# WARNING: IT USES ~22 GB OF RAM, 16 THREADS and at least 300 GB OF DISK.
 #
 # INSTALL FALCON ==============================================================
 git clone https://github.com/pratas/falcon.git
@@ -20,7 +21,7 @@ perl downloadBacteria.pl
 # RUN FALCON ==================================================================
 for((x=1 ; x<=56 ; ++x));
   do
-  (time ./FALCON -v -l 36 -p 1 -t 10000 -n 16 -c 50 -x TOP$x HN-C$x \
+  (time ./FALCON -v -l 36 -p 1 -t 20000 -n 16 -c 50 -x TOP$x HN-C$x \
   Bacteria.fa) &> REPORT$x;
   done
 #

@@ -7,7 +7,7 @@
 # INSTALL FALCON ==============================================================
 git clone https://github.com/pratas/falcon.git
 cd falcon/src/
-cp Makefile.linux Makefile
+cmake .
 make
 cp FALCON ../../
 cd ../../
@@ -21,7 +21,7 @@ perl downloadBacteria.pl
 # RUN FALCON ==================================================================
 for((x=1 ; x<=13 ; ++x));
   do
-  (time ./FALCON -v -l 38 -p 1 -t 20000 -n 16 -c 70 -x TOP$x DX$x \
+  (time ./FALCON -v -l 38 -p 1 -t 40000 -n 16 -c 70 -x TOP$x DX$x \
   Bacteria.fa) &> REPORT$x;
   done
 #
