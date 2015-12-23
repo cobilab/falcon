@@ -15,7 +15,7 @@ rm -fr falcon/
 # GET NENADERTHAL =============================================================
 . GetHumanNean.sh
 # GET VIRUSES =================================================================
-perl downloadViruses.pl
+perl downloadBacteria.pl
 # RUN FALCON ==================================================================
 for((x=1 ; x<=56 ; ++x));
   do
