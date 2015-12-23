@@ -1,6 +1,7 @@
 #!/bin/bash
 # 
 # AN EXAMPLE SHOWING THE DETECTION OF PATHOGENS IN THE NEANDERTHAL GENOME.
+# IT USES ~22 GB OF RAM, 16 THREADS and at least 300 GB OF DISK.
 #
 # INSTALL FALCON ==============================================================
 git clone https://github.com/pratas/falcon.git
