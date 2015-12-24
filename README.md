@@ -59,6 +59,11 @@ gunzip PT18.fa.gz
 </pre>
 It will use less than 3.5 GB of RAM memory and about 1 minute (in a common laptop) to run the FALCON.
 
+In the case of problems with perl, run the following:
+<pre>
+perl -MCPAN -e'install "LWP::Simple"'
+</pre>
+
 ## USAGE ##
 
 To see the possible options type
