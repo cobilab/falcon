@@ -121,7 +121,9 @@ All the parameters can be better explained trough the following table:
 
 ## CITATION ##
 
-On using this software/method please cite the url: https://github.com/pratas/falcon
+On using this software/method please cite: 
+
+D. Pratas, A. J. Pinho, P. J. S. G. Ferreira, J. M. O. S. Rodrigues (2015). FALCON: a machine learning system to detect pathogens in genomic and metagenomic samples. Zenodo. 10.5281/zenodo.35745
 
 ## ISSUES ##
 
