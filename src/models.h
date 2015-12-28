@@ -18,26 +18,26 @@
   #define MAX_HASH_CTX        16
 #endif
 
-typedef U16  ACC;                  // Size of context counters for arrays
+typedef U16  ACC;             // Size of context counters for arrays
 typedef U8   HCC;             // Size of context counters for hash tables
-typedef U16  ENTMAX;                // Entry size (nKeys for each hIndex)
+typedef U8   ENTMAX;          // Entry size (nKeys for each hIndex)
 typedef HCC  HCCounters[4];
 
 typedef struct{
   #if defined(PREC32B)
-  U32        key;                         // The key stored in this entry
+  U32        key;             // The key stored in this entry
   #elif defined(PREC16B)
   U16        key;
   #else
   U8         key;
   #endif
-  HCC        counters;           // "Small" counters: 2 bits for each one
+  HCC        counters;        // "Small" counters: 2 bits for each one
   }
 Entry;
 
 typedef struct{
-  ENTMAX     *index;                      // Number of keys in this entry
-  Entry      **entries;              // The heads of the hash table lists
+  ENTMAX     *index;          // Number of keys in this entry
+  Entry      **entries;       // The heads of the hash table lists
   uint32_t   maxC;
   uint32_t   maxH;
   }
@@ -50,19 +50,19 @@ Array;
 
 typedef struct{
   uint32_t   in;
-  CBUF       *seq;      // BUFFER FOR EDITED SEQUENCE
-  uint8_t    *mask;     // BUFFER FOR FAILS & HITS
-  uint64_t   idx;       // INDEX FOR UPDATE
-  uint64_t   idx2;      // AUXILIAR INDEX FOR UPDATE
-  uint32_t   threshold; // DISCARD ABOVE THIS VALUE
-  uint32_t   eDen;      // ALPHA DENOMINATOR FOR THIS MODEL
+  CBUF       *seq;            // BUFFER FOR EDITED SEQUENCE
+  uint8_t    *mask;           // BUFFER FOR FAILS & HITS
+  uint64_t   idx;             // INDEX FOR UPDATE
+  uint64_t   idx2;            // AUXILIAR INDEX FOR UPDATE
+  uint32_t   threshold;       // DISCARD ABOVE THIS VALUE
+  uint32_t   eDen;            // ALPHA DENOMINATOR FOR THIS MODEL
   }
 Correct;
 
 typedef struct{
-  U32        ctx;                    // Current depth of context template
-  U64        nPModels;            // Maximum number of probability models
-  U32        alphaDen;                            // Denominator of alpha
+  U32        ctx;             // Current depth of context template
+  U64        nPModels;        // Maximum number of probability models
+  U32        alphaDen;        // Denominator of alpha
   U32        maxCount;        // Counters /= 2 if one counter >= maxCount
   U64        multiplier;
   U8         ir;
@@ -70,10 +70,8 @@ typedef struct{
   U32        mode;
   HashTable  hTable;
   Array      array;
-  // INDEXES 
   U64        pModelIdx;
   U64        pModelIdxIR;
-  // EDITS HANDLING:
   U32        edits;
   Correct    SUBS;
   }
