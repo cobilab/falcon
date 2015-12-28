@@ -1,17 +1,19 @@
 #!/bin/bash
 #. GetTopNames.sh 56
-cp UNIQUE UNIQUE-NEANDERTHAL;
-filename="UNIQUE-NEANDERTHAL"
-while read -r line
-do
-    name=$line
-    if [[ $line == "" ]] 
-      then
-      continue;
-      fi;
-    echo "PROCESSING: $name"
-    perl downloadOrg.pl "$name"
+cat UNIQUE | tr -d "." > bnames.nm;
+perl DownloadRef.pl bnames.nm;
 
-    echo "DONE";
-done < "$filename"
+#filename="U"
+#while read -r line
+#do
+#    name=$line
+#    if [[ $line == "" ]] 
+#      then
+#      continue;
+#      fi;
+#    echo "PROCESSING: $name"
+#    perl downloadOrg.pl "$name"
+#
+#    echo "DONE";
+#done < "$filename"
 

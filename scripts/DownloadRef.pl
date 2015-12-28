@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+# IT DOWNLOADS REFERENCE GENOMES USING THE NAMES FROM FILE
 use strict;
 use warnings;
 use LWP::Simple;
@@ -10,7 +11,7 @@ my $base = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
 my $limit = 'srcdb+refseq[prop]+AND+gene+in+chromosome[prop])';
 
 my @species;
-open(my $fh, "<", "bnames.txt")
+open(my $fh, "<", $ARGV[0])
     or die "Failed to open file: $!\n";
 while(<$fh>) { 
     chomp; 
