@@ -22,7 +22,7 @@ close $fh;
 print join " ", @species;
 
 foreach my $s (@species) {
-  print "Downloading $s ... ";
+  print STDERR "Downloading $s ... \n";
   undef @genomeId;
   $query_key = $webenv = '';
   $s =~ s/ /+/g;
