@@ -11,17 +11,17 @@ cmake .
 make
 cp FALCON ../../
 cd ../../
-cp falcon/scripts/downloadBacteria.pl .
+cp falcon/scripts/DownloadBacteria.pl .
 cp falcon/scripts/GetHumanDeni.sh .
 rm -fr falcon/
 # GET DENISOVAN ===============================================================
 . GetHumanDeni.sh
 # GET VIRUSES =================================================================
-perl downloadBacteria.pl
+perl DownloadBacteria.pl
 # RUN FALCON ==================================================================
 for((x=1 ; x<=13 ; ++x));
   do
-  (time ./FALCON -v -l 38 -p 1 -t 40000 -n 16 -c 70 -x TOP$x DX$x \
+  (time ./FALCON -v -F -l 38 -p 1 -t 40000 -n 16 -c 70 -x TOP$x DX$x \
   Bacteria.fa) &> REPORT$x;
   done
 #
