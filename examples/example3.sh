@@ -11,17 +11,17 @@ cp Makefile.linux Makefile
 make
 cp FALCON ../../
 cd ../../
-cp falcon/scripts/downloadBacteria.pl .
+cp falcon/scripts/DownloadBacteria.pl .
 cp falcon/scripts/GetHumanNean.sh .
 rm -fr falcon/
 # GET NENADERTHAL =============================================================
 . GetHumanNean.sh
 # GET VIRUSES =================================================================
-perl downloadBacteria.pl
+perl DownloadBacteria.pl
 # RUN FALCON ==================================================================
 for((x=1 ; x<=56 ; ++x));
   do
-  (time ./FALCON -v -l 36 -p 1 -t 20000 -n 16 -c 50 -x TOP$x HN-C$x \
+  (time ./FALCON -v -l 36 -F -p 1 -t 20000 -n 16 -c 50 -x TOP$x HN-C$x \
   Bacteria.fa) &> REPORT$x;
   done
 #
