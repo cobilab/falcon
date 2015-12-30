@@ -1,5 +1,6 @@
 #!/bin/bash
-#. GetTopNames.sh 56
+. RunHumanNeanderthal.sh
+. GetTopNames.sh 56
 cat UNIQUE | tr -d "." > bnames.nm;
 perl DownloadRef.pl bnames.nm;
 
