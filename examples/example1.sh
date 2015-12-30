@@ -10,17 +10,17 @@ cp Makefile.linux Makefile
 make
 cp FALCON ../../
 cd ../../
-cp falcon/scripts/downloadViruses.pl .
+cp falcon/scripts/DownloadViruses.pl .
 rm -fr falcon/
 # GET BALD EAGLE ==============================================================
 WGETO=" --trust-server-names -q ";
 BEPAT=" ftp://climb.genomics.cn/pub/10.5524/101001_102000/101040"
-echo "Downloading and uncompressing Bald Eagle ...";
+echo "Downloading and decompressing Bald Eagle ...";
 wget $WGETO $BEPAT/Haliaeetus_leucocephalus.fa.gz -O BE.fa.gz
 gunzip BE.fa.gz
 echo "Done!";
 # GET VIRUSES =================================================================
-perl downloadViruses.pl
+perl DownloadViruses.pl
 # RUN FALCON ==================================================================
-./FALCON -v -l 15 -n 4 -t 10 -x top.csv BE.fa viruses.fa
+./FALCON -v -F -l 15 -n 4 -t 10 -x top.csv BE.fa viruses.fa
 # ============================================================================= 
