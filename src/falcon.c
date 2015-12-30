@@ -50,10 +50,10 @@ void SamplingCompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){
+            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id) && 
+              nBase > 1)
               UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 
               nBase);
-              }
             // RESET MODELS 
             ResetCBuffer(symBuf);
             ResetShadowModel(Shadow);
@@ -128,10 +128,10 @@ void FalconCompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){
+            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id && 
+              nBase > 1))
               UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 
               nBase);
-              }
             // RESET MODELS 
             ResetCBuffer(symBuf);
             ResetShadowModel(Shadow);
@@ -219,10 +219,10 @@ void CompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id)){
+            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id && 
+              nBase > 1))
               UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 
               nBase);
-              }
             // RESET MODELS 
             ResetCBuffer(symBuf);
             for(n = 0 ; n < P->nModels ; ++n)
