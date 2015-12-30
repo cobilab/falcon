@@ -10,7 +10,7 @@ cp Makefile.linux Makefile
 make
 cp FALCON ../../
 cd ../../
-cp falcon/scripts/downloadViruses.pl .
+cp falcon/scripts/DownloadViruses.pl .
 rm -fr falcon/
 # GET SYMBIONT WGS ============================================================
 WGETO=" --trust-server-names -q ";
@@ -20,7 +20,7 @@ wget $WGETO $BEPAT/?download=AASZ01.1.fsa_nt.gz -O AASZ01.1.fsa_nt.gz
 gunzip AASZ01.1.fsa_nt.gz
 echo "Done!";
 # GET VIRUSES =================================================================
-perl downloadViruses.pl
+perl DownloadViruses.pl
 # RUN FALCON ==================================================================
-./FALCON -v -l 32 -c 20 -g 0.98 -n 4 AASZ01.1.fsa_nt viruses.fa
+./FALCON -v -F -l 32 -c 20 -g 0.98 -n 4 AASZ01.1.fsa_nt viruses.fa
 # ============================================================================= 
