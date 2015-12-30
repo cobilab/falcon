@@ -49,8 +49,9 @@ to measure the similarity between sequences.
 
 ## DEMO ##
 
-Search for the top 10 similar virus in Chimpanzee chromosome 7:
+After install, search for the top 10 similar virus in Chimpanzee chromosome 7:
 <pre>
+
 cp falcon/scripts/downloadViruses.pl .
 perl downloadViruses.pl
 wget  --trust-server-names -q \
