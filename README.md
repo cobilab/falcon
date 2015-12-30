@@ -52,8 +52,8 @@ to measure the similarity between sequences.
 After install, search for the top 10 similar virus in Chimpanzee chromosome 7:
 <pre>
 
-cp falcon/scripts/downloadViruses.pl .
-perl downloadViruses.pl
+cp falcon/scripts/DownloadViruses.pl .
+perl DownloadViruses.pl
 wget  --trust-server-names -q \
 ftp://ftp.ncbi.nlm.nih.gov/genomes/Pan_troglodytes/CHR_18/ptr_ref_Pan_troglodytes-2.1.4_chr18.fa.gz \
 -O PT18.fa.gz
