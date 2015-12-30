@@ -6,9 +6,9 @@ make
 cd ../../
 cp falcon/src/FALCON .
 cp falcon/scripts/GetHumanCHMParse.sh .
-cp falcon/scripts/downloadBacteria.pl .
+cp falcon/scripts/DownloadBacteria.pl .
 rm -fr falcon/
-perl downloadBacteria.pl
+perl DownloadBacteria.pl
 . GetHumanCHMParse.sh
 rm -f CHM;
 for((x=1; x<=23 ; ++x)); do cat CHM$x >> CHM; rm -f CHM$x; done

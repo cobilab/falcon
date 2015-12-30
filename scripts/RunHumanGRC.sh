@@ -6,9 +6,9 @@ make
 cd ../../
 cp falcon/src/FALCON .
 cp falcon/scripts/GetHumanGRCParse.sh .
-cp falcon/scripts/downloadBacteria.pl .
+cp falcon/scripts/DownloadBacteria.pl .
 rm -fr falcon/
-perl downloadBacteria.pl
+perl DownloadBacteria.pl
 . GetHumanGRCParse.sh
 rm -f GRC;
 for((x=1; x<=23 ; ++x)); do cat GRC$x >> GRC; rm -f GRC$x; done
