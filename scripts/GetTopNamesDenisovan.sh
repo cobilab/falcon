@@ -5,12 +5,10 @@
 # EDIT <THIS> IN LINE 8 : if($3 > <THIS>), FOR CUSTOM THRESHOLD 
 #
 # =============================================================================
-SIZE=$1;
-# =============================================================================
-for((x=1 ; x<=$SIZE ; ++x));
+for((x=1 ; x<=13 ; ++x));
   do
-  rm -f UNIQ$x;
-  cat TOP$x \
+  rm -f UNIQ-DENI$x;
+  cat TOP-DENI$x \
   | awk '{ if($3 > 85 && $2 > 400) 
         print $1"\t"$2"\t"$3"\t"$4"\n"; }' \
   | awk '{ print $4;}' \
@@ -20,13 +18,13 @@ for((x=1 ; x<=$SIZE ; ++x));
   | awk '{ print $1" "$2;}' \
   | sort \
   | uniq -d \
-  > UNIQ$x;
+  > UNIQ-DENI$x;
   done
 # =============================================================================
-rm -f ALL-UNIQ UNIQUE;
-for((x=1 ; x<=$SIZE ; ++x));
+rm -f ALL-UNIQ-DENI UNIQUE-DENI;
+for((x=1 ; x<=13 ; ++x));
   do
-  cat UNIQ$x >> ALL-UNIQ;
+  cat UNIQ-DENI$x >> ALL-UNIQ-DENI;
   done
-cat ALL-UNIQ | sort | uniq > UNIQUE;
+cat ALL-UNIQ-DENI | sort | uniq > UNIQUE-DENI;
 # =============================================================================

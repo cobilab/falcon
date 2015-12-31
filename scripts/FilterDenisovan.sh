@@ -1,5 +1,5 @@
 #!/bin/bash
 . RunHumanDenisovan.sh
-. GetTopNames.sh 13
-cat UNIQUE | tr -d "." > bnames.nm;
-perl DownloadRef.pl bnames.nm;
+. GetTopNamesDenisovan.sh
+cat UNIQUE-DENI | tr -d "." > bnames-deni.nm;
+perl DownloadRef.pl bnames-deni.nm;
