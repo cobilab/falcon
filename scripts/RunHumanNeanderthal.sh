@@ -6,7 +6,7 @@
 # GET VIRUSES =================================================================
 perl DownloadBacteria.pl
 # RUN FALCON ==================================================================
-for((x=1 ; x<=56 ; ++x));
+for((x=1 ; x<=13 ; ++x));
   do
   (time ./FALCON -v -l 36 -F -p 1 -t 20000 -n 16 -c 100 -x TOP$x HN-C$x \
   Bacteria.fa) &> REPORT$x;

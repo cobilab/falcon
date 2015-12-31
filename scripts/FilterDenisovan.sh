@@ -1,4 +1,5 @@
 #!/bin/bash
+. RunHumanDenisovan.sh
 . GetTopNames.sh 13
-mv UNIQUE UNIQUE-DENISOVAN;
-# FIND NAMES
+cat UNIQUE | tr -d "." > bnames.nm;
+perl DownloadRef.pl bnames.nm;
