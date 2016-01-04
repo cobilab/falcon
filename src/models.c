@@ -16,6 +16,12 @@ static uint64_t XHASH(uint64_t x){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+static uint64_t YHASH(uint64_t y){
+  return (y * 786491 + 216617) % 66719476787;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 static void InitHashTable(CModel *M, U32 c){ 
   uint32_t k;
   M->hTable.maxC    = c;
@@ -172,6 +178,7 @@ void GetHCCounters(HashTable *H, U64 key, PModel *P, uint32_t a){
       }
     }
 
+  // TODO: MAKE THIS ALREADY DONE!
   P->freqs[0] = 1;
   P->freqs[1] = 1;
   P->freqs[2] = 1;
@@ -366,6 +373,7 @@ void ResetShadowModel(CModel *M){
     uint32_t n;
     for(n = 0 ; n < BGUARD ; ++n)
       M->SUBS.mask[n] = 0;
+    //TODO: MEMSET?
     // Free(M->SUBS.mask);
     // M->SUBS.mask = (uint8_t *) Calloc(BGUARD, sizeof(uint8_t));
     }
@@ -502,6 +510,7 @@ inline void ComputeWeightedFreqs(double w, PModel *P, FloatPModel *PT){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 double PModelSymbolLog(PModel *P, U32 s){
+  // TODO: LOG_2 FAST ?
   return log((double) P->sum / P->freqs[s]) / M_LN2;
   }
 
