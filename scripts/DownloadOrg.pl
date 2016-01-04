@@ -3,7 +3,6 @@
 
 use LWP::Simple;
 
-
 if($#ARGV + 1 > 0) {
     $organism = $ARGV[0];
 } else {
@@ -16,10 +15,8 @@ print STDERR "Searching RefSeq for $organism: $query\n";
 $base = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
 $url = $base . "esearch.fcgi?db=nucleotide&term=$query&usehistory=y";
 
-
 #post the esearch URL
 $output = get($url);
-
 
 #parse WebEnv, QueryKey and Count (# records retrieved)
 $web = $1 if ($output =~ /<WebEnv>(\S+)<\/WebEnv>/);
@@ -33,7 +30,6 @@ if($count == 0) {
 
 #open output file for writing
 open(OUT, ">tmp.$organism.fa") || die "Can't open file!\n";
-
 
 #retrieve data in batches of 500
 $retmax = 500;
