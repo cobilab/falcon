@@ -22,6 +22,19 @@ static uint64_t YHASH(uint64_t y){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+static uint64_t ZHASH(uint64_t z){
+  z = (~z) + (z << 21);
+  z = z    ^ (z >> 24);
+  z = (z   + (z << 3)) + (z << 8);
+  z = z    ^ (z >> 14);
+  z = (z   + (z << 2)) + (z << 4);
+  z = z    ^ (z >> 28);
+  z = z    + (z << 31);
+  return z;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 static void InitHashTable(CModel *M, U32 c){ 
   uint32_t k;
   M->hTable.maxC    = c;
@@ -226,7 +239,7 @@ void UpdateCModelCounter(CModel *M, U32 sym, U64 im){
 
   if(M->mode == HASH_TABLE_MODE){
     U8   counter;
-    U32  s, hIndex = (idx = XHASH(idx)) % HASH_SIZE;
+    U32  s, hIndex = (idx = ZHASH(idx)) % HASH_SIZE;
     #if defined(PREC32B)
     U32 b = idx & 0xffffffff;
     #elif defined(PREC16B)
@@ -367,9 +380,9 @@ void ResetShadowModel(CModel *M){
   ResetCModelIdx(M);
   if(M->edits != 0){
     RemoveCBuffer(M->SUBS.seq);
-    M->SUBS.seq  = CreateCBuffer(BUFFER_SIZE, BGUARD);
-    M->SUBS.in   = 0;
-    M->SUBS.idx  = 0;
+    M->SUBS.seq = CreateCBuffer(BUFFER_SIZE, BGUARD);
+    M->SUBS.in  = 0;
+    M->SUBS.idx = 0;
     uint32_t n;
     for(n = 0 ; n < BGUARD ; ++n)
       M->SUBS.mask[n] = 0;
@@ -481,7 +494,7 @@ inline void ComputePModel(CModel *M, PModel *P, uint64_t idx, uint32_t aDen){
   ACC *ac;
   switch(M->mode){
     case HASH_TABLE_MODE:
-      GetHCCounters(&M->hTable, XHASH(idx), P, aDen);
+      GetHCCounters(&M->hTable, ZHASH(idx), P, aDen);
     break;
     case ARRAY_MODE:
       ac = &M->array.counters[idx<<2];
