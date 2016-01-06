@@ -325,6 +325,8 @@ void *CompressThread(void *Thr){
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - - - R E F E R E N C E - - - - - - - - - - - - -
 
+/* FIXME: MMAP BUG FOR LARGE FILES (~300 GB)
+   XXX: IT WILL BE USED FREAD UNTIL FIXED BUG
 void LoadReference(char *refName){
   FILE     *Reader = Fopen(refName, "r");
   uint32_t n;
@@ -370,6 +372,46 @@ void LoadReference(char *refName){
   RemoveCBuffer(symBuf);
   RemoveParser(PA);
   close(fd);
+  }
+*/
+
+void LoadReference(char *refName){
+  FILE     *Reader = Fopen(refName, "r");
+  uint32_t n;
+  uint64_t idx = 0;
+  uint64_t k, idxPos;
+  PARSER   *PA = CreateParser();
+  CBUF     *symBuf  = CreateCBuffer(BUFFER_SIZE, BGUARD);
+  uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t));
+  uint8_t  sym, irSym;
+  FileType(PA, Reader);
+  fclose(Reader);
+  Reader   = Fopen(refName, "r");
+
+  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
+    for(idxPos = 0 ; idxPos < k ; ++idxPos){
+      if(ParseSym(PA, (sym = readBuf[idxPos])) == -1){ idx = 0; continue; }
+      symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
+      for(n = 0 ; n < P->nModels ; ++n){
+        CModel *CM = Models[n];
+        GetPModelIdx(symBuf->buf+symBuf->idx-1, CM);
+        if(++idx > CM->ctx){
+          UpdateCModelCounter(CM, sym, CM->pModelIdx);
+          if(CM->ir == 1){                         // INVERTED REPEATS
+            irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, CM);
+            UpdateCModelCounter(CM, irSym, CM->pModelIdxIR);
+            }
+          }
+        }
+      UpdateCBuffer(symBuf);
+      }
+ 
+  for(n = 0 ; n < P->nModels ; ++n)
+    ResetCModelIdx(Models[n]);
+  RemoveCBuffer(symBuf);
+  Free(readBuf);
+  RemoveParser(PA);
+  fclose(Reader);
   }
 
 
