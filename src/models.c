@@ -142,16 +142,16 @@ static void InsertKey(HashTable *H, U32 hi, U64 idx, U8 s){
   #else
   H->entries[hi][H->index[hi]].key = (U8)(idx&0xff);
   #endif  
-  H->entries[hi][H->index[hi]].counters = (0x01<<(s<<1));
+  H->entries[hi][H->index[hi]].counters = (0x01<<(s<<2));
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 inline void GetFreqsFromHCC(HCC c, uint32_t a, PModel *P){
-   P->sum  = (P->freqs[0] = a * ( c &  0x03) + 1);
-   P->sum += (P->freqs[1] = a * ((c & (0x03<<2))>>2) + 1);
-   P->sum += (P->freqs[2] = a * ((c & (0x03<<4))>>4) + 1);
-   P->sum += (P->freqs[3] = a * ((c & (0x03<<6))>>6) + 1);
+   P->sum  = (P->freqs[0] = a * ( c &  0x0f) + 1);
+   P->sum += (P->freqs[1] = a * ((c & (0x0f<<4 ))>>4)  + 1);
+   P->sum += (P->freqs[2] = a * ((c & (0x0f<<8 ))>>8)  + 1);
+   P->sum += (P->freqs[3] = a * ((c & (0x0f<<12))>>12) + 1);
    }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -238,7 +238,7 @@ void UpdateCModelCounter(CModel *M, U32 sym, U64 im){
   U64 idx = im;
 
   if(M->mode == HASH_TABLE_MODE){
-    U8   counter;
+    U16  counter;
     U32  s, hIndex = (idx = ZHASH(idx)) % HASH_SIZE;
     #if defined(PREC32B)
     U32 b = idx & 0xffffffff;
@@ -250,22 +250,32 @@ void UpdateCModelCounter(CModel *M, U32 sym, U64 im){
 
     for(n = 0 ; n < M->hTable.maxC ; n++){
       if(M->hTable.entries[hIndex][n].key == b){
-        counter = (M->hTable.entries[hIndex][n].counters>>(sym<<1))&0x03;
-        if(counter == 3){
-          for(s = 0 ; s < 4 ; ++s){
-            if(s != sym){
-              counter = 
-              ((M->hTable.entries[hIndex][n].counters>>(s<<1))&0x03)>>1;
-              M->hTable.entries[hIndex][n].counters &= ~(0x03<<(s<<1));
-              M->hTable.entries[hIndex][n].counters |= (counter<<(s<<1));
-              }
-            }
-          return;
+        counter = (M->hTable.entries[hIndex][n].counters>>(sym<<2))&0x0f;
+        if(counter == 15)
+          {
+          for(s = 0 ; s < 4 ; ++s)
+            {
+           //if(s != sym)
+           //   {
+              counter = ((M->hTable.entries[hIndex][n].counters>>(s<<2))&0x0f)>>1;
+              M->hTable.entries[hIndex][n].counters &= ~(0x0f<<(s<<2));
+              M->hTable.entries[hIndex][n].counters |= (counter<<(s<<2));
+           //   }
+             }
+
+              counter = (M->hTable.entries[hIndex][n].counters>>(sym<<2))&0x0f;
+              ++counter;
+              M->hTable.entries[hIndex][n].counters &= ~(0x0f<<(sym<<2));
+              M->hTable.entries[hIndex][n].counters |= (counter<<(sym<<2));
+
+
+            return;
           }
-        else{ // THERE IS STILL SPACE FOR INCREMENT COUNTER
+        else
+          { // THERE IS STILL SPACE FOR INCREMENT COUNTER
           ++counter;
-          M->hTable.entries[hIndex][n].counters &= ~(0x03<<(sym<<1));
-          M->hTable.entries[hIndex][n].counters |= (counter<<(sym<<1));
+          M->hTable.entries[hIndex][n].counters &= ~(0x0f<<(sym<<2));
+          M->hTable.entries[hIndex][n].counters |= (counter<<(sym<<2));
           return;
           }
         }
