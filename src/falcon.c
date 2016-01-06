@@ -507,7 +507,7 @@ int32_t main(int argc, char *argv[]){
     if(strcmp(xargv[n], "-c") == 0) 
       col = atoi(xargv[n+1]);
 
-  P->col       = ArgsNum    (col,   p, argc, "-c", 1, 200);
+  P->col       = ArgsNum    (col,   p, argc, "-c", 1, 253);
   P->gamma     = ArgsDouble (gamma, p, argc, "-g");
   P->gamma     = ((int)(P->gamma * 65536)) / 65536.0;
   P->output    = ArgsFileGen(p, argc, "-x", "top", ".csv");
