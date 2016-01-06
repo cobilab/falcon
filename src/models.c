@@ -248,36 +248,21 @@ void UpdateCModelCounter(CModel *M, U32 sym, U64 im){
     U8  b = idx & 0xff;
     #endif
 
-    for(n = 0 ; n < M->hTable.maxC ; n++){
+    for(n = 0 ; n < M->hTable.maxC ; ++n){
       if(M->hTable.entries[hIndex][n].key == b){
+        if(counter == 15){ // IT REACHES THE MAXIMUM COUNTER: RENORMALIZE
+          for(s = 0 ; s < 4 ; ++s){ // RENORMALIZE EACH AND STORE
+            counter = ((M->hTable.entries[hIndex][n].counters>>(s<<2))&0x0f)>>1;
+            M->hTable.entries[hIndex][n].counters &= ~(0x0f<<(s<<2));
+            M->hTable.entries[hIndex][n].counters |= (counter<<(s<<2));
+            }
+          }
+        // GET, INCREMENT AND STORE COUNTER
         counter = (M->hTable.entries[hIndex][n].counters>>(sym<<2))&0x0f;
-        if(counter == 15)
-          {
-          for(s = 0 ; s < 4 ; ++s)
-            {
-           //if(s != sym)
-           //   {
-              counter = ((M->hTable.entries[hIndex][n].counters>>(s<<2))&0x0f)>>1;
-              M->hTable.entries[hIndex][n].counters &= ~(0x0f<<(s<<2));
-              M->hTable.entries[hIndex][n].counters |= (counter<<(s<<2));
-           //   }
-             }
-
-              counter = (M->hTable.entries[hIndex][n].counters>>(sym<<2))&0x0f;
-              ++counter;
-              M->hTable.entries[hIndex][n].counters &= ~(0x0f<<(sym<<2));
-              M->hTable.entries[hIndex][n].counters |= (counter<<(sym<<2));
-
-
-            return;
-          }
-        else
-          { // THERE IS STILL SPACE FOR INCREMENT COUNTER
-          ++counter;
-          M->hTable.entries[hIndex][n].counters &= ~(0x0f<<(sym<<2));
-          M->hTable.entries[hIndex][n].counters |= (counter<<(sym<<2));
-          return;
-          }
+        ++counter;
+        M->hTable.entries[hIndex][n].counters &= ~(0x0f<<(sym<<2));
+        M->hTable.entries[hIndex][n].counters |= (counter<<(sym<<2));
+        return;
         }
       }
     InsertKey(&M->hTable, hIndex, b, sym); // KEY NOT FOUND: WRITE ON OLDEST

@@ -31,7 +31,7 @@ typedef struct{
   #else
   U8         key;
   #endif
-  HCC        counters;        // "Small" counters: 2 bits for each one
+  HCC        counters;        // "Small" counters: 4 bits for each one
   }
 Entry;
 
