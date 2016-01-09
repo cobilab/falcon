@@ -1,5 +1,3 @@
-# FALCON #
-
 <br>
 <p align="center"><img src="imgs/logot.png"
 alt="FALCON" width="350" height="200" border="0" /></p>

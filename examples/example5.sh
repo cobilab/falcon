@@ -15,7 +15,7 @@ rm -fr falcon/
 # GET HUMAN GUT MICROBIOME ====================================================
 WGETO=" --trust-server-names ";
 XBEPAT="trace.ncbi.nlm.nih.gov/Traces/sra/";
-BEPAT=$XBEPAT"sra.cgi?cmd=dload&format=fastq&run_list=";
+BEPAT=$XBEPAT"sra.cgi?cmd=dload&format=fasta&run_list=";
 echo "Downloading SRR2822456 ...";
 wget $WGETO $BEPAT"SRR2822456" -O SRR2822456.fq.gz
 gunzip SRR2822456.fq.gz
