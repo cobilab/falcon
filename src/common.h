@@ -14,6 +14,7 @@ INF;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 double      BoundDouble      (double, double, double);
+unsigned    QuadQuantization (double);
 FILE        *Fopen           (const char *, const char *);
 void        UnPackByte       (uint8_t *, uint8_t);
 uint8_t     PackByte         (uint8_t *);

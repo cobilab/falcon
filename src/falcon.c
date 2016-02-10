@@ -186,7 +186,7 @@ void FalconCompressTarget(Threads T){
 
 void CompressTarget(Threads T){
   FILE        *Reader = Fopen(P->base, "r"), *OUT = NULL;
-  double      bits = 0;
+  double      bits = 0, instant = 0;
   uint64_t    nBase = 0, r = 0;
   uint32_t    n, k, idxPos, totModels, cModel;
   PARSER      *PA = CreateParser();
@@ -199,9 +199,11 @@ void CompressTarget(Threads T){
   CMWeight    *CMW;
   int         action;
 
+  #ifdef LOCAL_SIMILARITY
   if(P->local == 1){
-    OUT = Fopen("tmp-falcon", "w");
+    OUT = Fopen("tmp-falcon", "w"); // MULTIPLE THREADS WILL WRITE OVER SAME FILE
     }
+  #endif
 
   totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
   for(n = 0 ; n < P->nModels ; ++n) 
@@ -255,10 +257,11 @@ void CompressTarget(Threads T){
       if(PA->nRead % P->nThreads == T.id){
 
         if((sym = DNASymToNum(sym)) == 4){
+          #ifdef LOCAL_SIMILARITY
           if(P->local == 1){
-            //TODO: RECORD IN FILE
-
+            fprintf(OUT, QuadQuantization(2.0));
             }
+          #endif
           continue; // IT IGNORES EXTRA SYMBOLS
           }
 
@@ -283,7 +286,11 @@ void CompressTarget(Threads T){
           }
 
         ComputeMXProbs(PT, MX);
-        bits += PModelSymbolLog(MX, sym);
+        instant = PModelSymbolLog(MX, sym);
+        bits += instant;
+        #ifdef LOCAL_SIMILARITY
+        fprintf(OUT, "%u", QuadQuantization(instant));
+        #endif
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
@@ -295,9 +302,11 @@ void CompressTarget(Threads T){
   if(PA->nRead % P->nThreads == T.id)
     UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, nBase);
   
+  #ifdef LOCAL_SIMILARITY
   if(P->local == 1){
     fclose(OUT);
     }
+  #endif
 
   DeleteWeightModel(CMW);
   for(n = 0 ; n < totModels ; ++n)
@@ -490,7 +499,9 @@ int32_t main(int argc, char *argv[]){
 
   P->verbose  = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
   P->force    = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
+  #ifdef LOCAL_SIMILARITY
   P->local    = ArgsState  (DEFAULT_LOCAL,   p, argc, "-z");
+  #endif
   P->sample   = ArgsNum    (DEFAULT_SAMPLE,  p, argc, "-p", MIN_SAP, MAX_SAP);
   P->level    = ArgsNum    (0,               p, argc, "-l", MIN_LEV, MAX_LEV);
   topSize     = ArgsNum    (DEF_TOP,         p, argc, "-t", MIN_TOP, MAX_TOP);

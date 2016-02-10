@@ -18,6 +18,15 @@ double BoundDouble(double low, double value, double high){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+unsigned QuadQuantization(double v){
+  if(v >= 1.5)      return 3;
+  else if(v >= 1.0) return 2;
+  else if(v >= 0.5) return 1;
+  else              return 0;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 void UnPackByte(uint8_t *bin, uint8_t sym){
   *bin++ = (sym & 0x80) >> 7;
   *bin++ = (sym & 0x40) >> 6;
