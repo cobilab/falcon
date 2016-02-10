@@ -185,7 +185,7 @@ void FalconCompressTarget(Threads T){
 // - - - - - - - - - - - - - - C O M P R E S S I N G - - - - - - - - - - - - - 
 
 void CompressTarget(Threads T){
-  FILE        *Reader  = Fopen(P->base, "r");
+  FILE        *Reader = Fopen(P->base, "r"), *OUT = NULL;
   double      bits = 0;
   uint64_t    nBase = 0, r = 0;
   uint32_t    n, k, idxPos, totModels, cModel;
@@ -198,6 +198,10 @@ void CompressTarget(Threads T){
   FloatPModel *PT;
   CMWeight    *CMW;
   int         action;
+
+  if(P->local == 1){
+    OUT = Fopen("tmp-falcon", "w");
+    }
 
   totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
   for(n = 0 ; n < P->nModels ; ++n) 
@@ -250,7 +254,14 @@ void CompressTarget(Threads T){
 
       if(PA->nRead % P->nThreads == T.id){
 
-        if((sym = DNASymToNum(sym)) == 4) continue; // IT IGNORES EXTRA SYMBOLS
+        if((sym = DNASymToNum(sym)) == 4){
+          if(P->local == 1){
+            //TODO: RECORD IN FILE
+
+            }
+          continue; // IT IGNORES EXTRA SYMBOLS
+          }
+
         symBuf->buf[symBuf->idx] = sym;
         memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
         n = 0;
@@ -283,6 +294,10 @@ void CompressTarget(Threads T){
         
   if(PA->nRead % P->nThreads == T.id)
     UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, nBase);
+  
+  if(P->local == 1){
+    fclose(OUT);
+    }
 
   DeleteWeightModel(CMW);
   for(n = 0 ; n < totModels ; ++n)
@@ -475,6 +490,7 @@ int32_t main(int argc, char *argv[]){
 
   P->verbose  = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
   P->force    = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
+  P->local    = ArgsState  (DEFAULT_LOCAL,   p, argc, "-z");
   P->sample   = ArgsNum    (DEFAULT_SAMPLE,  p, argc, "-p", MIN_SAP, MAX_SAP);
   P->level    = ArgsNum    (0,               p, argc, "-l", MIN_LEV, MAX_LEV);
   topSize     = ArgsNum    (DEF_TOP,         p, argc, "-t", MIN_TOP, MAX_TOP);

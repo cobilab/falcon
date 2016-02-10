@@ -23,6 +23,9 @@ typedef struct{
   U8       force;
   U8       estim;
   U8       level;
+  #ifdef LOCAL_SIMILARITY
+  U8       local;
+  #endif
   U32      sample;
   U32      col;
   U32      windowSize;
