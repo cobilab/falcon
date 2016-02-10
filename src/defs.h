@@ -36,7 +36,7 @@ typedef int8_t   I8;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#define LOCAL_SIMILARITY       1
+//#define LOCAL_SIMILARITY       1
 #define MAX_LABEL              1024
 #define BUFFER_SIZE            65535
 #define DEF_VERSION            0
