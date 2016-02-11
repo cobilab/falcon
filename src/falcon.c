@@ -135,7 +135,10 @@ void FalconCompressTarget(Threads T){
             // RESET MODELS 
             ResetCBuffer(symBuf);
             ResetShadowModel(Shadow);
-            idx = r = nBase = bits = 0;
+            idx   = 0;
+            r     = 0;
+            nBase = 0; 
+            bits  = 0;
           break;
           case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
           case -3: // IF IS A SYMBOL OF THE HEADER
