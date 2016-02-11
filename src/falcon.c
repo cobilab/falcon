@@ -160,12 +160,14 @@ void FalconCompressTarget(Threads T){
         symBuf->buf[symBuf->idx] = sym;
         pos = &symBuf->buf[symBuf->idx-1];
         GetPModelIdx(pos, Shadow);
-        if(++idx > Shadow->ctx){
+        //if(++idx > Shadow->ctx){
           ComputePModel(Models[0], pModel, Shadow->pModelIdx, Shadow->alphaDen);
           bits += PModelSymbolLog(pModel, sym);
           ++nBase;
-          UpdateCBuffer(symBuf);
-          }
+          //UpdateCBuffer(symBuf);
+        //  }
+printf("x\n");
+        UpdateCBuffer(symBuf);
         }
       }
 
@@ -412,9 +414,6 @@ void LoadReference(char *refName){
   uint8_t  sym, irSym;
   FileType(PA, Reader);
   rewind(Reader);
-
-//  fclose(Reader);
-//  Reader   = Fopen(refName, "r");
 
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
