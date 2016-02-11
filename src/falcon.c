@@ -192,18 +192,12 @@ void CompressTarget(Threads T){
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t     sym, *pos, conName[MAX_NAME];
+  uint8_t     sym, *pos, conName[MAX_NAME], locname[MAX_NAME];
   PModel      **pModel, *MX;
   CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
   FloatPModel *PT;
   CMWeight    *CMW;
   int         action;
-
-  #ifdef LOCAL_SIMILARITY
-  if(P->local == 1){
-    OUT = Fopen("tmp-falcon", "w"); // MULTIPLE THREADS WILL WRITE OVER SAME FILE
-    }
-  #endif
 
   totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
   for(n = 0 ; n < P->nModels ; ++n) 
@@ -219,6 +213,14 @@ void CompressTarget(Threads T){
   MX          = CreatePModel(ALPHABET_SIZE);
   PT          = CreateFloatPModel(ALPHABET_SIZE);
   CMW         = CreateWeightModel(totModels);
+
+  #ifdef LOCAL_SIMILARITY
+  if(P->local == 1){
+    sprintf(locname, "%s%u", "x-tmp-falcon-", T.id);
+    OUT = Fopen(locname, "w");
+    //XXX:
+    }
+  #endif
 
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
@@ -409,8 +411,10 @@ void LoadReference(char *refName){
   uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t));
   uint8_t  sym, irSym;
   FileType(PA, Reader);
-  fclose(Reader);
-  Reader   = Fopen(refName, "r");
+  rewind(Reader);
+
+//  fclose(Reader);
+//  Reader   = Fopen(refName, "r");
 
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
@@ -419,12 +423,12 @@ void LoadReference(char *refName){
       for(n = 0 ; n < P->nModels ; ++n){
         CModel *CM = Models[n];
         GetPModelIdx(symBuf->buf+symBuf->idx-1, CM);
-        if(++idx > CM->ctx){
+        if(CM->ir == 1) // INVERTED REPEATS
+          irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, CM);
+        if(++idx >= CM->ctx){
           UpdateCModelCounter(CM, sym, CM->pModelIdx);
-          if(CM->ir == 1){                         // INVERTED REPEATS
-            irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, CM);
+          if(CM->ir == 1) // INVERTED REPEATS
             UpdateCModelCounter(CM, irSym, CM->pModelIdxIR);
-            }
           }
         }
       UpdateCBuffer(symBuf);
