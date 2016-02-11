@@ -166,7 +166,6 @@ void FalconCompressTarget(Threads T){
           ++nBase;
           //UpdateCBuffer(symBuf);
         //  }
-printf("x\n");
         UpdateCBuffer(symBuf);
         }
       }
