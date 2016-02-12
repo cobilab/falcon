@@ -118,14 +118,8 @@ void PrintTop(FILE *F, TOP *Top, uint32_t size){
     exit(1);
     }
   for(n = 0 ; n < size ; ++n)
-    #ifdef LOCAL_SIMILARITY
-    fprintf(F, "%u\t%"PRIu64"\t%6.3lf\t%s\t%"PRIu64"\t%"PRIu64"\n", n+1, 
-    Top->V[n].size, (1.0-Top->V[n].value)*100.0, Top->V[n].name, 
-    Top->V[n].iPos, Top->V[n].ePos);
-    #else
     fprintf(F, "%u\t%"PRIu64"\t%6.3lf\t%s\n", n+1, Top->V[n].size, 
     (1.0-Top->V[n].value)*100.0, Top->V[n].name);
-    #endif
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

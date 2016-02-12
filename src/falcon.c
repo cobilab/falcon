@@ -186,14 +186,14 @@ void FalconCompressTarget(Threads T){
 // - - - - - - - - - - - - - - C O M P R E S S I O N - - - - - - - - - - - - - 
 
 void CompressTarget(Threads T){
-  FILE        *Reader = Fopen(P->base, "r"), *OUT = NULL;
+  FILE        *Reader = Fopen(P->base, "r");
   double      bits = 0, instant = 0;
   uint64_t    nBase = 0, r = 0, nSymbol = 0, initNSymbol = 0;
   uint32_t    n, k, idxPos, totModels, cModel;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t     sym, *pos, conName[MAX_NAME], locname[MAX_NAME];
+  uint8_t     sym, *pos, conName[MAX_NAME];
   PModel      **pModel, *MX;
   CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
   FloatPModel *PT;
@@ -224,20 +224,17 @@ void CompressTarget(Threads T){
             if((PA->nRead-1) % P->nThreads == T.id){
               if(PA->nRead > 1 && nBase > 1){
                 #ifdef LOCAL_SIMILARITY
-                if(P->local == 1)
+                if(P->local == 1){
                   UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase, 
                   initNSymbol, nSymbol);
+                  initNSymbol = nSymbol; //FIXME: IT DOES NOT WORK WITH MTHREADING
+                  }
                 else
                   UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
                 #else
                 UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
                 #endif
                 }
-              #ifdef LOCAL_SIMILARITY
-              else{
-                initNSymbol = nSymbol;
-                }
-              #endif
               }
             // RESET MODELS 
             ResetCBuffer(symBuf);
@@ -309,15 +306,17 @@ void CompressTarget(Threads T){
         }
       }
         
-  if(PA->nRead % P->nThreads == T.id)
+  if(PA->nRead % P->nThreads == T.id){
+    #ifdef LOCAL_SIMILARITY
+    if(P->local == 1)
+      UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase,
+      initNSymbol, nSymbol);
+    else
+      UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+    #else
     UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
-  
-  #ifdef LOCAL_SIMILARITY
-  if(P->local == 1){
-
-
+    #endif
     }
-  #endif
 
   DeleteWeightModel(CMW);
   for(n = 0 ; n < totModels ; ++n)
@@ -418,7 +417,7 @@ void LoadReference(char *refName){
   PARSER   *PA = CreateParser();
   CBUF     *symBuf  = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t  sym, irSym;
+  uint8_t  sym, irSym = 0;
   FileType(PA, Reader);
   rewind(Reader);
 
@@ -587,13 +586,18 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ RESULTS ]=======================\n");
-
   k = 0;
   P->top = CreateTop(topSize * P->nThreads);
   for(ref = 0 ; ref < P->nThreads ; ++ref){
     for(n = 0 ; n < T[ref].top->size-1 ; ++n){
       P->top->V[k].value = T[ref].top->V[n].value; 
       P->top->V[k].size  = T[ref].top->V[n].size; 
+      #ifdef LOCAL_SIMILARITY
+      if(P->local == 1){
+        P->top->V[k].iPos = T[ref].top->V[n].iPos; 
+        P->top->V[k].ePos = T[ref].top->V[n].ePos; 
+        }
+      #endif
       CopyStringPart(P->top->V[k].name, T[ref].top->V[n].name);
       ++k;
       }
