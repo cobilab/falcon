@@ -52,8 +52,7 @@ void SamplingCompressTarget(Threads T){
           case -1: // IT IS THE BEGGINING OF THE HEADER
             if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id) && 
               nBase > 1)
-              UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 
-              nBase);
+              UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
             // RESET MODELS 
             ResetCBuffer(symBuf);
             ResetShadowModel(Shadow);
@@ -94,7 +93,7 @@ void SamplingCompressTarget(Threads T){
       }
 
   if(PA->nRead % P->nThreads == T.id)
-    UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, nBase);
+    UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
 
   RemovePModel(pModel);
   FreeShadow(Shadow);
@@ -130,8 +129,7 @@ void FalconCompressTarget(Threads T){
           case -1: // IT IS THE BEGGINING OF THE HEADER
             if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id && 
               nBase > 1))
-              UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 
-              nBase);
+              UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
             // RESET MODELS 
             ResetCBuffer(symBuf);
             ResetShadowModel(Shadow);
@@ -173,7 +171,7 @@ void FalconCompressTarget(Threads T){
       }
 
   if(PA->nRead % P->nThreads == T.id)
-    UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, nBase);
+    UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
 
   RemovePModel(pModel);
   FreeShadow(Shadow);
@@ -185,7 +183,7 @@ void FalconCompressTarget(Threads T){
   
 
 //////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - - - - - - - C O M P R E S S I N G - - - - - - - - - - - - - 
+// - - - - - - - - - - - - - - C O M P R E S S I O N - - - - - - - - - - - - - 
 
 void CompressTarget(Threads T){
   FILE        *Reader = Fopen(P->base, "r"), *OUT = NULL;
@@ -217,23 +215,27 @@ void CompressTarget(Threads T){
   PT          = CreateFloatPModel(ALPHABET_SIZE);
   CMW         = CreateWeightModel(totModels);
 
-  #ifdef LOCAL_SIMILARITY
-  if(P->local == 1){
-    sprintf(locname, "%s%u", "x-tmp-falcon-", T.id);
-    OUT = Fopen(locname, "w");
-    //XXX:
-    }
-  #endif
-
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id && 
-              nBase > 1))
-              UpdateTop(BoundDouble(0.0, bits/2.0/nBase, 1.0), conName, T.top, 
-              nBase);
+            if((PA->nRead-1) % P->nThreads == T.id){
+              #ifdef LOCAL_SIMILARITY
+              if(P->local == 1){
+                if(PA->nRead > 1 && !OUT){
+                  fclose(OUT);
+                  // GetUIDName();
+                  // rename(UID, locname);
+                  } 
+
+                sprintf(locname, "%s%u", "x-tmp-falcon-", T.id);
+                OUT = Fopen(locname, "w");
+                }
+              #endif
+              if(PA->nRead > 1 && nBase > 1)
+                UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+              }
             // RESET MODELS 
             ResetCBuffer(symBuf);
             for(n = 0 ; n < P->nModels ; ++n)
@@ -305,7 +307,7 @@ void CompressTarget(Threads T){
       }
         
   if(PA->nRead % P->nThreads == T.id)
-    UpdateTop(BoundDouble(0.0, bits/2/nBase, 1.0), conName, T.top, nBase);
+    UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
   
   #ifdef LOCAL_SIMILARITY
   if(P->local == 1){

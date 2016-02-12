@@ -18,6 +18,12 @@ double BoundDouble(double low, double value, double high){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+double BPBB(double bits, uint64_t nBase){
+  return BoundDouble(0.0, bits / 2.0 / nBase, 1.0);
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 unsigned QuadQuantization(double v){
   if(v >= 1.5)      return 3;
   else if(v >= 1.0) return 2;
