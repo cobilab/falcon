@@ -315,6 +315,7 @@ void CompressTarget(Threads T){
   #ifdef LOCAL_SIMILARITY
   if(P->local == 1){
 
+
     }
   #endif
 

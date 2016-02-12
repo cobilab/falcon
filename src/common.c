@@ -590,6 +590,10 @@ void PrintArgs(Parameters *P, Threads T, char *ref, char *tar, uint32_t top){
   ? "no" : "yes");
   fprintf(stderr, "Force mode ......................... %s\n", P->force == 0 ? 
   "no" : "yes");
+  #ifdef LOCAL_SIMILARITY
+  fprintf(stderr, "Local similarity mode .............. %s\n", P->local == 0 ? 
+  "no" : "yes");
+  #endif
   fprintf(stderr, "Compression level .................. %u\n", P->level);
   fprintf(stderr, "Sub-sampling ....................... %u\n", P->sample);
   fprintf(stderr, "Number of threads .................. %u\n", P->nThreads);
