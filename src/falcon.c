@@ -188,7 +188,7 @@ void FalconCompressTarget(Threads T){
 void CompressTarget(Threads T){
   FILE        *Reader = Fopen(P->base, "r"), *OUT = NULL;
   double      bits = 0, instant = 0;
-  uint64_t    nBase = 0, r = 0;
+  uint64_t    nBase = 0, r = 0, nSymbol = 0, initNSymbol = 0;
   uint32_t    n, k, idxPos, totModels, cModel;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
@@ -217,24 +217,27 @@ void CompressTarget(Threads T){
 
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
+      ++nSymbol;
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
             if((PA->nRead-1) % P->nThreads == T.id){
+              if(PA->nRead > 1 && nBase > 1){
+                #ifdef LOCAL_SIMILARITY
+                if(P->local == 1)
+                  UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase, 
+                  initNSymbol, nSymbol);
+                else
+                  UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+                #else
+                UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+                #endif
+                }
               #ifdef LOCAL_SIMILARITY
-              if(P->local == 1){
-                if(PA->nRead > 1 && !OUT){
-                  fclose(OUT);
-                  // GetUIDName();
-                  // rename(UID, locname);
-                  } 
-
-                sprintf(locname, "%s%u", "x-tmp-falcon-", T.id);
-                OUT = Fopen(locname, "w");
+              else{
+                initNSymbol = nSymbol;
                 }
               #endif
-              if(PA->nRead > 1 && nBase > 1)
-                UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
               }
             // RESET MODELS 
             ResetCBuffer(symBuf);
@@ -264,11 +267,11 @@ void CompressTarget(Threads T){
       if(PA->nRead % P->nThreads == T.id){
 
         if((sym = DNASymToNum(sym)) == 4){
-          #ifdef LOCAL_SIMILARITY
-          if(P->local == 1){
-            fprintf(OUT, QuadQuantization(2.0));
-            }
-          #endif
+          //#ifdef LOCAL_SIMILARITY
+          //if(P->local == 1){
+          //  fprintf(OUT, QuadQuantization(2.0));
+          //  }
+          //#endif
           continue; // IT IGNORES EXTRA SYMBOLS
           }
 
@@ -295,9 +298,9 @@ void CompressTarget(Threads T){
         ComputeMXProbs(PT, MX);
         instant = PModelSymbolLog(MX, sym);
         bits += instant;
-        #ifdef LOCAL_SIMILARITY
-        fprintf(OUT, "%u", QuadQuantization(instant));
-        #endif
+        //#ifdef LOCAL_SIMILARITY
+        //fprintf(OUT, "%u", QuadQuantization(instant));
+        //#endif
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
@@ -311,7 +314,7 @@ void CompressTarget(Threads T){
   
   #ifdef LOCAL_SIMILARITY
   if(P->local == 1){
-    fclose(OUT);
+
     }
   #endif
 
@@ -600,11 +603,25 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "Done!\n");
 
   fprintf(stderr, "  [+] Printing to file: %s ... ", P->output);
+  #ifdef LOCAL_SIMILARITY
+  if(P->local == 1)
+    PrintTopWP(OUTPUT, P->top, topSize);
+  else
+    PrintTop(OUTPUT, P->top, topSize);
+  #else
   PrintTop(OUTPUT, P->top, topSize);
+  #endif
   fprintf(stderr, "Done!\n");
 
   if(P->verbose && topSize <= 100){
+    #ifdef LOCAL_SIMILARITY
+    if(P->local == 1)
+      PrintTopInfoWP(P->top, topSize);
+    else
+      PrintTopInfo(P->top, topSize);
+    #else
     PrintTopInfo(P->top, topSize);
+    #endif
     }
   fprintf(stderr, "\n");
 
