@@ -188,7 +188,7 @@ void FalconCompressTarget(Threads T){
 void CompressTarget(Threads T){
   FILE        *Reader = Fopen(P->base, "r");
   double      bits = 0, instant = 0;
-  uint64_t    nBase = 0, r = 0, nSymbol = 0, initNSymbol = 0;
+  uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol;
   uint32_t    n, k, idxPos, totModels, cModel;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
@@ -215,6 +215,7 @@ void CompressTarget(Threads T){
   PT          = CreateFloatPModel(ALPHABET_SIZE);
   CMW         = CreateWeightModel(totModels);
 
+  initNSymbol = nSymbol = 0;
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
       ++nSymbol;
@@ -227,7 +228,6 @@ void CompressTarget(Threads T){
                 if(P->local == 1){
                   UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase, 
                   initNSymbol, nSymbol);
-                  initNSymbol = nSymbol; //FIXME: IT DOES NOT WORK WITH MTHREADING
                   }
                 else
                   UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
@@ -236,6 +236,9 @@ void CompressTarget(Threads T){
                 #endif
                 }
               }
+            #ifdef LOCAL_SIMILARITY
+            initNSymbol = nSymbol; 
+            #endif  
             // RESET MODELS 
             ResetCBuffer(symBuf);
             for(n = 0 ; n < P->nModels ; ++n)
