@@ -222,19 +222,17 @@ void CompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if((PA->nRead-1) % P->nThreads == T.id){
-              if(PA->nRead > 1 && nBase > 1){
-                #ifdef LOCAL_SIMILARITY
-                if(P->local == 1){
-                  UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase, 
-                  initNSymbol, nSymbol);
-                  }
-                else
-                  UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
-                #else
-                UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
-                #endif
+            if((PA->nRead-1) % P->nThreads == T.id && PA->nRead>1 && nBase>1){
+              #ifdef LOCAL_SIMILARITY
+              if(P->local == 1){
+                UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase, 
+                initNSymbol, nSymbol);
                 }
+              else
+                UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+              #else
+              UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+              #endif
               }
             #ifdef LOCAL_SIMILARITY
             initNSymbol = nSymbol; 
