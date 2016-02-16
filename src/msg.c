@@ -29,7 +29,7 @@ void PrintMenu(void){
   "  -V                       display version number,                       \n"
   "  -v                       verbose mode (more information),              \n"
   #ifdef LOCAL_SIMILARITY
-  "  -z                       database local similarity,                    \n"
+  "  -Z                       database local similarity,                    \n"
   #endif
   "  -s                       show compression levels,                      \n"
   "  -l <level>               compression level [%u;%u],                    \n"

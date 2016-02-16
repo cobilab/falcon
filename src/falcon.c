@@ -509,7 +509,7 @@ int32_t main(int argc, char *argv[]){
   P->verbose  = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
   P->force    = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
   #ifdef LOCAL_SIMILARITY
-  P->local    = ArgsState  (DEFAULT_LOCAL,   p, argc, "-z");
+  P->local    = ArgsState  (DEFAULT_LOCAL,   p, argc, "-Z");
   #endif
   P->sample   = ArgsNum    (DEFAULT_SAMPLE,  p, argc, "-p", MIN_SAP, MAX_SAP);
   P->level    = ArgsNum    (0,               p, argc, "-l", MIN_LEV, MAX_LEV);
