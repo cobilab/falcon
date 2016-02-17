@@ -32,7 +32,7 @@ CModel **Models;  // MEMORY SHARED BY THREADING
 void SamplingCompressTarget(Threads T){
   FILE        *Reader  = Fopen(P->base, "r");
   double      bits = 0;
-  uint64_t    nBase = 0, r = 0, idx = 0;
+  uint64_t    nBase = 0, r = 0, idx = 0, initNSymbol, nSymbol;
   uint32_t    k, idxPos;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
@@ -45,14 +45,27 @@ void SamplingCompressTarget(Threads T){
   Shadow = CreateShadowModel(Models[0]);
   pModel = CreatePModel(ALPHABET_SIZE);
 
+  initNSymbol = nSymbol = 0;
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
-            if(PA->nRead > 1 && ((PA->nRead-1) % P->nThreads == T.id) && 
-              nBase > 1)
+            if(PA->nRead>1 && ((PA->nRead-1) % P->nThreads == T.id) && nBase>1){
+              #ifdef LOCAL_SIMILARITY
+              if(P->local == 1){
+                UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase,
+                initNSymbol, nSymbol);
+                }
+              else
+                UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+              #else
               UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+              #endif
+              }
+            #ifdef LOCAL_SIMILARITY
+            initNSymbol = nSymbol;
+            #endif
             // RESET MODELS 
             ResetCBuffer(symBuf);
             ResetShadowModel(Shadow);
@@ -92,8 +105,17 @@ void SamplingCompressTarget(Threads T){
         }
       }
 
-  if(PA->nRead % P->nThreads == T.id)
+  if(PA->nRead % P->nThreads == T.id){
+    #ifdef LOCAL_SIMILARITY
+    if(P->local == 1)
+      UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase,
+      initNSymbol, nSymbol);
+    else
+      UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+    #else
     UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+    #endif
+    }
 
   RemovePModel(pModel);
   FreeShadow(Shadow);
