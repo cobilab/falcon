@@ -29,7 +29,8 @@ CModel **Models;  // MEMORY SHARED BY THREADING
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - L O C A L   C O M P L E X I T Y - - - - - - - - - - - -
 
-void LocalComplexity(Threads T){
+#ifdef LOCAL_SIMILARITY
+void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
   FILE        *Reader = Fopen(P->base, "r");
   double      bits = 0, instant = 0;
   uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol;
@@ -59,26 +60,7 @@ void LocalComplexity(Threads T){
   PT          = CreateFloatPModel(ALPHABET_SIZE);
   CMW         = CreateWeightModel(totModels);
 
-  //TODO: READ EACH START AND END POSITION
-  //TODO: FOR EACH READ RUN COMPLEXITY
-
-
   FILE *OUT = Fopen("out", "w");
-
-  uint64_t id, size, pInit, pEnd;
-  double score;
-  char str[MAX_NAME];
-  while(fscanf(Reader, "%"PRIu64"\t%"PRIu64"\t%lf\t%s%"PRIu64"\t%"PRIu64"\n", 
-  &id, &size, &score, str, &pInit, &pEnd) == 6){
-
-    fprintf(stderr, "xxxxxxxxxxxxx%"PRIu64"\t%"PRIu64"\t%lf\t%s%"PRIu64"\t%"PRIu64"\n", 
-  id, size, score, str, pInit, pEnd);
- 
-  
-    }
-
-
-
 
   initNSymbol = nSymbol = 0;
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
@@ -119,7 +101,7 @@ void LocalComplexity(Threads T){
       if(PA->nRead % P->nThreads == T.id){
 
         if((sym = DNASymToNum(sym)) == 4){
-          fprintf(OUT, "%u", QuadQuantization(2.0)); // PRINT AS UPPER BOUND
+          //fprintf(OUT, "%u", QuadQuantization(2.0)); // PRINT AS UPPER BOUND
           continue; // IT IGNORES EXTRA SYMBOLS
           }
 
@@ -146,7 +128,7 @@ void LocalComplexity(Threads T){
         ComputeMXProbs(PT, MX);
         instant = PModelSymbolLog(MX, sym);
         bits += instant;
-        fprintf(OUT, "%u", QuadQuantization(instant)); // PRINT COMPLEXITY VALUE
+        //fprintf(OUT, "%u", QuadQuantization(instant)); // PRINT COMPLEXITY VALUE
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
@@ -173,6 +155,7 @@ void LocalComplexity(Threads T){
   RemoveParser(PA);
   fclose(Reader);
   }
+#endif
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -655,10 +638,6 @@ void CompressAction(Threads *T, char *refName, char *baseName){
     pthread_create(&(t[n+1]), NULL, CompressThread, (void *) &(T[n]));
   for(n = 0 ; n < P->nThreads ; ++n) // DO NOT JOIN FORS!
     pthread_join(t[n+1], NULL);
-
-  for(n = 0 ; n < P->nModels ; ++n)
-    FreeCModel(Models[n]);
-  Free(Models);
   }
 
 
@@ -766,7 +745,6 @@ int32_t main(int argc, char *argv[]){
   TIME *Time = CreateClock(clock());
   P->base = argv[argc-1];
   CompressAction(T, argv[argc-2], P->base);
-  StopTimeNDRM(Time, clock());
 
   k = 0;
   P->top = CreateTop(topSize * P->nThreads);
@@ -803,13 +781,18 @@ int32_t main(int argc, char *argv[]){
   #ifdef LOCAL_SIMILARITY
   if(P->local == 1){
     fprintf(stderr, "  [+] Running local similarity ..... ");
-
-    //TODO: TOP SIZE
-
-
+    LocalComplexity(T[0], P->top, topSize);
     fprintf(stderr, "Done!\n");
     }
   #endif
+
+  fprintf(stderr, "  [+] Freeing compression models ... ");
+  for(n = 0 ; n < P->nModels ; ++n)
+    FreeCModel(Models[n]);
+  Free(Models);
+  fprintf(stderr, "Done!\n");
+
+  StopTimeNDRM(Time, clock());
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ RESULTS ]=======================\n");
