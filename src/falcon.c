@@ -364,7 +364,7 @@ void FalconCompressTarget(Threads T){
 
 void CompressTarget(Threads T){
   FILE        *Reader = Fopen(P->base, "r");
-  double      bits = 0, instant = 0;
+  double      bits = 0;
   uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol;
   uint32_t    n, k, idxPos, totModels, cModel;
   PARSER      *PA = CreateParser();
@@ -442,11 +442,6 @@ void CompressTarget(Threads T){
       if(PA->nRead % P->nThreads == T.id){
 
         if((sym = DNASymToNum(sym)) == 4){
-          //#ifdef LOCAL_SIMILARITY
-          //if(P->local == 1){
-          //  fprintf(OUT, QuadQuantization(2.0));
-          //  }
-          //#endif
           continue; // IT IGNORES EXTRA SYMBOLS
           }
 
@@ -471,11 +466,7 @@ void CompressTarget(Threads T){
           }
 
         ComputeMXProbs(PT, MX);
-        instant = PModelSymbolLog(MX, sym);
-        bits += instant;
-        //#ifdef LOCAL_SIMILARITY
-        //fprintf(OUT, "%u", QuadQuantization(instant));
-        //#endif
+        bits += PModelSymbolLog(MX, sym);
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
@@ -517,24 +508,41 @@ void CompressTarget(Threads T){
 
 void *CompressThread(void *Thr){
   Threads *T = (Threads *) Thr;
+  
+  fprintf(stderr, "  [+] Compressing database");
 
   if(P->nModels == 1 && T->model[0].edits == 0){
     if(P->sample > 1){
+      fprintf(stderr, " ... ");
       SamplingCompressTarget(T[0]);
+      fprintf(stderr, "Done!\n");
+      pthread_exit(NULL);
       }
     else{      
+      fprintf(stderr, " ... ");
       FalconCompressTarget(T[0]);
+      fprintf(stderr, "Done!\n");
+      pthread_exit(NULL);
       }
     }
   else{
-    CompressTarget(T[0]);
-    #ifdef LOCAL_COMPLEXITY
+    #ifdef LOCAL_SIMILARITY
     if(P->local == 1){
+      fprintf(stderr, ":\n      [+] Global processing");
+      }
+    #endif
+    fprintf(stderr, " ... ");
+    CompressTarget(T[0]);
+    #ifdef LOCAL_SIMILARITY
+    if(P->local == 1){
+      fprintf(stderr, "Done!\n      [+] Local processing ... ");
       LocalComplexity(T[0]);
+      fprintf(stderr, "Done!\n  [+] Done all!\n");
+      pthread_exit(NULL);
       }
     #endif
     }
-
+  fprintf(stderr, "Done!\n");
   pthread_exit(NULL);
   }
 
@@ -648,12 +656,10 @@ void CompressAction(Threads *T, char *refName, char *baseName){
   LoadReference(refName);
   fprintf(stderr, "Done!\n");
 
-  fprintf(stderr, "  [+] Compressing database ... ");
   for(n = 0 ; n < P->nThreads ; ++n)
     pthread_create(&(t[n+1]), NULL, CompressThread, (void *) &(T[n]));
   for(n = 0 ; n < P->nThreads ; ++n) // DO NOT JOIN FORS!
     pthread_join(t[n+1], NULL);
-  fprintf(stderr, "Done!\n");
 
   for(n = 0 ; n < P->nModels ; ++n)
     FreeCModel(Models[n]);
