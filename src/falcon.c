@@ -27,6 +27,139 @@
 CModel **Models;  // MEMORY SHARED BY THREADING
 
 //////////////////////////////////////////////////////////////////////////////
+// - - - - - - - - - - L O C A L   C O M P L E X I T Y - - - - - - - - - - - -
+
+void LocalComplexity(Threads T){
+  FILE        *Reader = Fopen(P->base, "r");
+  double      bits = 0, instant = 0;
+  uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol;
+  uint32_t    n, k, idxPos, totModels, cModel;
+  PARSER      *PA = CreateParser();
+  CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
+  uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
+  uint8_t     sym, *pos, conName[MAX_NAME];
+  PModel      **pModel, *MX;
+  CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
+  FloatPModel *PT;
+  CMWeight    *CMW;
+  int         action;
+
+  totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
+  for(n = 0 ; n < P->nModels ; ++n) 
+    if(T.model[n].edits != 0)
+      totModels += 1;
+
+  Shadow      = (CModel **) Calloc(P->nModels, sizeof(CModel *));
+  for(n = 0 ; n < P->nModels ; ++n)
+    Shadow[n] = CreateShadowModel(Models[n]); 
+  pModel      = (PModel **) Calloc(totModels, sizeof(PModel *));
+  for(n = 0 ; n < totModels ; ++n)
+    pModel[n] = CreatePModel(ALPHABET_SIZE);
+  MX          = CreatePModel(ALPHABET_SIZE);
+  PT          = CreateFloatPModel(ALPHABET_SIZE);
+  CMW         = CreateWeightModel(totModels);
+
+  initNSymbol = nSymbol = 0;
+
+  //TODO: READ EACH START AND END POSITION
+  //TODO: FOR EACH READ RUN COMPLEXITY
+  FILE *OUT = Fopen("out", "w");
+
+  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
+    for(idxPos = 0 ; idxPos < k ; ++idxPos){
+      ++nSymbol;
+      if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
+        switch(action){
+          case -1: // IT IS THE BEGGINING OF THE HEADER
+            if((PA->nRead-1) % P->nThreads == T.id && PA->nRead>1 && nBase>1){
+              UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+              }
+            initNSymbol = nSymbol; 
+            // RESET MODELS 
+            ResetCBuffer(symBuf);
+            for(n = 0 ; n < P->nModels ; ++n)
+              ResetShadowModel(Shadow[n]);
+            ResetWeightModel(CMW);
+            r = nBase = bits = 0;
+          break;
+          case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
+          case -3: // IF IS A SYMBOL OF THE HEADER
+            if(r >= MAX_NAME-1)
+              conName[r] = '\0';
+            else{
+              if(sym == ' ' || sym < 32 || sym > 126){ // PROTECT INTERVAL
+                if(r == 0) continue;
+                else       sym = '_'; // PROTECT OUT SYM WITH UNDERL
+                }
+              conName[r++] = sym;
+              }
+          break; 
+          case -99: break; // IF IS A SIMPLE FORMAT BREAK
+          default: exit(1);
+          }
+        continue; // GO TO NEXT SYMBOL
+        }
+
+      if(PA->nRead % P->nThreads == T.id){
+
+        if((sym = DNASymToNum(sym)) == 4){
+          fprintf(OUT, "%u", QuadQuantization(2.0)); // PRINT AS UPPER BOUND
+          continue; // IT IGNORES EXTRA SYMBOLS
+          }
+
+        symBuf->buf[symBuf->idx] = sym;
+        memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
+        n = 0;
+        pos = &symBuf->buf[symBuf->idx-1];
+        for(cModel = 0 ; cModel < P->nModels ; ++cModel){
+          CModel *CM = Shadow[cModel];
+          GetPModelIdx(pos, CM);
+          ComputePModel(Models[cModel], pModel[n], CM->pModelIdx, CM->alphaDen);
+          ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
+          if(CM->edits != 0){
+            ++n;
+            CM->SUBS.seq->buf[CM->SUBS.seq->idx] = sym;
+            CM->SUBS.idx = GetPModelIdxCorr(CM->SUBS.seq->buf+CM->SUBS.seq->idx
+            -1, CM, CM->SUBS.idx);
+            ComputePModel(Models[cModel], pModel[n], CM->SUBS.idx, CM->SUBS.eDen);
+            ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
+            }
+          ++n;
+          }
+
+        ComputeMXProbs(PT, MX);
+        instant = PModelSymbolLog(MX, sym);
+        bits += instant;
+        fprintf(OUT, "%u", QuadQuantization(instant)); // PRINT COMPLEXITY VALUE
+        ++nBase;
+        CalcDecayment(CMW, pModel, sym, P->gamma);
+        RenormalizeWeights(CMW);
+        CorrectXModels(Shadow, pModel, sym);
+        UpdateCBuffer(symBuf);
+        }
+      }
+        
+  if(PA->nRead % P->nThreads == T.id){
+    UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+    }
+
+  DeleteWeightModel(CMW);
+  for(n = 0 ; n < totModels ; ++n)
+    RemovePModel(pModel[n]);
+  Free(pModel);
+  RemovePModel(MX);
+  RemoveFPModel(PT);
+  for(n = 0 ; n < P->nModels ; ++n)
+    FreeShadow(Shadow[n]);
+  Free(Shadow);
+  Free(readBuf);
+  RemoveCBuffer(symBuf);
+  RemoveParser(PA);
+  fclose(Reader);
+  }
+
+
+//////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - P E R E G R I N E   C O M P R E S S I O N - - - - - - - -
 
 void SamplingCompressTarget(Threads T){
@@ -395,6 +528,11 @@ void *CompressThread(void *Thr){
     }
   else{
     CompressTarget(T[0]);
+    #ifdef LOCAL_COMPLEXITY
+    if(P->local == 1){
+      LocalComplexity(T[0]);
+      }
+    #endif
     }
 
   pthread_exit(NULL);
