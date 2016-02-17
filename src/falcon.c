@@ -59,12 +59,28 @@ void LocalComplexity(Threads T){
   PT          = CreateFloatPModel(ALPHABET_SIZE);
   CMW         = CreateWeightModel(totModels);
 
-  initNSymbol = nSymbol = 0;
-
   //TODO: READ EACH START AND END POSITION
   //TODO: FOR EACH READ RUN COMPLEXITY
+
+
   FILE *OUT = Fopen("out", "w");
 
+  uint64_t id, size, pInit, pEnd;
+  double score;
+  char str[MAX_NAME];
+  while(fscanf(Reader, "%"PRIu64"\t%"PRIu64"\t%lf\t%s%"PRIu64"\t%"PRIu64"\n", 
+  &id, &size, &score, str, &pInit, &pEnd) == 6){
+
+    fprintf(stderr, "xxxxxxxxxxxxx%"PRIu64"\t%"PRIu64"\t%lf\t%s%"PRIu64"\t%"PRIu64"\n", 
+  id, size, score, str, pInit, pEnd);
+ 
+  
+    }
+
+
+
+
+  initNSymbol = nSymbol = 0;
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
       ++nSymbol;
@@ -509,38 +525,17 @@ void CompressTarget(Threads T){
 void *CompressThread(void *Thr){
   Threads *T = (Threads *) Thr;
   
-  fprintf(stderr, "  [+] Compressing database");
-
+  fprintf(stderr, "  [+] Compressing database ......... ");
   if(P->nModels == 1 && T->model[0].edits == 0){
     if(P->sample > 1){
-      fprintf(stderr, " ... ");
       SamplingCompressTarget(T[0]);
-      fprintf(stderr, "Done!\n");
-      pthread_exit(NULL);
       }
     else{      
-      fprintf(stderr, " ... ");
       FalconCompressTarget(T[0]);
-      fprintf(stderr, "Done!\n");
-      pthread_exit(NULL);
       }
     }
   else{
-    #ifdef LOCAL_SIMILARITY
-    if(P->local == 1){
-      fprintf(stderr, ":\n      [+] Global processing");
-      }
-    #endif
-    fprintf(stderr, " ... ");
     CompressTarget(T[0]);
-    #ifdef LOCAL_SIMILARITY
-    if(P->local == 1){
-      fprintf(stderr, "Done!\n      [+] Local processing ... ");
-      LocalComplexity(T[0]);
-      fprintf(stderr, "Done!\n  [+] Done all!\n");
-      pthread_exit(NULL);
-      }
-    #endif
     }
   fprintf(stderr, "Done!\n");
   pthread_exit(NULL);
@@ -652,7 +647,7 @@ void CompressAction(Threads *T, char *refName, char *baseName){
     T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits, 
     T[0].model[n].eDen);
 
-  fprintf(stderr, "  [+] Loading metagenomic file ... ");
+  fprintf(stderr, "  [+] Loading metagenomic file ..... ");
   LoadReference(refName);
   fprintf(stderr, "Done!\n");
 
@@ -772,9 +767,7 @@ int32_t main(int argc, char *argv[]){
   P->base = argv[argc-1];
   CompressAction(T, argv[argc-2], P->base);
   StopTimeNDRM(Time, clock());
-  fprintf(stderr, "\n");
 
-  fprintf(stderr, "==[ RESULTS ]=======================\n");
   k = 0;
   P->top = CreateTop(topSize * P->nThreads);
   for(ref = 0 ; ref < P->nThreads ; ++ref){
@@ -792,11 +785,11 @@ int32_t main(int argc, char *argv[]){
       }
     }
   
-  fprintf(stderr, "  [+] Sorting ... ");
+  fprintf(stderr, "  [+] Sorting top .................. ");
   qsort(P->top->V, k, sizeof(VT), SortByValue);
   fprintf(stderr, "Done!\n");
 
-  fprintf(stderr, "  [+] Printing to file: %s ... ", P->output);
+  fprintf(stderr, "  [+] Printing to output file ...... ");
   #ifdef LOCAL_SIMILARITY
   if(P->local == 1)
     PrintTopWP(OUTPUT, P->top, topSize);
@@ -807,6 +800,19 @@ int32_t main(int argc, char *argv[]){
   #endif
   fprintf(stderr, "Done!\n");
 
+  #ifdef LOCAL_SIMILARITY
+  if(P->local == 1){
+    fprintf(stderr, "  [+] Running local similarity ..... ");
+
+    //TODO: TOP SIZE
+
+
+    fprintf(stderr, "Done!\n");
+    }
+  #endif
+  fprintf(stderr, "\n");
+
+  fprintf(stderr, "==[ RESULTS ]=======================\n");
   if(P->verbose && topSize <= 100){
     #ifdef LOCAL_SIMILARITY
     if(P->local == 1)
