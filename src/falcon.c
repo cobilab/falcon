@@ -60,7 +60,6 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
   PT          = CreateFloatPModel(ALPHABET_SIZE);
   CMW         = CreateWeightModel(totModels);
 
-
   char c;
   for(entry = 0 ; entry < topSize ; ++entry){
     if(Top->V[entry].value > 0.0 && Top->V[entry].size > 1){ 
@@ -75,56 +74,10 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
       sprintf(name, "top%"PRIu64".prof", entry);
       FILE *OUT = Fopen(name, "w");
       
-      uint8_t c = fgetc(Reader);     
-
-
- 
-    
-      fclose(OUT);
-      }
-    }
-
-/*
-  initNSymbol = nSymbol = 0;
-  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
-    for(idxPos = 0 ; idxPos < k ; ++idxPos){
-      ++nSymbol;
-      if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
-        switch(action){
-          case -1: // IT IS THE BEGGINING OF THE HEADER
-            if((PA->nRead-1) % P->nThreads == T.id && PA->nRead>1 && nBase>1){
-              UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
-              }
-            initNSymbol = nSymbol; 
-            // RESET MODELS 
-            ResetCBuffer(symBuf);
-            for(n = 0 ; n < P->nModels ; ++n)
-              ResetShadowModel(Shadow[n]);
-            ResetWeightModel(CMW);
-            r = nBase = bits = 0;
-          break;
-          case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
-          case -3: // IF IS A SYMBOL OF THE HEADER
-            if(r >= MAX_NAME-1)
-              conName[r] = '\0';
-            else{
-              if(sym == ' ' || sym < 32 || sym > 126){ // PROTECT INTERVAL
-                if(r == 0) continue;
-                else       sym = '_'; // PROTECT OUT SYM WITH UNDERL
-                }
-              conName[r++] = sym;
-              }
-          break; 
-          case -99: break; // IF IS A SIMPLE FORMAT BREAK
-          default: exit(1);
-          }
-        continue; // GO TO NEXT SYMBOL
-        }
-
-      if(PA->nRead % P->nThreads == T.id){
+      while((sym = fgetc(Reader)) != '\n' && sym != EOF){     // FIXME: WHAT ABOUT BREAKING '\n' ?
 
         if((sym = DNASymToNum(sym)) == 4){
-          //fprintf(OUT, "%u", QuadQuantization(2.0)); // PRINT AS UPPER BOUND
+          fprintf(OUT, "%u", QuadQuantization(2.0)); // PRINT AS UPPER BOUND
           continue; // IT IGNORES EXTRA SYMBOLS
           }
 
@@ -151,19 +104,17 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
         ComputeMXProbs(PT, MX);
         instant = PModelSymbolLog(MX, sym);
         bits += instant;
-        //fprintf(OUT, "%u", QuadQuantization(instant)); // PRINT COMPLEXITY VALUE
+        fprintf(OUT, "%u", QuadQuantization(instant)); // PRINT COMPLEXITY VALUE
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
         CorrectXModels(Shadow, pModel, sym);
         UpdateCBuffer(symBuf);
         }
+       
+      fclose(OUT);
       }
-        
-  if(PA->nRead % P->nThreads == T.id){
-    UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
-    }
-*/
+    } 
 
   DeleteWeightModel(CMW);
   for(n = 0 ; n < totModels ; ++n)
