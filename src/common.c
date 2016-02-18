@@ -10,6 +10,74 @@
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+void Fclose(FILE *F){
+  if(F == NULL){
+    fprintf(stderr, "Error (Fclose): NULL file pointer.\n");
+    exit(EXIT_FAILURE);
+    }
+
+  if(ferror(F)){
+    fprintf(stderr, "Error (Fclose): unable to close the stream due to an "
+    "unknown error.\n");
+    exit(EXIT_FAILURE);
+    }
+		
+  if(fclose(F) != 0){
+    fprintf(stderr, "Error (Fclose): unable to close the file stream.\n");
+    exit(EXIT_FAILURE);	
+    }
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void Fseeko(FILE *F, off_t offset, int32_t ac){
+
+  if(F == NULL){
+    fprintf(stderr, "Error (Fseeko): NULL file pointer.\n");
+    exit(EXIT_FAILURE);
+    }
+		
+  if(fseeko(F, offset, ac) != 0){
+    Fclose(F);
+    fprintf(stderr, "Error (Fseeko): unable to change file position.\n");
+    fprintf(stderr, "Error (Fseeko): offset = %"PRId64".\n",offset);
+		
+    switch(ac){
+      case SEEK_SET:
+      fprintf(stderr, "Error (Fseeko): origin = %d (SEEK_SET).\n", ac);
+      break;
+      case SEEK_CUR:
+      fprintf(stderr, "Error (Fseeko): origin = %d (SEEK_CUR).\n", ac);
+      break;
+      case SEEK_END:
+      fprintf(stderr, "Error (Fseeko): origin = %d (SEEK_END).\n", ac);
+      default:
+      fprintf(stderr, "Error (Fseeko): invalid origin value = %d.\n", ac);
+      exit(EXIT_FAILURE);
+      }			
+    }
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -	
+	
+uint64_t Ftello(FILE *F){
+  if(F == NULL){
+    fprintf(stderr, "Error (Ftello): NULL file pointer.\n");
+    exit(EXIT_FAILURE);
+    }
+	
+  if(ftello(F) < 0){
+    Fclose(F);
+    fprintf(stderr, "Error (Ftello): unable get the current position of the"
+    " file associated with stream.\n");
+    exit(EXIT_FAILURE);	
+    }
+	
+  return (uint64_t) ftello(F);
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 double BoundDouble(double low, double value, double high){
   if(value < low ) return low;
   if(value > high) return high;

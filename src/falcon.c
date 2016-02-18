@@ -33,7 +33,7 @@ CModel **Models;  // MEMORY SHARED BY THREADING
 void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
   FILE        *Reader = Fopen(P->base, "r");
   double      bits = 0, instant = 0;
-  uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol;
+  uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol, entry;
   uint32_t    n, k, idxPos, totModels, cModel;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
@@ -59,6 +59,23 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
   MX          = CreatePModel(ALPHABET_SIZE);
   PT          = CreateFloatPModel(ALPHABET_SIZE);
   CMW         = CreateWeightModel(totModels);
+
+
+  char c;
+  for(entry = 0 ; entry < topSize ; ++entry){
+    if(Top->V[entry].value > 0.0 && Top->V[entry].size > 1){ 
+      fprintf(stderr, "\n  [>] Running %"PRIu64" ... ", entry);
+
+      Fseeko(Reader, (off_t) Top->V[entry].iPos-1, SEEK_SET); // MOVE POINTER
+
+      while((c = fgetc(Reader)) != '\n') 
+        ; // SKIP HEADER
+      
+      uint8_t c = fgetc(Reader);     
+
+
+      }
+    }
 
   FILE *OUT = Fopen("out", "w");
 
