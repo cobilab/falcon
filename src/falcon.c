@@ -70,15 +70,21 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
 
       while((c = fgetc(Reader)) != '\n') 
         ; // SKIP HEADER
+  
+      char name[MAX_NAME];
+      sprintf(name, "top%"PRIu64".prof", entry);
+      FILE *OUT = Fopen(name, "w");
       
       uint8_t c = fgetc(Reader);     
 
 
+ 
+    
+      fclose(OUT);
       }
     }
 
-  FILE *OUT = Fopen("out", "w");
-
+/*
   initNSymbol = nSymbol = 0;
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
@@ -157,6 +163,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
   if(PA->nRead % P->nThreads == T.id){
     UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
     }
+*/
 
   DeleteWeightModel(CMW);
   for(n = 0 ; n < totModels ; ++n)
