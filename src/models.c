@@ -8,6 +8,7 @@
 #include "common.h"
 #include "models.h"
 
+/*
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 static uint64_t XHASH(uint64_t x){
@@ -19,6 +20,7 @@ static uint64_t XHASH(uint64_t x){
 static uint64_t YHASH(uint64_t y){
   return (y * 786491 + 216617) % 66719476787;
   }
+*/
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

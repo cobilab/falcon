@@ -33,17 +33,17 @@ CModel **Models;  // MEMORY SHARED BY THREADING
 void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
   FILE        *Reader = Fopen(P->base, "r");
   double      bits = 0, instant = 0;
-  uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol, entry;
-  uint32_t    n, k, idxPos, totModels, cModel;
+  uint64_t    nBase = 0, entry;
+  uint32_t    n, totModels, cModel;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t     *pos, conName[MAX_NAME];
+  uint8_t     *pos;
   PModel      **pModel, *MX;
   CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
   FloatPModel *PT;
   CMWeight    *CMW;
-  int         action, sym;
+  int         sym;
 
   totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
   for(n = 0 ; n < P->nModels ; ++n) 
