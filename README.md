@@ -87,6 +87,7 @@ Non-mandatory arguments:
   -F                       force mode (overwrites top file),
   -V                       display version number,                       
   -v                       verbose mode (more information),              
+  -Z                       database local similarity,
   -s                       show compression levels,                       
   -l &#60level&#62               compression level [1;44],                     
   -p &#60sample&#62              subsampling (default: 1),                     
@@ -109,6 +110,7 @@ All the parameters can be better explained trough the following table:
 | -F                  | It will use the force mode, namely overwriting the output top file.                                        |
 | -V                  | It will print the FALCON version number, license type and authors.    |
 | -v                  | It will print progress information.    |
+| -Z                  | It measures the local complexity to localize specific events. |
 | -s                  | It will show pre-defined running levels/modes.    |
 | -l &#60;level&#62;    | It will use the selected running levels/modes.    |
 | -p &#60;sample&#62;   | If FALCON is using a single model it will sample (or use) only this periodic value of bases.    |
