@@ -65,16 +65,21 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
     if(Top->V[entry].value > 0.0 && Top->V[entry].size > 1){ 
       fprintf(stderr, "\n  [>] Running %"PRIu64" ... ", entry);
 
-      Fseeko(Reader, (off_t) Top->V[entry].iPos-1, SEEK_SET); // MOVE POINTER
-
-      while((c = fgetc(Reader)) != '\n') 
-        ; // SKIP HEADER
-  
+      // CREATE NEW PROFILE
       char name[MAX_NAME];
       sprintf(name, "top%"PRIu64".prof", entry);
       FILE *OUT = Fopen(name, "w");
-      
-      while((sym = fgetc(Reader)) != '\n' && sym != EOF){     // FIXME: WHAT ABOUT BREAKING '\n' ?
+  
+      // MOVE POINTER FORWARD
+      Fseeko(Reader, (off_t) Top->V[entry].iPos-1, SEEK_SET); 
+
+      while((c = fgetc(Reader)) != '\n')
+        ; // SKIP HEADER
+
+      while((sym = fgetc(Reader)) != '>' && sym != EOF){
+
+        if(sym == '\n') 
+          continue;  // SKIP '\n' IN FASTA
 
         if((sym = DNASymToNum(sym)) == 4){
           fprintf(OUT, "%u", QuadQuantization(2.0)); // PRINT AS UPPER BOUND
