@@ -38,12 +38,12 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t     sym, *pos, conName[MAX_NAME];
+  uint8_t     *pos, conName[MAX_NAME];
   PModel      **pModel, *MX;
   CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
   FloatPModel *PT;
   CMWeight    *CMW;
-  int         action;
+  int         action, sym;
 
   totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
   for(n = 0 ; n < P->nModels ; ++n) 
@@ -60,23 +60,27 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
   PT          = CreateFloatPModel(ALPHABET_SIZE);
   CMW         = CreateWeightModel(totModels);
 
-  char c;
   for(entry = 0 ; entry < topSize ; ++entry){
     if(Top->V[entry].value > 0.0 && Top->V[entry].size > 1){ 
-      fprintf(stderr, "\n  [>] Running %"PRIu64" ... ", entry);
+      fprintf(stderr, "\n  [>] Running %"PRIu64": %"PRIu64"... ", entry, Top->V[entry].iPos-1);
 
       // CREATE NEW PROFILE
       char name[MAX_NAME];
-      sprintf(name, "top%"PRIu64".prof", entry);
+      sprintf(name, "top%"PRIu64".prof", entry+1);
       FILE *OUT = Fopen(name, "w");
   
       // MOVE POINTER FORWARD
       Fseeko(Reader, (off_t) Top->V[entry].iPos-1, SEEK_SET); 
 
-      while((c = fgetc(Reader)) != '\n')
-        ; // SKIP HEADER
+      while((sym = fgetc(Reader)) != EOF){
 
-      while((sym = fgetc(Reader)) != '>' && sym != EOF){
+        if(sym == '>'){ // FOUND HEADER & SKIP 
+          while((sym = fgetc(Reader)) != '\n' && sym != EOF)
+            ;
+
+          if(sym == EOF) 
+            break;
+          }
 
         if(sym == '\n') 
           continue;  // SKIP '\n' IN FASTA
@@ -116,7 +120,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
         CorrectXModels(Shadow, pModel, sym);
         UpdateCBuffer(symBuf);
         }
-       
+
       fclose(OUT);
       }
     } 
