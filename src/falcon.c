@@ -62,7 +62,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
 
   for(entry = 0 ; entry < topSize ; ++entry){
     if(Top->V[entry].value > 0.0 && Top->V[entry].size > 1){ 
-      fprintf(stderr, "\n  [>] Running %"PRIu64": %"PRIu64"... ", entry, Top->V[entry].iPos-1);
+      fprintf(stderr, "      [+] Running profile: %5"PRIu64" ... ", entry+1);
 
       // CREATE NEW PROFILE
       char name[MAX_NAME];
@@ -122,6 +122,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
         }
 
       fclose(OUT);
+      fprintf(stderr, "Done!\n");
       }
     } 
 
@@ -764,9 +765,8 @@ int32_t main(int argc, char *argv[]){
 
   #ifdef LOCAL_SIMILARITY
   if(P->local == 1){
-    fprintf(stderr, "  [+] Running local similarity ..... ");
+    fprintf(stderr, "  [+] Running local similarity:\n");
     LocalComplexity(T[0], P->top, topSize);
-    fprintf(stderr, "Done!\n");
     }
   #endif
 
