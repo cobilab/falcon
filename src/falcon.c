@@ -30,7 +30,7 @@ CModel **Models;  // MEMORY SHARED BY THREADING
 // - - - - - - - - - - L O C A L   C O M P L E X I T Y - - - - - - - - - - - -
 
 #ifdef LOCAL_SIMILARITY
-void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
+void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
   FILE        *Reader = Fopen(P->base, "r");
   double      bits = 0, instant = 0;
   uint64_t    nBase = 0, entry;
@@ -62,13 +62,11 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
 
   for(entry = 0 ; entry < topSize ; ++entry){
     if(Top->V[entry].value > 0.0 && Top->V[entry].size > 1){ 
-      fprintf(stderr, "      [+] Running profile: %5"PRIu64" ... ", entry+1);
+      fprintf(stderr, "      [+] Running profile: %5"PRIu64" ... ", entry + 1);
 
-      // CREATE NEW PROFILE
-      char name[MAX_NAME];
-      sprintf(name, "top%"PRIu64".prof", entry+1);
-      FILE *OUT = Fopen(name, "w");
-  
+      // PRINT COMPLEXITY VALUE
+      fprintf(OUT, "%.5lf\n", Top->V[entry].value);
+
       // MOVE POINTER FORWARD
       Fseeko(Reader, (off_t) Top->V[entry].iPos-1, SEEK_SET); 
 
@@ -121,7 +119,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize){
         UpdateCBuffer(symBuf);
         }
 
-      fclose(OUT);
+      fprintf(OUT, "\n");
       fprintf(stderr, "Done!\n");
       }
     } 
@@ -493,7 +491,6 @@ void CompressTarget(Threads T){
 void *CompressThread(void *Thr){
   Threads *T = (Threads *) Thr;
   
-  fprintf(stderr, "  [+] Compressing database ......... ");
   if(P->nModels == 1 && T->model[0].edits == 0){
     if(P->sample > 1){
       SamplingCompressTarget(T[0]);
@@ -505,7 +502,7 @@ void *CompressThread(void *Thr){
   else{
     CompressTarget(T[0]);
     }
-  fprintf(stderr, "Done!\n");
+  
   pthread_exit(NULL);
   }
 
@@ -619,10 +616,12 @@ void CompressAction(Threads *T, char *refName, char *baseName){
   LoadReference(refName);
   fprintf(stderr, "Done!\n");
 
+  fprintf(stderr, "  [+] Compressing database ......... ");
   for(n = 0 ; n < P->nThreads ; ++n)
     pthread_create(&(t[n+1]), NULL, CompressThread, (void *) &(T[n]));
   for(n = 0 ; n < P->nThreads ; ++n) // DO NOT JOIN FORS!
     pthread_join(t[n+1], NULL);
+  fprintf(stderr, "Done!\n");
   }
 
 
@@ -766,7 +765,12 @@ int32_t main(int argc, char *argv[]){
   #ifdef LOCAL_SIMILARITY
   if(P->local == 1){
     fprintf(stderr, "  [+] Running local similarity:\n");
-    LocalComplexity(T[0], P->top, topSize);
+    // CREATE NEW PROFILE
+    char name[MAX_NAME];
+    sprintf(name, "complexities.prof");
+    FILE *OUT = Fopen(name, "w");
+    LocalComplexity(T[0], P->top, topSize, OUT);
+    fclose(OUT);
     }
   #endif
 
