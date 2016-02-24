@@ -61,7 +61,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
   CMW         = CreateWeightModel(totModels);
 
   for(entry = 0 ; entry < topSize ; ++entry){
-    if(/* Top->V[entry].value < 1.0 && */ Top->V[entry].size > 1){ 
+    if(Top->V[entry].size > 1){ 
       fprintf(stderr, "      [+] Running profile: %-5"PRIu64" ... ", entry + 1);
 
       // PRINT HEADER COMPLEXITY VALUE
@@ -78,11 +78,13 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
             ; // DO NOTHING
 
           if(sym == EOF) 
-            break;
+            break;     // END OF FILE: QUIT
           }
 
-        if(sym == '\n') 
-          continue;  // SKIP '\n' IN FASTA
+        if(nBase >= Top->V[entry].size) // IT PROCESSED ALL READ BASES: QUIT!
+          break;
+
+        if(sym == '\n') continue;  // SKIP '\n' IN FASTA
 
         if((sym = DNASymToNum(sym)) == 4){
           fprintf(OUT, "%u", QuadQuantization(2.0)); // PRINT AS UPPER BOUND
@@ -118,6 +120,17 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
         RenormalizeWeights(CMW);
         CorrectXModels(Shadow, pModel, sym);
         UpdateCBuffer(symBuf);
+        }
+
+      // fprintf(stderr, "x=%6.3lf, %"PRIu64"\n", 
+      // (1.0-BPBB(bits, nBase))*100.0, nBase);
+
+      if(entry < topSize - 1){ // RESET MODELS & PROPERTIES
+        ResetCBuffer(symBuf);
+        for(n = 0 ; n < P->nModels ; ++n)
+          ResetShadowModel(Shadow[n]);
+        ResetWeightModel(CMW);
+        nBase = bits = 0;
         }
 
       fprintf(OUT, "\n");
