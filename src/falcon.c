@@ -61,7 +61,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
   CMW         = CreateWeightModel(totModels);
 
   for(entry = 0 ; entry < topSize ; ++entry){
-    if(Top->V[entry].value < 1.0 && Top->V[entry].size > 1){ 
+    if(/* Top->V[entry].value < 1.0 && */ Top->V[entry].size > 1){ 
       fprintf(stderr, "      [+] Running profile: %-5"PRIu64" ... ", entry + 1);
 
       // PRINT HEADER COMPLEXITY VALUE
@@ -75,7 +75,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
 
         if(sym == '>'){ // FOUND HEADER & SKIP 
           while((sym = fgetc(Reader)) != '\n' && sym != EOF)
-            ;
+            ; // DO NOTHING
 
           if(sym == EOF) 
             break;
