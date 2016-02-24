@@ -47,6 +47,25 @@ void PrintMenu(void){
   MIN_LEV, MAX_LEV, DEFAULT_SAMPLE, DEF_TOP, DEFAULT_THREADS);
   }
 
+void PrintMenuEye(void){
+  fprintf(stderr,
+  "Usage: FALCON-EYE [OPTION]... [FILE]                                     \n"
+  "Vizualise FALCON output: filter, segment and image drawer.               \n"
+  "                                                                         \n"
+  "Non-mandatory arguments:                                                 \n"
+  "                                                                         \n"
+  "  -h                       give this help,                               \n"
+  "  -F                       force mode (overwrites top file),             \n"
+  "  -V                       display version number,                       \n"
+  "  -v                       verbose mode (more information),              \n"
+  "                                                                         \n"
+  "Mandatory arguments:                                                     \n"
+  "                                                                         \n"
+  "  [FILE]                   profile filename (from FALCON),               \n"
+  "                                                                         \n"
+  "Report issues to <{pratas,ap,pjf,jmr}@ua.pt>.                           \n");
+  }
+
 void PrintVersion(void){
   fprintf(stderr,
   "                                                                         \n"
