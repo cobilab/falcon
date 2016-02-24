@@ -694,11 +694,25 @@ int32_t main(int argc, char *argv[]){
   P->gamma     = ArgsDouble (gamma, p, argc, "-g");
   P->gamma     = ((int)(P->gamma * 65536)) / 65536.0;
   P->output    = ArgsFileGen(p, argc, "-x", "top", ".csv");
+  #ifdef LOCAL_SIMILARITY
+  if(P->local == 1){
+    P->outLoc  = ArgsFileGen(p, argc, "-y", "local", ".fal");
+    }
+  #endif
 
   FILE *OUTPUT = NULL;
   if(!P->force) 
     FAccessWPerm(P->output);
   OUTPUT = Fopen(P->output, "w");
+
+  #ifdef LOCAL_SIMILARITY
+  FILE *OUTLOC = NULL;
+  if(P->local == 1){
+    if(!P->force)
+      FAccessWPerm(P->outLoc);
+    OUTLOC = Fopen(P->outLoc, "w");
+    }
+  #endif 
 
   if(P->nModels == 0){
     fprintf(stderr, "Error: at least you need to use a context model!\n");
@@ -763,14 +777,10 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "Done!\n");
 
   #ifdef LOCAL_SIMILARITY
-  if(P->local == 1){
+  if(P->local == 1 && (P->nModels > 1 || T->model[0].edits != 0)){ //TODO: RM AFTER SPECIFIC FUNCTIONS
     fprintf(stderr, "  [+] Running local similarity:\n");
-    // CREATE NEW PROFILE
-    char name[MAX_NAME];
-    sprintf(name, "complexities.prof");
-    FILE *OUT = Fopen(name, "w");
-    LocalComplexity(T[0], P->top, topSize, OUT);
-    fclose(OUT);
+    LocalComplexity(T[0], P->top, topSize, OUTLOC);
+    fclose(OUTLOC);
     }
   #endif
 

@@ -37,6 +37,9 @@ void PrintMenu(void){
   "  -t <top>                 top of similarity (default: %u),              \n"
   "  -n <nThreads>            number of threads (default: %u),              \n"
   "  -x <FILE>                similarity top filename,                      \n"
+  #ifdef LOCAL_SIMILARITY
+  "  -y <FILE>                local similarities filename,                  \n"
+  #endif
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
   "                                                                         \n"

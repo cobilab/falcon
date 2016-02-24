@@ -25,6 +25,7 @@ typedef struct{
   U8       level;
   #ifdef LOCAL_SIMILARITY
   U8       local;
+  char     *outLoc;
   #endif
   U32      sample;
   U32      col;
