@@ -61,11 +61,12 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
   CMW         = CreateWeightModel(totModels);
 
   for(entry = 0 ; entry < topSize ; ++entry){
-    if(Top->V[entry].value > 0.0 && Top->V[entry].size > 1){ 
-      fprintf(stderr, "      [+] Running profile: %5"PRIu64" ... ", entry + 1);
+    if(Top->V[entry].value < 1.0 && Top->V[entry].size > 1){ 
+      fprintf(stderr, "      [+] Running profile: %-5"PRIu64" ... ", entry + 1);
 
-      // PRINT COMPLEXITY VALUE
-      fprintf(OUT, "%.5lf\n", Top->V[entry].value);
+      // PRINT HEADER COMPLEXITY VALUE
+      fprintf(OUT, "# %.5lf\t%"PRIu64"\t%s\n", (1.0-Top->V[entry].value)*100.0, 
+      Top->V[entry].size, Top->V[entry].name);
 
       // MOVE POINTER FORWARD
       Fseeko(Reader, (off_t) Top->V[entry].iPos-1, SEEK_SET); 
