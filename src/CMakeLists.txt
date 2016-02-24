@@ -12,7 +12,7 @@ SET(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 SET(CMAKE_BUILD_TYPE Release)
 
 add_executable (FALCON falcon.c mem.c time.c msg.c parser.c common.c buffer.c levels.c models.c top.c defs.h param.h) 
-add_executable (FALCON-EYE falcon-eye.c mem.c time.c msg.c parser.c common.c buffer.c levels.c models.c top.c defs.h param.h) 
+add_executable (FALCON-EYE falcon-eye.c mem.c time.c msg.c parser.c common.c buffer.c filters.c segment.c defs.h param.h) 
 TARGET_LINK_LIBRARIES(FALCON pthread)
 TARGET_LINK_LIBRARIES(FALCON-EYE)
 

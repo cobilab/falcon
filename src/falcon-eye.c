@@ -18,6 +18,8 @@
 #include "param.h"
 #include "msg.h"
 #include "common.h"
+#include "filters.h"
+#include "segment.h"
 
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -25,15 +27,12 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int32_t main(int argc, char *argv[]){
-  char     **p = *&argv, **xargv, *xpl = NULL;
-  int32_t  xargc = 0;
-  uint32_t n, k, col, ref, topSize;
-  double   gamma;
-  Threads  *T;
+  char     **p = *&argv;
+  //uint32_t n;
   
   P = (Parameters *) Malloc(1 * sizeof(Parameters));
   if((P->help = ArgsState(DEFAULT_HELP, p, argc, "-h")) == 1 || argc < 2){
-    PrintMenu();
+    PrintMenuEye();
     return EXIT_SUCCESS;
     }
 
@@ -46,7 +45,6 @@ int32_t main(int argc, char *argv[]){
   P->force    = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
   P->sample   = ArgsNum    (DEFAULT_SAMPLE,  p, argc, "-p", MIN_SAP, MAX_SAP);
   P->level    = ArgsNum    (0,               p, argc, "-l", MIN_LEV, MAX_LEV);
-  topSize     = ArgsNum    (DEF_TOP,         p, argc, "-t", MIN_TOP, MAX_TOP);
   P->output   = ArgsFileGen(p, argc, "-x", "top", ".csv");
 
   FILE *OUTPUT = NULL;
@@ -55,7 +53,7 @@ int32_t main(int argc, char *argv[]){
   OUTPUT = Fopen(P->output, "w");
 
   fprintf(stderr, "\n");
-  if(P->verbose) PrintArgs(P, T[0], argv[argc-2], argv[argc-1], topSize);
+//  if(P->verbose) PrintArgs(P, T[0], argv[argc-2], argv[argc-1], topSize);
 
   fprintf(stderr, "==[ PROCESSING ]====================\n");
   TIME *Time = CreateClock(clock());

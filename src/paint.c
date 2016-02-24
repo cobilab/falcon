@@ -3,7 +3,6 @@
 #include <time.h>
 #include <string.h>
 #include <ctype.h>
-#include <math.h>
 #include "paint.h"
 #include "common.h"
 #include "mem.h"
@@ -101,46 +100,19 @@ char *GetRgbColor(uint8_t hue)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-char *HeatMapColor(double lambda, char *color, COLORS *CLR){
-
-  // CHANGE BEHAVIOUR [SENSITIVITY: NEAR LOW SIMILARITY // COMMENT 4 UNIFORM
-  lambda = (1 + lambda*lambda*lambda + tanh(8*(lambda-1))) / 2; 
-
-  double phi = 2*M_PI*(CLR->start/3+CLR->rotations*lambda);
-  double lambdaGamma = pow(lambda, CLR->gamma);
-  double a = CLR->hue*lambdaGamma*(1-lambdaGamma)/2;
-  double R = lambdaGamma - a*0.14861*cos(phi) + a*1.78277*sin(phi);
-  double G = lambdaGamma - a*0.29227*cos(phi) - a*0.90649*sin(phi);
-  double B = lambdaGamma + a*1.97294*cos(phi);
- 
-  R = BoundDouble(0.0, R, 1.0);
-  G = BoundDouble(0.0, G, 1.0);
-  B = BoundDouble(0.0, B, 1.0);
-
-  sprintf(color, "#%02X%02X%02X", (int) (R * 255), (int) (G * 255), (int) (B * 
-  255));
-  return color;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-Painter *CreatePainter(double size, double width, double space)
+Painter *CreatePainter(double size, char *color)
   {
-  Painter *Pa = (Painter *) Malloc(sizeof(Painter));  
-  Pa->size    = size; 
-  Pa->cx      = DEFAULT_CX;
-  Pa->cy      = DEFAULT_CY;
-  Pa->tx      = DEFAULT_TX;
-  Pa->ty      = DEFAULT_TY;
-  Pa->width   = width; 
-  Pa->space   = space; 
-  return Pa;
-  }
+  Painter *P    = (Painter *) Malloc(sizeof(Painter));  
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  P->backColor  = color;
+  P->size       = size; 
+  P->cx         = DEFAULT_CX;
+  P->cy         = DEFAULT_CY;
+  P->tx         = DEFAULT_TX;
+  P->ty         = DEFAULT_TY;
+  P->width      = DEFAULT_WIDTH; 
 
-void RemovePainter(Painter *Pa){
-  Free(Pa);
+  return P;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -251,35 +223,10 @@ void Chromosome(FILE *F, double w, double h, double x, double y)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Text90d(FILE *F, double x, double y, char *name)
-  {
-  fprintf(F, "<text xml:space=\"preserve\" "
-            "style=\"font-size:30px;font-style:normal;"
-            "font-weight:normal;line-height:125%%;"
-            "letter-spacing:0px;word-spacing:0px;fill:#000000;"
-            "fill-opacity:1;stroke:none;font-family:Sans\" "
-            "transform=\"rotate(-90)\" "
-            "x=\"%.2lf\" "
-            "y=\"%.2lf\" "
-            "id=\"corben\" "
-            "sodipodi:linespacing=\"125%%\">"
-            "<tspan sodipodi:role=\"line\" "
-            "id=\"tspan3804\" "
-            "x=\"%.2lf\" "
-            "y=\"%.2lf\" "
-            "style=\"font-size:16px;font-style:normal;font-variant:"
-            "normal;font-weight:normal;font-stretch:normal;"
-            "text-align:start;line-height:125%%;writing-mode"
-            ":lr-tb;text-anchor:start;font-family:monospace;\">%s</tspan>\n"
-         "</text>\n", x, y-4, x, y-4, name);
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 void Text(FILE *F, double x, double y, char *name)
   {
   fprintf(F, "<text xml:space=\"preserve\" "
-            "style=\"font-size:30px;font-style:normal;"
+            "style=\"font-size:40px;font-style:normal;"
             "font-weight:normal;line-height:125%%;"
             "letter-spacing:0px;word-spacing:0px;fill:#000000;"
             "fill-opacity:1;stroke:none;font-family:Sans\" "
@@ -291,13 +238,13 @@ void Text(FILE *F, double x, double y, char *name)
             "id=\"tspan3804\" "
             "x=\"%.2lf\" "
             "y=\"%.2lf\" "
-            "style=\"font-size:16px;font-style:normal;font-variant:"
+            "style=\"font-size:18px;font-style:normal;font-variant:"
             "normal;font-weight:normal;font-stretch:normal;"
             "text-align:start;line-height:125%%;writing-mode"
-            ":lr-tb;text-anchor:start;font-family:monospace;\">%s</tspan>\n"
+            ":lr-tb;text-anchor:start;font-family:Arial;-"
+            "inkscape-font-specification:Arial\">%s</tspan>\n"
          "</text>\n", x, y, x, y, name);
   }
-
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -319,8 +266,23 @@ void TextFloat(FILE *F, double x, double y, double name)
              "style=\"font-size:18px;font-style:normal;font-variant:"
              "normal;font-weight:normal;font-stretch:normal;"
              "text-align:start;line-height:125%%;writing-mode"
-             ":lr-tb;text-anchor:start;font-family:Arial;-\">%5.2lf</tspan>\n"
+             ":lr-tb;text-anchor:start;font-family:Arial;-"
+             "inkscape-font-specification:Arial\"> %5.2lf</tspan>\n"
           "</text>\n", x, y, x, y, name);
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void SetScale(double max)
+  {
+  scale = max / 80.0; 
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+double GetPoint(uint64_t p)
+  {
+  return p / (double) scale * 5;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -328,17 +290,20 @@ void TextFloat(FILE *F, double x, double y, double name)
 void PrintHead(FILE *F, double w, double u)
   {
   fprintf(F, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
-  "<!-- SMASH @ IEETA 2015 -->\n""<svg\n"
+  "<!-- IEETA 2014 using Inkscape -->\n""<svg\n"
   "xmlns:osb=\"http://www.openswatchbook.org/uri/2009/osb\"\n"
   "xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n"
   "xmlns:cc=\"http://creativecommons.org/ns#\"\n"
   "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
   "xmlns:svg=\"http://www.w3.org/2000/svg\"\n"
   "xmlns=\"http://www.w3.org/2000/svg\"\n"
+  "xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\"\n"
+  "xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\"\n"
   "width=\"%lf\"\n"
   "height=\"%lf\"\n"
   "id=\"svg2\"\n"
   "version=\"1.1\"\n"
+  "inkscape:version=\"0.48.3.1 r9886\"\n"
   "sodipodi:docname=\"chromosomes\">\n"
   "<defs\n"
   "id=\"defs4\">\n"
@@ -369,6 +334,137 @@ void PrintHead(FILE *F, double w, double u)
   "<g inkscape:label=\"Camada 1\" inkscape:groupmode=\"layer\" id=\"layer1\" "
   ">\n", w, u);
   
+  fprintf(F, "<defs id=\"defs6211\"><pattern inkscape:stockid=\"Polka dots, "
+  "large\" id=\"Polkadots-large\" patternTransform=\"translate(0,0)" 
+  "scale(10,10)\" height=\"10\" width=\"10\" patternUnits=\"userSpa"
+  "ceOnUse\" inkscape:collect=\"always\"> "
+  "<circle id=\"circle4936\" r=\"0.45\" cy=\"0.810\" cx=\"2.567\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4938\" r=\"0.45\" cy=\"2.33\" cx=\"3.048\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4940\" r=\"0.45\" cy=\"2.415\" cx=\"4.418\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4942\" r=\"0.45\" cy=\"3.029\" cx=\"1.844\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4944\" r=\"0.45\" cy=\"1.363\" cx=\"6.08\" " 
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4946\" r=\"0.45\" cy=\"4.413\" cx=\"5.819\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4948\" r=\"0.45\" cy=\"4.048\" cx=\"4.305\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4950\" r=\"0.45\" cy=\"3.045\" cx=\"5.541\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4952\" r=\"0.45\" cy=\"5.527\" cx=\"4.785\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4954\" r=\"0.45\" cy=\"5.184\" cx=\"2.667\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4956\" r=\"0.45\" cy=\"1.448\" cx=\"7.965\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4958\" r=\"0.45\" cy=\"5.049\" cx=\"7.047\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4960\" r=\"0.45\" cy=\"0.895\" cx=\"4.340\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4962\" r=\"0.45\" cy=\"0.340\" cx=\"7.125\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4964\" r=\"0.45\" cy=\"1.049\" cx=\"9.553\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4966\" r=\"0.45\" cy=\"2.689\" cx=\"7.006\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4968\" r=\"0.45\" cy=\"2.689\" cx=\"8.909\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4970\" r=\"0.45\" cy=\"4.407\" cx=\"9.315\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4972\" r=\"0.45\" cy=\"3.870\" cx=\"7.820\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4974\" r=\"0.45\" cy=\"5.948\" cx=\"8.270\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4976\" r=\"0.45\" cy=\"7.428\" cx=\"7.973\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4978\" r=\"0.45\" cy=\"8.072\" cx=\"9.342\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4980\" r=\"0.45\" cy=\"9.315\" cx=\"8.206\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4982\" r=\"0.45\" cy=\"9.475\" cx=\"9.682\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4984\" r=\"0.45\" cy=\"6.186\" cx=\"9.688\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4986\" r=\"0.45\" cy=\"6.296\" cx=\"3.379\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4988\" r=\"0.45\" cy=\"8.204\" cx=\"2.871\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4990\" r=\"0.45\" cy=\"8.719\" cx=\"4.59\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4992\" r=\"0.45\" cy=\"9.671\" cx=\"3.181\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4994\" r=\"0.45\" cy=\"7.315\" cx=\"5.734\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4996\" r=\"0.45\" cy=\"6.513\" cx=\"6.707\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle4998\" r=\"0.45\" cy=\"9.670\" cx=\"5.730\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5000\" r=\"0.45\" cy=\"8.373\" cx=\"6.535\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5002\" r=\"0.45\" cy=\"7.154\" cx=\"4.37\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5004\" r=\"0.45\" cy=\"7.25\" cx=\"0.622\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5006\" r=\"0.45\" cy=\"5.679\" cx=\"0.831\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5008\" r=\"0.45\" cy=\"8.519\" cx=\"1.257\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5010\" r=\"0.45\" cy=\"6.877\" cx=\"1.989\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5012\" r=\"0.45\" cy=\"3.181\" cx=\"0.374\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5014\" r=\"0.45\" cy=\"1.664\" cx=\"1.166\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5016\" r=\"0.45\" cy=\"0.093\" cx=\"1.151\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5018\" r=\"0.45\" cy=\"10.093\" cx=\"1.151\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5020\" r=\"0.45\" cy=\"4.451\" cx=\"1.302\" "
+  "style=\"fill:black;stroke:none\" />"
+  "<circle id=\"circle5022\" r=\"0.45\" cy=\"3.763\" cx=\"3.047\" "
+  "style=\"fill:black;stroke:none\" />"
+  "</pattern></defs>");
+
+  fprintf(F, "<defs id=\"ffff\"><pattern inkscape:stockid=\"Wavy\" "
+  "id=\"Wavy\" height=\"5.1805778\" width=\"30.0\" patternUnits=\"userSpaceOn"
+  "Use\" inkscape:collect=\"always\"><path id=\"path5114\" d=\"M 7.597,0.061 "
+  "C 5.079,-0.187 2.656,0.302 -0.01,1.788 L -0.01,3.061 C 2.773,1.431 5.173,1"
+  ".052 7.472,1.280 C 9.770,1.508 11.969,2.361 14.253,3.218 C 18.820,4.931 23"
+  ".804,6.676 30.066,3.061 L 30.062,1.788 C 23.622,5.497 19.246,3.770 14.691,"
+  "2.061 C 12.413,1.207 10.115,0.311 7.597,0.061 z \" style=\"fill:black;stro"
+  "ke:none;\" /></pattern></defs>");
+
+  fprintf(F, "<defs id=\"defs6219\"><pattern inkscape:stockid=\"xtrace\" "
+  "id=\"xtrace\" height=\"20.0\" width=\"20.0\" patternUnits=\"userSpace"
+  "OnUse\" inkscape:collect=\"always\"><path style=\"fill:#000000;stroke:"
+  "#000000;stroke-width:0.30;stroke-linecap:butt;stroke-linejoin:miter;"
+  "stroke-opacity:1;stroke-miterlimit:0;stroke-dasharray:none;fill-opacity:"
+  "1\" d=\"m 0.0,10.0 25.00000,-25.0 0,5 -25.00000,25.00000 z\" "
+  "id=\"path7213\" inkscape:connector-curvature=\"0\" /><path style=\""
+  "fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.30;stroke-lineca"
+  "p:butt;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-d"
+  "asharray:none\" d=\"m 0.0,30.0 25.00000,-25.0 0,5 -25.00000,25.00000 z\" i"
+  "d=\"path7213-8\" inkscape:connector-curvature=\"0\" /><path style=\"fill:#"
+  "000000;fill-opacity:1;stroke:#000000;stroke-width:0.30;stroke-linecap:butt"
+  ";stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharr"
+  "ay:none\" d=\"m 0.0,50.0 25.00000,-25.0 0,5 -25.00000,25.00000 z\" id=\"pa"
+  "th7213-9\" inkscape:connector-curvature=\"0\" /><path style=\"fill:#000000"
+  ";fill-opacity:1;stroke:#000000;stroke-width:0.30;stroke-linecap:butt;strok"
+  "e-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:non"
+  "e\" d=\"m 0.0,70.0 25.00000,-25.0 0,5 -25.00000,25.00000 z\" id=\"path7213"
+  "-10\" inkscape:connector-curvature=\"0\" /><path style=\"fill:#000000;fill"
+  "-opacity:1;stroke:#000000;stroke-width:0.30;stroke-linecap:butt;stroke-lin"
+  "ejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none\" d"
+  "=\"m 0.0,90.0 25.00000,-25.0 0,5 -25.00000,25.00000 z\" id=\"path7213-11\""
+  " inkscape:connector-curvature=\"0\" /><path style=\"fill:#000000;fill-opac"
+  "ity:1;stroke:#000000;stroke-width:0.30;stroke-linecap:butt;stroke-linejoin"
+  ":miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none\" d=\"m "
+  "m 0.0,110.0 25.00000,-25.0 0,05 -25.00000,25.00000 z\" id=\"path7213-12\" "
+  "inkscape:connector-curvature=\"0\" /></pattern></defs>");
+
   fprintf(F, "<defs id=\"defs4\"><pattern id=\"dallas\" patternTransform=\"tr"
   "anslate(106.59375,206.90625)\" height=\"4.75\" width=\"4.75\" patternUnits"
   "=\"userSpaceOnUse\"> <path style=\"fill:none;stroke:#000000;stroke-width:1"

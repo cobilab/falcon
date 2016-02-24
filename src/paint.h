@@ -3,12 +3,13 @@
 
 #include "defs.h"
 
-#define DEFAULT_CX             350.0
-#define DEFAULT_CY             350.0
+#define DEFAULT_CX             70.0
+#define DEFAULT_CY             75.0
 #define DEFAULT_TX             50.0                        // X COORD FOR TEXT
 #define DEFAULT_TY             82.0                        // Y COORD FOR TEXT
-#define DEFAULT_WIDTH          16.0                        // SQUARE THICKNESS
-#define DEFAULT_SPACE          1                      // SPACE BETWEEN SQUARES
+#define DEFAULT_WIDTH          20.0                   // CHROMOSOMES THICKNESS
+#define DEFAULT_SPACE          10                 // SPACE BETWEEN CHROMOSOMES
+#define DEFAULT_SCALE          100000                 // SCALE FOR CHROMOSOMES
 #define EXTRA                  150                   // EXTRA SPACE FOR BORDER
 #define LEVEL_SATURATION       220 
 #define LEVEL_VALUE            160
@@ -17,8 +18,8 @@
 
 typedef struct
   {
+  char    *backColor;
   double  width;
-  double  space;
   double  cx; 
   double  cy;
   double  tx;
@@ -26,15 +27,6 @@ typedef struct
   double  size;  
   }
 Painter;
-
-typedef struct
-  {
-  double start;
-  double rotations;
-  double hue;
-  double gamma;
-  }
-COLORS;
 
 typedef struct
   {
@@ -52,11 +44,11 @@ typedef struct
   } 
 HsvColor;
 
+double scale;
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-char      *HeatMapColor  (double, char *, COLORS *);
-Painter   *CreatePainter (double, double, double);
-void      RemovePainter  (Painter *);
+Painter   *CreatePainter (double, char *);
 RgbColor  HsvToRgb       (HsvColor);
 HsvColor  RgbToHsv       (RgbColor);
 char      *GetRgbColor   (uint8_t);
@@ -68,8 +60,9 @@ void      Rect           (FILE *, double, double, double, double, char *);
 void      RectIR         (FILE *, double, double, double, double, char *);
 void      Chromosome     (FILE *, double, double, double, double);
 void      Text           (FILE *, double, double, char *);
-void      Text90d        (FILE *, double, double, char *);
 void      TextFloat      (FILE *, double, double, double);
+void      SetScale       (double);
+double    GetPoint       (uint64_t);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

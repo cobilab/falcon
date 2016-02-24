@@ -56,6 +56,33 @@ Threads;
 
 Parameters *P;
 
+typedef struct{
+  char     **names;
+  uint32_t nFiles;
+  }
+SFILES;
+
+typedef struct{
+  uint8_t  verbose;
+  uint8_t  disk;
+  char     *output;
+  SFILES   *ref;
+  SFILES   *tar;
+  uint32_t context;
+  uint32_t inverse;
+  uint64_t **size;
+  uint64_t *chrSize;
+  int64_t  subsamp;
+  int64_t  window;
+  int64_t  ratio;
+  uint8_t  bloom;
+  uint64_t bSize;
+  uint32_t bHashes;
+  uint64_t max;
+  double   threshold;
+  }
+Param;
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #endif

@@ -74,7 +74,6 @@ typedef int8_t   I8;
 #define CHECKSUMGF             1073741824
 #define WATERMARK              16042014
 #define DEFAULT_GAMMA          0.90
-#define DEFAULT_THRESHOLD      1.85
 #define MAX_HISTORYSIZE        1000000
 #define REFERENCE              1
 #define TARGET                 0
@@ -87,6 +86,13 @@ typedef int8_t   I8;
 #define EXTRA_L_DEN            1
 #define EXTRA_L_CTX            8
 #define MAX_STR                2048
+
+#define WINDOW_RATIO           1300
+#define SUBSAMPLE_RATIO        5
+#define DEFAULT_THRESHOLD      0.5 
+#define DEFAULT_WINDOW         -1
+#define DEFAULT_SUBSAMPLE      0
+#define DEFAULT_SAMPLE_RATIO   10000
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
