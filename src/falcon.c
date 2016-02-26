@@ -65,7 +65,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
       fprintf(stderr, "      [+] Running profile: %-5"PRIu64" ... ", entry + 1);
 
       // PRINT HEADER COMPLEXITY VALUE
-      fprintf(OUT, "# %.5lf\t%"PRIu64"\t%s\n", (1.0-Top->V[entry].value)*100.0, 
+      fprintf(OUT, "#\t%.5lf\t%"PRIu64"\t%s\n", (1.0-Top->V[entry].value)*100.0, 
       Top->V[entry].size, Top->V[entry].name);
 
       // MOVE POINTER FORWARD

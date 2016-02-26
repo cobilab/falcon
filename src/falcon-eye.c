@@ -28,8 +28,9 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int32_t main(int argc, char *argv[]){
-  char     **p = *&argv;
-  //uint32_t n;
+  char **p = *&argv;
+  FILE *OUTPUT = NULL, *INPUT = NULL;
+  uint32_t n;
   
   PEYE = (EYEPARAM *) Malloc(1 * sizeof(EYEPARAM));
   if((PEYE->help = ArgsState(DEFAULT_HELP, p, argc, "-h")) == 1 || argc < 2){
@@ -52,7 +53,6 @@ int32_t main(int argc, char *argv[]){
   PEYE->gamma     = ArgsDouble (0.50,            p, argc, "-g");
   PEYE->output    = ArgsFileGen(p, argc, "-o", "image", ".svg");
 
-  FILE *OUTPUT = NULL;
   if(!PEYE->force) 
     FAccessWPerm(PEYE->output);
   OUTPUT = Fopen(PEYE->output, "w");
@@ -74,9 +74,36 @@ int32_t main(int argc, char *argv[]){
 
   fprintf(stderr, "==[ PROCESSING ]====================\n");
   TIME *Time = CreateClock(clock());
-  fprintf(stderr, "Done!\n");
+
+  int sym;
+  char fname[MAX_NAME];
+  double fvalue;
+  uint64_t fsize;
+ 
+  INPUT = Fopen(argv[argc-1], "r"); 
+  while((sym = fgetc(INPUT)) != EOF){
+
+    if(sym == '#'){
+      if(fscanf(INPUT, "\t%lf\t%"PRIu64"\t%s\n", &fvalue, &fsize, fname) != 3){
+        fprintf(stderr, "  [x] Error: unknown type of file!\n");
+        exit(1);
+        }
+ 
+      fprintf(stderr, "$\t%lf\t%"PRIu64"\t%s\n", fvalue, fsize, fname);
+      // DO SOMETHING
+      // RESET ?
+      // MOVE PAINTER ?
+      }
+
+    // TODO: FILTER
+    // TODO: SEGMENT
+    }
+  
+  if(!OUTPUT) fclose(OUTPUT);
+  if(!INPUT)  fclose(INPUT);
 
   StopTimeNDRM(Time, clock());
+  fprintf(stderr, "Done!\n");
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ RESULTS ]=======================\n");
@@ -87,7 +114,6 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "\n");
 
   RemoveClock(Time);
-  if(!OUTPUT) fclose(OUTPUT);
 
   return EXIT_SUCCESS;
   }
