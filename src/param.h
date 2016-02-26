@@ -55,13 +55,26 @@ typedef struct{
   }
 Threads;
 
-Parameters *P;
-
 typedef struct{
   char     **names;
   uint32_t nFiles;
   }
 SFILES;
+
+typedef struct{
+  U8       help;
+  U8       verbose;
+  U8       force;
+  U8       nFiles;
+  double   start;
+  double   rotations;
+  double   hue;
+  double   gamma;
+  double   width;
+  double   space;
+  char     *output;
+  }
+EYEPARAM;
 
 typedef struct{
   uint8_t  verbose;
@@ -83,6 +96,9 @@ typedef struct{
   double   threshold;
   }
 Param;
+
+Parameters *P;
+EYEPARAM   *PEYE;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
