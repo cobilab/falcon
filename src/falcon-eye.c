@@ -89,7 +89,10 @@ int32_t main(int argc, char *argv[]){
         exit(1);
         }
  
-      fprintf(stderr, "$\t%lf\t%"PRIu64"\t%s\n", fvalue, fsize, fname);
+      // fprintf(stderr, "$\t%lf\t%"PRIu64"\t%s\n", fvalue, fsize, fname);
+      fprintf(stderr, "  [+] Filtering %s\n", fname);
+      
+      
       // DO SOMETHING
       // RESET ?
       // MOVE PAINTER ?
