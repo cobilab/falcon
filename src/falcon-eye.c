@@ -100,10 +100,10 @@ int32_t main(int argc, char *argv[]){
       DeleteEntries(FIL);
       fclose(TMP);
 
-      TMP = Fopen("falconEyeFilTmpFile.fse", "r");
+      FILE *TMP2 = Fopen("falconEyeFilTmpFile.fse", "r");
       fprintf(stderr, "  [+] Segmenting %s\n", fname);
       //if(SegmentStream(TMP, OUTPUT) == 1) break; 
-      fclose(TMP);
+      fclose(TMP2);
       }
     }
 

@@ -85,6 +85,7 @@ void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
 
 void DeleteEntries(FILTER *FIL){
   Free(FIL->entries);
+  FIL->entries = NULL;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
