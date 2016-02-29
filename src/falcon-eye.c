@@ -92,18 +92,12 @@ int32_t main(int argc, char *argv[]){
         exit(1);
         }
  
-      fprintf(stderr, "  [+] Filtering %s\n", fname);
-      FILE *TMP = Fopen("falconEyeFilTmpFile.fse", "w");
-      //fprintf(TMP, "$\t%lf\t%"PRIu64"\t%s\n", fvalue, fsize, fname);
+      fprintf(stderr, "  [+] Filtering & segmenting %s ... ", fname);
+      fprintf(OUTPUT, "$\t%lf\t%"PRIu64"\t%s\n", fvalue, fsize, fname);
       InitEntries(FIL, fsize, INPUT);
-      FilterStream(FIL, TMP);
+      FilterStream(FIL, OUTPUT);
       DeleteEntries(FIL);
-      fclose(TMP);
-
-      FILE *TMP2 = Fopen("falconEyeFilTmpFile.fse", "r");
-      fprintf(stderr, "  [+] Segmenting %s\n", fname);
-      //if(SegmentStream(TMP, OUTPUT) == 1) break; 
-      fclose(TMP2);
+      fprintf(stderr, "Done!\n");
       }
     }
 
@@ -115,7 +109,6 @@ int32_t main(int argc, char *argv[]){
   if(!INPUT)  fclose(INPUT);
 
   StopTimeNDRM(Time, clock());
-  fprintf(stderr, "Done!\n");
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ RESULTS ]=======================\n");

@@ -32,7 +32,7 @@ void FilterStream(FILTER *FIL, FILE *OUT){
 
   for(n = 0 ; n < FIL->nEntries ; ++n){
     if(n % FIL->drop == 0){
-      fprintf(OUT, "%"PRIu64"\t%f\n", n, Mean(FIL, n));
+      fprintf(OUT, "%"PRIu64"\t%.2lf\n", n, Mean(FIL, n));
       }
     }
   }
@@ -77,7 +77,8 @@ void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
       fprintf(stderr, "  [x] Error: filtering symbols larger than size!");
       exit(1);
       }
-    FIL->entries[idx] = c;
+    FIL->entries[idx] = (double) ((c-48)*0.25);
+    //fprintf(stderr, "%lf\n", FIL->entries[idx]);
     }
   }
 
