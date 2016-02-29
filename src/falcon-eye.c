@@ -95,7 +95,9 @@ int32_t main(int argc, char *argv[]){
       // fprintf(stderr, "$\t%lf\t%"PRIu64"\t%s\n", fvalue, fsize, fname);
       FILE *TMP = Fopen("falconEyeFilTmpFile.fse", "w");
       fprintf(stderr, "  [+] Filtering %s\n", fname);
+      InitEntries(FIL, fsize, INPUT);
       //if( FilterStream(INPUT, TMP)  == 1) break;
+      DeleteEntries(FIL);
       fclose(TMP);
       TMP = Fopen("falconEyeFilTmpFile.fse", "r");
       fprintf(stderr, "  [+] Segmenting %s\n", fname);

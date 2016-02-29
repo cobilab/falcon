@@ -25,7 +25,9 @@ FILTER;
 
 FILTER   *CreateFilter      (uint64_t, uint64_t, uint8_t);
 void     InitWeights        (FILTER *);
+void     InitEntries        (FILTER *, uint64_t, FILE *);
 void     DeleteFilter       (FILTER *);
+void     DeleteEntries      (FILTER *);
 
 
 void     FilterSequence     (char *, Param *, float *);

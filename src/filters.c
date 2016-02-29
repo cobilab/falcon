@@ -38,8 +38,8 @@ void FilterSequence(char *fName, Param *P, float *w){
   Reader   = Fopen(fName, "r");
   entries  = (float *) Malloc(BUFFER_SIZE * sizeof(float));
   buffer   = (char  *) Malloc(BUFFER_SIZE * sizeof(char ));
-  nEntries = 0;
 
+  nEntries = 0;
   while((k = fread(buffer, sizeof(char), BUFFER_SIZE, Reader))){
     for(n = 0 ; n < k ; ++n)
       switch(buffer[n]){
@@ -90,6 +90,30 @@ void InitWeights(FILTER *FIL){
         FIL->weights[FIL->size+k] = 1;
     break;
     }
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
+  int c;
+  uint64_t idx;
+
+  FIL->nEntries = nEntries;
+  FIL->entries  = (double *) Malloc(FIL->nEntries * sizeof(double)); 
+  for(idx = 0 ; idx < FIL->nEntries ; ++idx){
+    c = fgetc(INPUT);
+    if(c == EOF || c == '\n'){
+      fprintf(stderr, "  [x] Error: filtering symbols larger than size!");
+      exit(1);
+      }
+    FIL->entries[idx] = c;
+    }
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void DeleteEntries(FILTER *FIL){
+  Free(FIL->entries);
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
