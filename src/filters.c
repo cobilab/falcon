@@ -10,14 +10,14 @@
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-static float Mean(float *ent, int64_t nEnt, int64_t n, int64_t M, float *w){
+static double Mean(FILTER *FIL, int64_t n){
   int64_t k, s;
-  float   sum = 0, wSum = 0, tmp;
+  double  sum = 0, wSum = 0, tmp;
 
-  for(k = -M ; k <= M ; ++k){
+  for(k = -FIL->size ; k <= FIL->size ; ++k){
     s = n+k;
-    if(s >= 0 && s < nEnt){
-      sum  += (tmp=w[M+k])*ent[s];
+    if(s >= 0 && s < FIL->nEntries){
+      sum  += (tmp= FIL->weights[FIL->size+k]) * FIL->entries[s];
       wSum += tmp;
       }
     }
@@ -27,43 +27,14 @@ static float Mean(float *ent, int64_t nEnt, int64_t n, int64_t M, float *w){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void FilterSequence(char *fName, Param *P, float *w){
-  FILE    *Reader  = NULL, *Writter = NULL;
-  float   *entries = NULL;
-  int64_t nEntries, n, M, drop, k;
-  char    *fNameOut, *buffer;
+void FilterStream(FILTER *FIL, FILE *OUT){
+  int64_t n;
 
-  M        = P->window;
-  drop     = P->subsamp + 1;
-  Reader   = Fopen(fName, "r");
-  entries  = (float *) Malloc(BUFFER_SIZE * sizeof(float));
-  buffer   = (char  *) Malloc(BUFFER_SIZE * sizeof(char ));
-
-  nEntries = 0;
-  while((k = fread(buffer, sizeof(char), BUFFER_SIZE, Reader))){
-    for(n = 0 ; n < k ; ++n)
-      switch(buffer[n]){
-        case '0': entries[nEntries++] = 0.0; break;
-        case '1': entries[nEntries++] = 1.0; break;
-        default:  entries[nEntries++] = 1.0; break; // UNKNOWN SYMBOLS
-        }
-    entries = (float *) Realloc(entries, (nEntries+k) * sizeof(float), 
-    sizeof(float) * k);
+  for(n = 0 ; n < FIL->nEntries ; ++n){
+    if(n % FIL->drop == 0){
+      fprintf(OUT, "%"PRIu64"\t%f\n", n, Mean(FIL, n));
+      }
     }
-  fclose(Reader);
-
-  if(P->verbose == 1)
-    fprintf(stderr, "Got %"PRIu64" entries from file\n", nEntries);
-
-  fNameOut = ReplaceSubStr(fName, ".oxch", ".fil");
-  Writter  = Fopen(fNameOut, "w");
-
-  for(n = 0 ; n < nEntries ; ++n)
-    if(n % drop == 0)
-      fprintf(Writter, "%"PRIu64"\t%f\n", n, Mean(entries, nEntries, n, M, w));
-
-  Free(entries);
-  fclose(Writter);
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
