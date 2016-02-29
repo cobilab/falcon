@@ -10,41 +10,6 @@
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void WindowSizeAndDrop(Param *P, uint64_t size){
-  if(DEFAULT_WINDOW != -1) return;  
-  P->subsamp = size / DEFAULT_SAMPLE_RATIO;
-  if(size < DEFAULT_SAMPLE_RATIO)
-    P->subsamp = 1;
-  P->window = (P->subsamp-1) * SUBSAMPLE_RATIO;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-float *InitWinWeights(int64_t M, int32_t type){
-  float  *w = (float *) Malloc((2 * M + 1) * sizeof(float));
-  int64_t k;
-
-  switch(type){
-    case W_HAMMING: for(k = -M ; k <= M ; ++k) w[M+k] = 0.54 + 0.46 * cos((2 *
-    M_PI * k) / (2 * M + 1)); break;
-    case W_HANN: for(k = -M ; k <= M ; ++k) w[M+k] = 0.5 * (1 + cos((2 * M_PI
-    * k) / (2 * M + 1))); break;
-    case W_BLACKMAN: for(k = -M ; k <= M ; ++k) w[M+k] = 0.42 + 0.5 * cos((2 *
-    M_PI * k) / (2 * M + 1)) + 0.08 * cos((4 * M_PI * k) / (2 * M+1)); break;
-    case W_RECTANGULAR: for(k = -M ; k <= M ; ++k) w[M+k] = 1; break;
-    }
-
-  return w;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-void EndWinWeights(float *w){
-  Free(w);
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 static float Mean(float *ent, int64_t nEnt, int64_t n, int64_t M, float *w){
   int64_t k, s;
   float   sum = 0, wSum = 0, tmp;
@@ -103,3 +68,48 @@ void FilterSequence(char *fName, Param *P, float *w){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+void InitWeights(FILTER *FIL){
+  int64_t k, sizedb = 2 * FIL->size + 1;
+
+  switch(FIL->type){
+    case W_HAMMING:
+      for(k = -FIL->size ; k <= FIL->size ; ++k)
+        FIL->weights[FIL->size+k] = 0.54 + 0.46 * cos((2 * M_PI * k) / sizedb);
+    break;
+    case W_HANN:
+      for(k = -FIL->size ; k <= FIL->size ; ++k)
+        FIL->weights[FIL->size+k] = 0.5 * (1 + cos((2 * M_PI * k) / sizedb));
+    break;
+    case W_BLACKMAN:
+      for(k = -FIL->size ; k <= FIL->size ; ++k)
+        FIL->weights[FIL->size+k] = 0.42 + 0.5 * cos((2 * M_PI * k) / sizedb) +
+        0.08 * cos((4 * M_PI * k) / sizedb);
+    break;
+    case W_RECTANGULAR:
+      for(k = -FIL->size ; k <= FIL->size ; ++k)
+        FIL->weights[FIL->size+k] = 1;
+    break;
+    }
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+FILTER *CreatFilter(uint64_t size, uint64_t drop, uint8_t type){
+  FILTER *FIL  = (FILTER *) Calloc(1, sizeof(FILTER));
+  FIL->size    = size;
+  FIL->drop    = drop;
+  FIL->type    = type;
+  FIL->weights = (double *) Malloc((2*FIL->size+1) * sizeof(double));
+  InitWeights(FIL);
+  return FIL;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void DeleteFilter(FILTER *FIL){
+  Free(FIL->weights);
+  Free(FIL->entries);
+  Free(FIL);
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

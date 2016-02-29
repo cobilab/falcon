@@ -11,9 +11,23 @@
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void     WindowSizeAndDrop  (Param *, uint64_t);
-float    *InitWinWeights    (int64_t, int32_t);
-void     EndWinWeights      (float *);
+typedef struct{
+  int64_t  size;
+  int64_t  drop;
+  int64_t  nEntries;
+  double   *entries;
+  double   *weights;
+  uint8_t  type;
+  }
+FILTER;
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+FILTER   *CreatFilter       (uint64_t, uint64_t, uint8_t);
+void     InitWeights        (FILTER *);
+void     DeleteFilter       (FILTER *);
+
+
 void     FilterSequence     (char *, Param *, float *);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

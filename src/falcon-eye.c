@@ -79,6 +79,7 @@ int32_t main(int argc, char *argv[]){
   char fname[MAX_NAME];
   double fvalue;
   uint64_t fsize;
+  double   entries[5000];
  
   INPUT = Fopen(argv[argc-1], "r"); 
   while((sym = fgetc(INPUT)) != EOF){
@@ -90,17 +91,18 @@ int32_t main(int argc, char *argv[]){
         }
  
       // fprintf(stderr, "$\t%lf\t%"PRIu64"\t%s\n", fvalue, fsize, fname);
+      FILE *TMP = Fopen("falconEyeFilTmpFile.fse", "w");
       fprintf(stderr, "  [+] Filtering %s\n", fname);
-      
-      
-      // DO SOMETHING
-      // RESET ?
-      // MOVE PAINTER ?
+      //if( FilterStream(INPUT, TMP)  == 1) break;
+      fclose(TMP);
+      TMP = Fopen("falconEyeFilTmpFile.fse", "r");
+      fprintf(stderr, "  [+] Segmenting %s\n", fname);
+      //if(SegmentStream(TMP, OUTPUT) == 1) break; 
+      fclose(TMP);
       }
-
-    // TODO: FILTER
-    // TODO: SEGMENT
     }
+
+  //PaintFig();
   
   if(!OUTPUT) fclose(OUTPUT);
   if(!INPUT)  fclose(INPUT);
