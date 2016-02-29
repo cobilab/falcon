@@ -94,13 +94,14 @@ void InitWeights(FILTER *FIL){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FILTER *CreatFilter(uint64_t size, uint64_t drop, uint8_t type){
+FILTER *CreateFilter(uint64_t size, uint64_t drop, uint8_t type){
   FILTER *FIL  = (FILTER *) Calloc(1, sizeof(FILTER));
   FIL->size    = size;
   FIL->drop    = drop;
   FIL->type    = type;
   FIL->weights = (double *) Malloc((2*FIL->size+1) * sizeof(double));
   InitWeights(FIL);
+  FIL->entries = NULL;
   return FIL;
   }
 
@@ -108,7 +109,8 @@ FILTER *CreatFilter(uint64_t size, uint64_t drop, uint8_t type){
 
 void DeleteFilter(FILTER *FIL){
   Free(FIL->weights);
-  Free(FIL->entries);
+  if(FIL->entries != NULL)
+    Free(FIL->entries);
   Free(FIL);
   }
 

@@ -23,7 +23,7 @@ FILTER;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FILTER   *CreatFilter       (uint64_t, uint64_t, uint8_t);
+FILTER   *CreateFilter      (uint64_t, uint64_t, uint8_t);
 void     InitWeights        (FILTER *);
 void     DeleteFilter       (FILTER *);
 

@@ -79,7 +79,9 @@ int32_t main(int argc, char *argv[]){
   char fname[MAX_NAME];
   double fvalue;
   uint64_t fsize;
-  double   entries[5000];
+
+  //                         wSize drop type
+  FILTER *FIL = CreateFilter(5000, 10,  1);
  
   INPUT = Fopen(argv[argc-1], "r"); 
   while((sym = fgetc(INPUT)) != EOF){
@@ -101,6 +103,8 @@ int32_t main(int argc, char *argv[]){
       fclose(TMP);
       }
     }
+
+  DeleteFilter(FIL);
 
   //PaintFig();
   
