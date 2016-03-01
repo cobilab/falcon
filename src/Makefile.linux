@@ -11,7 +11,7 @@ LIBS   = -lm -lpthread
 DEPS   = defs.h param.h
 PROGS  = $(BIN)/FALCON $(BIN)/FALCON-EYE
 OBJS   = mem.o time.o msg.o parser.o common.o buffer.o levels.o models.o \
-         top.o filters.o segment.o        
+         top.o filters.o
 #-----------------------------------------------------------------------------
 all:
 	$(MAKE) progs
@@ -38,8 +38,6 @@ models.o: models.c models.h $(DEPS)
 	$(CC) -c $(CFLAGS) models.c
 top.o: top.c top.h $(DEPS)
 	$(CC) -c $(CFLAGS) top.c
-segment.o: segment.c segment.h $(DEPS)
-	$(CC) -c $(CFLAGS) segment.c
 filters.o: filters.c filters.h $(DEPS)
 	$(CC) -c $(CFLAGS) filters.c
 #-----------------------------------------------------------------------------
