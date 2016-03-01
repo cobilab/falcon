@@ -19,7 +19,6 @@
 #include "msg.h"
 #include "common.h"
 #include "filters.h"
-#include "segment.h"
 #include "paint.h"
 
 //////////////////////////////////////////////////////////////////////////////
