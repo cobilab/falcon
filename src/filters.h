@@ -8,6 +8,8 @@
 #define W_HANN        1
 #define W_BLACKMAN    2
 #define W_RECTANGULAR 3
+#define LOW_REGION    0
+#define HIGH_REGION   1
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -24,7 +26,7 @@ FILTER;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FILTER   *CreateFilter      (uint64_t, uint64_t, uint8_t);
+FILTER   *CreateFilter      (uint64_t, uint64_t, uint8_t, double);
 void     InitWeights        (FILTER *);
 void     InitEntries        (FILTER *, uint64_t, FILE *);
 void     DeleteFilter       (FILTER *);
