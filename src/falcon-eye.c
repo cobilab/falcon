@@ -42,15 +42,23 @@ int32_t main(int argc, char *argv[]){
     return EXIT_SUCCESS;
     }
 
-  PEYE->verbose   = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
-  PEYE->force     = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
-  PEYE->width     = ArgsDouble (DEFAULT_WIDTH,   p, argc, "-w");
-  PEYE->space     = ArgsDouble (DEFAULT_SPACE,   p, argc, "-a");
-  PEYE->start     = ArgsDouble (0.35,            p, argc, "-s");
-  PEYE->rotations = ArgsDouble (1.50,            p, argc, "-r");
-  PEYE->hue       = ArgsDouble (1.92,            p, argc, "-u");
-  PEYE->gamma     = ArgsDouble (0.50,            p, argc, "-g");
-  PEYE->output    = ArgsFileGen(p, argc, "-o", "image", ".svg");
+  PEYE->verbose    = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
+  PEYE->force      = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
+  // DRAWING
+  PEYE->width      = ArgsDouble (DEFAULT_WIDTH,   p, argc, "-iw");
+  PEYE->space      = ArgsDouble (DEFAULT_SPACE,   p, argc, "-ia");
+  PEYE->start      = ArgsDouble (0.35,            p, argc, "-is");
+  PEYE->rotations  = ArgsDouble (1.50,            p, argc, "-ir");
+  PEYE->hue        = ArgsDouble (1.92,            p, argc, "-iu");
+  PEYE->gamma      = ArgsDouble (0.50,            p, argc, "-ig");
+  // FILTERING
+  PEYE->windowSize = ArgsNum    (100,             p, argc, "-ws", 1, 999999);
+  PEYE->windowType = ArgsNum    (1,               p, argc, "-wt", 0, 3);
+  PEYE->sampling   = ArgsNum    (10,              p, argc, "-wx", 1, 999999);
+  // THRESHOLD
+  PEYE->threshold  = ArgsDouble (0,               p, argc, "-t");
+  // OUTPUT
+  PEYE->output     = ArgsFileGen(p, argc, "-o", "image", ".svg");
 
   if(!PEYE->force) 
     FAccessWPerm(PEYE->output);

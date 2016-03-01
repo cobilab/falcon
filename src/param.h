@@ -72,6 +72,10 @@ typedef struct{
   double   gamma;
   double   width;
   double   space;
+  int64_t  windowSize;
+  int      windowType;
+  int64_t  sampling;
+  double   threshold;
   char     *output;
   }
 EYEPARAM;
