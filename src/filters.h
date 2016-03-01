@@ -17,6 +17,7 @@ typedef struct{
   int64_t  nEntries;
   double   *entries;
   double   *weights;
+  double   threshold;
   uint8_t  type;
   }
 FILTER;

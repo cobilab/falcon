@@ -81,7 +81,7 @@ int32_t main(int argc, char *argv[]){
   uint64_t fsize;
 
   //                         wSize drop type
-  FILTER *FIL = CreateFilter(100, 10, 3);
+  FILTER *FIL = CreateFilter(100, 10, 3, 0.5);
  
   INPUT = Fopen(argv[argc-1], "r"); 
   while((sym = fgetc(INPUT)) != EOF){

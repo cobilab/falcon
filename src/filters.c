@@ -32,7 +32,10 @@ void FilterStream(FILTER *FIL, FILE *OUT){
 
   for(n = 0 ; n < FIL->nEntries ; ++n){
     if(n % FIL->drop == 0){
+
+      //TODO: SEGMENT HERE AND WRITE ONLY INIT AND END POSITIONS
       fprintf(OUT, "%"PRIu64"\t%.2lf\n", n, Mean(FIL, n));
+
       }
     }
   }
@@ -90,14 +93,16 @@ void DeleteEntries(FILTER *FIL){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FILTER *CreateFilter(uint64_t size, uint64_t drop, uint8_t type){
-  FILTER *FIL  = (FILTER *) Calloc(1, sizeof(FILTER));
-  FIL->size    = size;
-  FIL->drop    = drop;
-  FIL->type    = type;
-  FIL->weights = (double *) Malloc((2*FIL->size+1) * sizeof(double));
+FILTER *CreateFilter(uint64_t size, uint64_t drop, uint8_t type, double 
+threshold){
+  FILTER *FIL    = (FILTER *) Calloc(1, sizeof(FILTER));
+  FIL->size      = size;
+  FIL->drop      = drop;
+  FIL->type      = type;
+  FIL->threshold = threshold;
+  FIL->weights   = (double *) Malloc((2*FIL->size+1) * sizeof(double));
   InitWeights(FIL);
-  FIL->entries = NULL;
+  FIL->entries   = NULL;
   return FIL;
   }
 
