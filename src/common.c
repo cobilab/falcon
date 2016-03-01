@@ -93,7 +93,8 @@ double BPBB(double bits, uint64_t nBase){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 unsigned QuadQuantization(double v){
-  if     (v >= 1.75) return 7;
+  if     (v >= 2.00) return 8;
+  else if(v >= 1.75) return 7;
   else if(v >= 1.50) return 6;
   else if(v >= 1.25) return 5;
   else if(v >= 1.00) return 4;

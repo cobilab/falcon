@@ -78,7 +78,6 @@ void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
       exit(1);
       }
     FIL->entries[idx] = (double) ((c-48)*0.25);
-    //fprintf(stderr, "%lf\n", FIL->entries[idx]);
     }
   }
 
