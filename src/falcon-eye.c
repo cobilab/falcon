@@ -80,14 +80,18 @@ int32_t main(int argc, char *argv[]){
       // TODO: Paint global map
  
       fprintf(stderr, "  [+] Painting %s ... ", fname);
-      off_t beg = Ftello(INPUT);
-      if(fscanf(INPUT, "%"PRIu64":%"PRIu64"\n", &iPos, &ePos) != 2){
-        Fseeko(INPUT, (off_t) beg, SEEK_SET);       
+      while(1){
+        off_t beg = Ftello(INPUT);
+        if(fscanf(INPUT, "%"PRIu64":%"PRIu64"\n", &iPos, &ePos) != 2){
+          Fseeko(INPUT, (off_t) beg, SEEK_SET);
+          break;
+          }
+        else{
+          // TODO: Paint local map
+          fprintf(OUTPUT, "%"PRIu64":%"PRIu64"\n", iPos, ePos);
+          }
         }
-      else{
-        // TODO: Paint local map
-        fprintf(OUTPUT, "%"PRIu64":%"PRIu64"\n", iPos, ePos);
-        }
+
       fprintf(stderr, "Done!\n");
       }
     }

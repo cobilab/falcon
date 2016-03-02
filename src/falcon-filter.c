@@ -19,7 +19,6 @@
 #include "msg.h"
 #include "common.h"
 #include "filters.h"
-#include "paint.h"
 
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -90,9 +89,6 @@ int32_t main(int argc, char *argv[]){
   if(!INPUT)  fclose(INPUT);
 
   StopTimeNDRM(Time, clock());
-  fprintf(stderr, "\n");
-
-  fprintf(stderr, "==[ RESULTS ]=======================\n");
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ STATISTICS ]====================\n");
