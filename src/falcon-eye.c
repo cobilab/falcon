@@ -43,13 +43,13 @@ int32_t main(int argc, char *argv[]){
 
   PEYE->verbose    = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
   PEYE->force      = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
-  PEYE->width      = ArgsDouble (DEFAULT_WIDTH,   p, argc, "-iw");
-  PEYE->space      = ArgsDouble (DEFAULT_SPACE,   p, argc, "-ia");
-  PEYE->start      = ArgsDouble (0.35,            p, argc, "-is");
-  PEYE->rotations  = ArgsDouble (1.50,            p, argc, "-ir");
-  PEYE->hue        = ArgsDouble (1.92,            p, argc, "-iu");
-  PEYE->gamma      = ArgsDouble (0.50,            p, argc, "-ig");
-  PEYE->output     = ArgsFileGen(p, argc, "-o", "image", ".svg");
+  PEYE->width      = ArgsDouble (DEFAULT_WIDTH,   p, argc, "-w");
+  PEYE->space      = ArgsDouble (DEFAULT_SPACE,   p, argc, "-s");
+  PEYE->start      = ArgsDouble (0.35,            p, argc, "-i");
+  PEYE->rotations  = ArgsDouble (1.50,            p, argc, "-r");
+  PEYE->hue        = ArgsDouble (1.92,            p, argc, "-u");
+  PEYE->gamma      = ArgsDouble (0.50,            p, argc, "-g");
+  PEYE->output     = ArgsFileGen(p, argc, "-o", "femap", ".svg");
 
   if(!PEYE->force) 
     FAccessWPerm(PEYE->output);
@@ -63,10 +63,11 @@ int32_t main(int argc, char *argv[]){
     fprintf(stderr, "  [+] Width ........................ %.3g\n", PEYE->width);
     fprintf(stderr, "  [+] Space ........................ %.3g\n", PEYE->space);
     fprintf(stderr, "  [+] Start ........................ %.3g\n", PEYE->start);
-    fprintf(stderr, "  [+] Rotations .................... %.3g\n", PEYE->rotations);
+    fprintf(stderr, "  [+] Rotations .................... %.3g\n", 
+    PEYE->rotations);
     fprintf(stderr, "  [+] Hue .......................... %.3g\n", PEYE->hue);
     fprintf(stderr, "  [+] Gamma ........................ %.3g\n", PEYE->gamma);
-    fprintf(stderr, "Output visual filename ............. %s\n",   PEYE->output);
+    fprintf(stderr, "Output visual filename ............. %s\n",  PEYE->output);
     fprintf(stderr, "\n");
     }
 

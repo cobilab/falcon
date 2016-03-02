@@ -44,9 +44,9 @@ int32_t main(int argc, char *argv[]){
 
   PEYE->verbose    = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
   PEYE->force      = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
-  PEYE->windowSize = ArgsNum    (100,             p, argc, "-ws", 1, 999999);
-  PEYE->windowType = ArgsNum    (1,               p, argc, "-wt", 0, 3);
-  PEYE->sampling   = ArgsNum    (10,              p, argc, "-wx", 1, 999999);
+  PEYE->windowSize = ArgsNum    (100,             p, argc, "-s", 1, 999999);
+  PEYE->windowType = ArgsNum    (1,               p, argc, "-w", 0, 3);
+  PEYE->sampling   = ArgsNum    (10,              p, argc, "-x", 1, 999999);
   PEYE->threshold  = ArgsDouble (0,               p, argc, "-t");
   PEYE->output     = ArgsFileGen(p, argc, "-o", "coords", ".fil");
 
@@ -58,14 +58,12 @@ int32_t main(int argc, char *argv[]){
   if(PEYE->verbose){
     fprintf(stderr, "==[ CONFIGURATION ]=================\n");
     fprintf(stderr, "Verbose mode ....................... yes\n");
-    fprintf(stderr, "Visual characteristics:\n");
-    fprintf(stderr, "  [+] Width ........................ %.3g\n", PEYE->width);
-    fprintf(stderr, "  [+] Space ........................ %.3g\n", PEYE->space);
-    fprintf(stderr, "  [+] Start ........................ %.3g\n", PEYE->start);
-    fprintf(stderr, "  [+] Rotations .................... %.3g\n", PEYE->rotations);
-    fprintf(stderr, "  [+] Hue .......................... %.3g\n", PEYE->hue);
-    fprintf(stderr, "  [+] Gamma ........................ %.3g\n", PEYE->gamma);
-    fprintf(stderr, "Output visual filename ............. %s\n",   PEYE->output);
+    fprintf(stderr, "Filter characteristics:\n");
+    fprintf(stderr, "  [+] Window size .................. %"PRIi64"\n", PEYE->windowSize);
+    fprintf(stderr, "  [+] Window type .................. %d\n",        PEYE->windowType);
+    fprintf(stderr, "  [+] Sampling ..................... %"PRIi64"\n", PEYE->sampling);
+    fprintf(stderr, "  [+] Threshold .................... %.3g\n",      PEYE->threshold);
+    fprintf(stderr, "Output filename .................... %s\n",        PEYE->output);
     fprintf(stderr, "\n");
     }
 
