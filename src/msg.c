@@ -50,6 +50,30 @@ void PrintMenu(void){
   MIN_LEV, MAX_LEV, DEFAULT_SAMPLE, DEF_TOP, DEFAULT_THREADS);
   }
 
+void PrintMenuFilter(void){
+  fprintf(stderr,
+  "Usage: FALCON-FILTER [OPTION]... [FILE]                                  \n"
+  "Filter and segment FALCON output.                                        \n"
+  "                                                                         \n"
+  "Non-mandatory arguments:                                                 \n"
+  "                                                                         \n"
+  "  -h                       give this help,                               \n"
+  "  -F                       force mode (overwrites top file),             \n"
+  "  -V                       display version number,                       \n"
+  "  -v                       verbose mode (more information),              \n"
+  "  -s  <size>               filter window size,                           \n"
+  "  -w  <type>               filter window type,                           \n"
+  "  -x  <sampling>           filter window sampling,                       \n"
+  "  -t  <threshold>          threshold,                                    \n"
+  "  -o  <FILE>               output filename,                              \n"
+  "                                                                         \n"
+  "Mandatory arguments:                                                     \n"
+  "                                                                         \n"
+  "  [FILE]                   profile filename (from FALCON),               \n"
+  "                                                                         \n"
+  "Report issues to <{pratas,ap,pjf,jmr}@ua.pt>.                           \n");
+  }
+
 void PrintMenuEye(void){
   fprintf(stderr,
   "Usage: FALCON-EYE [OPTION]... [FILE]                                     \n"
@@ -61,21 +85,17 @@ void PrintMenuEye(void){
   "  -F                       force mode (overwrites top file),             \n"
   "  -V                       display version number,                       \n"
   "  -v                       verbose mode (more information),              \n"
-  "  -iw <width>              square width (for each value),                \n"
-  "  -ia <ispace>             square inter-space (between each value),      \n"
-  "  -is <indexs>             color index start,                            \n"
-  "  -ir <indexr>             color index rotations,                        \n"
-  "  -iu <hue>                color hue,                                    \n"
-  "  -ig <color>              color gamma,                                  \n"
-  "  -ws <size>               filter window size,                           \n"
-  "  -wt <type>               filter window type,                           \n"
-  "  -wx <sampling>           filter window sampling,                       \n"
-  "  -t  <threshold>          threshold,                                    \n"
+  "  -w <width>               square width (for each value),                \n"
+  "  -s <ispace>              square inter-space (between each value),      \n"
+  "  -i <indexs>              color index start,                            \n"
+  "  -r <indexr>              color index rotations,                        \n"
+  "  -u <hue>                 color hue,                                    \n"
+  "  -g <color>               color gamma,                                  \n"
   "  -o  <FILE>               output image filename,                        \n"
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
   "                                                                         \n"
-  "  [FILE]                   profile filename (from FALCON),               \n"
+  "  [FILE]                   profile filename (from FALCON-FILTER),        \n"
   "                                                                         \n"
   "Report issues to <{pratas,ap,pjf,jmr}@ua.pt>.                           \n");
   }

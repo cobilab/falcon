@@ -44,20 +44,12 @@ int32_t main(int argc, char *argv[]){
 
   PEYE->verbose    = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
   PEYE->force      = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
-  // DRAWING
   PEYE->width      = ArgsDouble (DEFAULT_WIDTH,   p, argc, "-iw");
   PEYE->space      = ArgsDouble (DEFAULT_SPACE,   p, argc, "-ia");
   PEYE->start      = ArgsDouble (0.35,            p, argc, "-is");
   PEYE->rotations  = ArgsDouble (1.50,            p, argc, "-ir");
   PEYE->hue        = ArgsDouble (1.92,            p, argc, "-iu");
   PEYE->gamma      = ArgsDouble (0.50,            p, argc, "-ig");
-  // FILTERING
-  PEYE->windowSize = ArgsNum    (100,             p, argc, "-ws", 1, 999999);
-  PEYE->windowType = ArgsNum    (1,               p, argc, "-wt", 0, 3);
-  PEYE->sampling   = ArgsNum    (10,              p, argc, "-wx", 1, 999999);
-  // THRESHOLD
-  PEYE->threshold  = ArgsDouble (0,               p, argc, "-t");
-  // OUTPUT
   PEYE->output     = ArgsFileGen(p, argc, "-o", "image", ".svg");
 
   if(!PEYE->force) 
@@ -85,33 +77,34 @@ int32_t main(int argc, char *argv[]){
   int sym;
   char fname[MAX_NAME];
   double fvalue;
-  uint64_t fsize;
+  uint64_t fsize, iPos, ePos;
 
-  //                         wSize drop type
-  FILTER *FIL = CreateFilter(100, 10, 3, 0.5);
- 
   INPUT = Fopen(argv[argc-1], "r"); 
   while((sym = fgetc(INPUT)) != EOF){
 
-    if(sym == '#'){
+    if(sym == '$'){
       if(fscanf(INPUT, "\t%lf\t%"PRIu64"\t%s\n", &fvalue, &fsize, fname) != 3){
         fprintf(stderr, "  [x] Error: unknown type of file!\n");
         exit(1);
         }
+
+      // TODO: Paint global map
  
-      fprintf(stderr, "  [+] Filtering & segmenting %s ... ", fname);
-      fprintf(OUTPUT, "$\t%lf\t%"PRIu64"\t%s\n", fvalue, fsize, fname);
-      InitEntries(FIL, fsize, INPUT);
-      FilterStream(FIL, OUTPUT);
-      DeleteEntries(FIL);
+      fprintf(stderr, "  [+] Painting %s ... ", fname);
+      off_t beg = Ftello(INPUT);
+      if(fscanf(INPUT, "%"PRIu64":%"PRIu64"\n", &iPos, &ePos) != 2){
+        Fseeko(INPUT, (off_t) beg, SEEK_SET);       
+        }
+      else{
+        // TODO: Paint local map
+        fprintf(OUTPUT, "%"PRIu64":%"PRIu64"\n", iPos, ePos);
+        }
       fprintf(stderr, "Done!\n");
       }
-
     }
-
   DeleteFilter(FIL);
 
-  //PaintFig();
+  // TODO: PaintFinal();
   
   if(!OUTPUT) fclose(OUTPUT);
   if(!INPUT)  fclose(INPUT);
