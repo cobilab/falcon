@@ -55,6 +55,8 @@ uint8_t     CmpCheckSum      (uint32_t, uint32_t);
 void        FAccessWPerm     (char    *);
 inline void CalcProgress     (uint64_t , uint64_t);
 void        PrintArgs        (Parameters *, Threads, char *, char *, uint32_t);
+void        PrintArgsFilter  (EYEPARAM *);
+void        PrintArgsEye     (EYEPARAM *);
 char        *concatenate     (char *, char *);
 int32_t     StrToArgv        (char *, char ***);
 char        *ArgsFilesImg    (char *[], uint32_t, char *);

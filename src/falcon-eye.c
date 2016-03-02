@@ -57,18 +57,7 @@ int32_t main(int argc, char *argv[]){
 
   fprintf(stderr, "\n");
   if(PEYE->verbose){
-    fprintf(stderr, "==[ CONFIGURATION ]=================\n");
-    fprintf(stderr, "Verbose mode ....................... yes\n");
-    fprintf(stderr, "Visual characteristics:\n");
-    fprintf(stderr, "  [+] Width ........................ %.3g\n", PEYE->width);
-    fprintf(stderr, "  [+] Space ........................ %.3g\n", PEYE->space);
-    fprintf(stderr, "  [+] Start ........................ %.3g\n", PEYE->start);
-    fprintf(stderr, "  [+] Rotations .................... %.3g\n", 
-    PEYE->rotations);
-    fprintf(stderr, "  [+] Hue .......................... %.3g\n", PEYE->hue);
-    fprintf(stderr, "  [+] Gamma ........................ %.3g\n", PEYE->gamma);
-    fprintf(stderr, "Output visual filename ............. %s\n",  PEYE->output);
-    fprintf(stderr, "\n");
+    PrintArgsEye(PEYE);
     }
 
   fprintf(stderr, "==[ PROCESSING ]====================\n");
@@ -109,9 +98,6 @@ int32_t main(int argc, char *argv[]){
   if(!INPUT)  fclose(INPUT);
 
   StopTimeNDRM(Time, clock());
-  fprintf(stderr, "\n");
-
-  fprintf(stderr, "==[ RESULTS ]=======================\n");
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ STATISTICS ]====================\n");

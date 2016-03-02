@@ -47,7 +47,7 @@ int32_t main(int argc, char *argv[]){
   PEYE->windowSize = ArgsNum    (100,             p, argc, "-s", 1, 999999);
   PEYE->windowType = ArgsNum    (1,               p, argc, "-w", 0, 3);
   PEYE->sampling   = ArgsNum    (10,              p, argc, "-x", 1, 999999);
-  PEYE->threshold  = ArgsDouble (0,               p, argc, "-t");
+  PEYE->threshold  = ArgsDouble (1.0,             p, argc, "-t");
   PEYE->output     = ArgsFileGen(p, argc, "-o", "coords", ".fil");
 
   if(!PEYE->force) 
@@ -56,15 +56,7 @@ int32_t main(int argc, char *argv[]){
 
   fprintf(stderr, "\n");
   if(PEYE->verbose){
-    fprintf(stderr, "==[ CONFIGURATION ]=================\n");
-    fprintf(stderr, "Verbose mode ....................... yes\n");
-    fprintf(stderr, "Filter characteristics:\n");
-    fprintf(stderr, "  [+] Window size .................. %"PRIi64"\n", PEYE->windowSize);
-    fprintf(stderr, "  [+] Window type .................. %d\n",        PEYE->windowType);
-    fprintf(stderr, "  [+] Sampling ..................... %"PRIi64"\n", PEYE->sampling);
-    fprintf(stderr, "  [+] Threshold .................... %.3g\n",      PEYE->threshold);
-    fprintf(stderr, "Output filename .................... %s\n",        PEYE->output);
-    fprintf(stderr, "\n");
+    PrintArgsFilter(PEYE);
     }
 
   fprintf(stderr, "==[ PROCESSING ]====================\n");
@@ -75,18 +67,15 @@ int32_t main(int argc, char *argv[]){
   double fvalue;
   uint64_t fsize;
 
-  //                         wSize drop type
-  FILTER *FIL = CreateFilter(100, 10, 3, 0.5);
- 
+  FILTER *FIL = CreateFilter(PEYE->windowSize, PEYE->sampling, PEYE->windowType, 
+  PEYE->threshold);
   INPUT = Fopen(argv[argc-1], "r"); 
   while((sym = fgetc(INPUT)) != EOF){
-
     if(sym == '#'){
       if(fscanf(INPUT, "\t%lf\t%"PRIu64"\t%s\n", &fvalue, &fsize, fname) != 3){
         fprintf(stderr, "  [x] Error: unknown type of file!\n");
         exit(1);
         }
- 
       fprintf(stderr, "  [+] Filtering & segmenting %s ... ", fname);
       fprintf(OUTPUT, "$\t%lf\t%"PRIu64"\t%s\n", fvalue, fsize, fname);
       InitEntries(FIL, fsize, INPUT);
@@ -94,12 +83,8 @@ int32_t main(int argc, char *argv[]){
       DeleteEntries(FIL);
       fprintf(stderr, "Done!\n");
       }
-
     }
-
   DeleteFilter(FIL);
-
-  //PaintFig();
   
   if(!OUTPUT) fclose(OUTPUT);
   if(!INPUT)  fclose(INPUT);
