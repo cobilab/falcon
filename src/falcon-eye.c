@@ -64,11 +64,40 @@ int32_t main(int argc, char *argv[]){
   TIME *Time = CreateClock(clock());
 
   int sym;
-  char fname[MAX_NAME];
+  size_t len;
+  char fname[MAX_NAME], *line = NULL;
   double fvalue;
-  uint64_t fsize, iPos, ePos;
+  uint64_t maxSize, fsize, iPos, ePos, nSeq;
+  Painter *Paint;
+
+  // OPTION TO IGNORE SCALE
+  //TODO: NEED TO GET MAXIMUM TO SET SCALE
+  //TODO: NEED TO GET NUMBER OF SEQUENCES
 
   INPUT = Fopen(argv[argc-1], "r"); 
+
+  nSeq = 0;
+  while((sym = fgetc(INPUT)) != EOF){
+    if(sym == '$'){
+      if(fscanf(INPUT, "\t%lf\t%"PRIu64"\t%s\n", &fvalue, &fsize, fname) != 3){
+        fprintf(stderr, "  [x] Error: unknown type of file!\n");
+        exit(1);
+        }
+      if(fsize > maxSize)
+        maxSize = fsize;
+      ++nSeq;
+      }
+    }
+  rewind(INPUT);
+
+  SetScale(maxSize);
+  Paint = CreatePainter(GetPoint(maxSize), "#ffffff");
+
+  PrintHead(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + DEFAULT_SPACE) *
+  nSeq) - DEFAULT_SPACE), Paint->size + EXTRA);
+  Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + DEFAULT_SPACE) *
+  nSeq) - DEFAULT_SPACE), Paint->size + EXTRA, 0, 0, "#ffffff");
+
   while((sym = fgetc(INPUT)) != EOF){
 
     if(sym == '$'){
@@ -78,18 +107,21 @@ int32_t main(int argc, char *argv[]){
         }
 
       // TODO: Paint global map
-      fprintf(OUTPUT, "&%.3lf\n", fvalue);
  
       fprintf(stderr, "  [+] Painting %s ... ", fname);
       while(1){
         off_t beg = Ftello(INPUT);
         if(fscanf(INPUT, "%"PRIu64":%"PRIu64"\n", &iPos, &ePos) != 2){
           Fseeko(INPUT, (off_t) beg, SEEK_SET);
+          Chromosome(OUTPUT, Paint->width, GetPoint(fsize), Paint->cx,
+          Paint->cy);
+          if(nSeq > 0) 
+            Paint->cx += DEFAULT_WIDTH + DEFAULT_SPACE;
           break;
           }
         else{
-          // TODO: Paint local map
-          fprintf(OUTPUT, "%"PRIu64":%"PRIu64"\n", iPos, ePos);
+          Rect(OUTPUT, Paint->width, GetPoint(ePos-iPos+1), Paint->cx,
+          Paint->cy + GetPoint(iPos), GetRgbColor(LEVEL_HUE));
           }
         }
 
@@ -97,7 +129,7 @@ int32_t main(int argc, char *argv[]){
       }
     }
 
-  // TODO: PaintFinal();
+  PrintFinal(OUTPUT);
   
   if(!OUTPUT) fclose(OUTPUT);
   if(!INPUT)  fclose(INPUT);
