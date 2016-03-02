@@ -78,6 +78,7 @@ int32_t main(int argc, char *argv[]){
         }
 
       // TODO: Paint global map
+      fprintf(OUTPUT, "&%.3lf\n", fvalue);
  
       fprintf(stderr, "  [+] Painting %s ... ", fname);
       while(1){
