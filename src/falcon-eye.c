@@ -18,7 +18,6 @@
 #include "param.h"
 #include "msg.h"
 #include "common.h"
-#include "filters.h"
 #include "paint.h"
 
 //////////////////////////////////////////////////////////////////////////////
@@ -102,7 +101,6 @@ int32_t main(int argc, char *argv[]){
       fprintf(stderr, "Done!\n");
       }
     }
-  DeleteFilter(FIL);
 
   // TODO: PaintFinal();
   
