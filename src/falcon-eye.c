@@ -26,9 +26,13 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int32_t main(int argc, char *argv[]){
-  char **p = *&argv;
+  char **p = *&argv, fname[MAX_NAME], *line = NULL;
   FILE *OUTPUT = NULL, *INPUT = NULL;
-  uint32_t n;
+  int sym;
+  size_t len;
+  double fvalue;
+  uint64_t maxSize, fsize, iPos, ePos, nSeq;
+  Painter *Paint;
   
   PEYE = (EYEPARAM *) Malloc(1 * sizeof(EYEPARAM));
   if((PEYE->help = ArgsState(DEFAULT_HELP, p, argc, "-h")) == 1 || argc < 2){
@@ -62,13 +66,6 @@ int32_t main(int argc, char *argv[]){
 
   fprintf(stderr, "==[ PROCESSING ]====================\n");
   TIME *Time = CreateClock(clock());
-
-  int sym;
-  size_t len;
-  char fname[MAX_NAME], *line = NULL;
-  double fvalue;
-  uint64_t maxSize, fsize, iPos, ePos, nSeq;
-  Painter *Paint;
 
   // OPTION TO IGNORE SCALE
   //TODO: NEED TO GET MAXIMUM TO SET SCALE
