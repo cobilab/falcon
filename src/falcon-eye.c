@@ -88,7 +88,7 @@ int32_t main(int argc, char *argv[]){
   rewind(INPUT);
 
   SetScale(maxSize);
-  Paint = CreatePainter(GetPoint(maxSize), "#ffffff");
+  Paint = CreatePainter(GetPoint(maxSize), DEFAULT_SPACE, "#ffffff");
 
   PrintHead(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + DEFAULT_SPACE) *
   nSeq) - DEFAULT_SPACE), Paint->size + EXTRA);
@@ -104,6 +104,9 @@ int32_t main(int argc, char *argv[]){
         }
 
       // TODO: Paint global map
+      Rect(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy,
+      "#ccc");
+      Paint->cy += Paint->width + Paint->space;
  
       fprintf(stderr, "  [+] Painting %s ... ", fname);
       while(1){
@@ -113,7 +116,7 @@ int32_t main(int argc, char *argv[]){
           Chromosome(OUTPUT, Paint->width, GetPoint(fsize), Paint->cx,
           Paint->cy);
           if(nSeq > 0) 
-            Paint->cx += DEFAULT_WIDTH + DEFAULT_SPACE;
+            Paint->cx += Paint->width + Paint->space;
           break;
           }
         else{
@@ -121,6 +124,8 @@ int32_t main(int argc, char *argv[]){
           Paint->cy + GetPoint(iPos), GetRgbColor(LEVEL_HUE));
           }
         }
+
+      Paint->cy -= Paint->width + Paint->space;
 
       fprintf(stderr, "Done!\n");
       }
@@ -139,7 +144,6 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "\n");
 
   RemoveClock(Time);
-
   return EXIT_SUCCESS;
   }
 

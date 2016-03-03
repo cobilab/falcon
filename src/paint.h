@@ -20,6 +20,7 @@ typedef struct
   {
   char    *backColor;
   double  width;
+  double  space;
   double  cx; 
   double  cy;
   double  tx;
@@ -48,7 +49,7 @@ double scale;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Painter   *CreatePainter (double, char *);
+Painter   *CreatePainter (double, double, char *);
 RgbColor  HsvToRgb       (HsvColor);
 HsvColor  RgbToHsv       (RgbColor);
 char      *GetRgbColor   (uint8_t);

@@ -100,10 +100,8 @@ char *GetRgbColor(uint8_t hue)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Painter *CreatePainter(double size, char *color)
-  {
+Painter *CreatePainter(double size, double space, char *color){
   Painter *P    = (Painter *) Malloc(sizeof(Painter));  
-
   P->backColor  = color;
   P->size       = size; 
   P->cx         = DEFAULT_CX;
@@ -111,7 +109,7 @@ Painter *CreatePainter(double size, char *color)
   P->tx         = DEFAULT_TX;
   P->ty         = DEFAULT_TY;
   P->width      = DEFAULT_WIDTH; 
-
+  P->space      = space; 
   return P;
   }
 
