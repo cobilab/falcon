@@ -188,23 +188,6 @@ void Chromosome(FILE *F, double w, double h, double x, double y)
   char borderColor[] = "#000000";
 
   double wk = w / 2 + 0.5;
-  fprintf(F, "<path "
-         "d=\"m %.2lf,"
-         "%.2lf 0,"
-         "%.2lf c 0, -8.31 6.69, -%.2lf %.2lf, -%.2lf l -%.2lf,0 z m %.2lf,"
-         "0 c 8.31,0 %.2lf,6.69 %.2lf,%.2lf l 0,-%.2lf -%.2lf,0 z\" "
-         "id=\"rect3787\" style=\"fill:#fff;fill-opacity:1;fill-rule:"
-         "nonzero;stroke:none\" />", x-0.5, y-0.5, 
-         wk, wk, wk, wk, wk, wk, wk, wk, wk, wk, wk);
-
-  fprintf(F, "<path "
-         "d=\"m %.2lf,"
-         "%.2lf 0,"
-         "-%.2lf c 0,8.31 -6.69, %.2lf -%.2lf, %.2lf l %.2lf,0 z m -%.2lf,"
-         "0 c -8.31,0 -%.2lf,-6.69 -%.2lf,-%.2lf l 0,%.2lf %.2lf,0 z\" "
-         "id=\"rect3787\" style=\"fill:#fff;fill-opacity:1;fill-rule:"
-         "nonzero;stroke:none\" />", x+0.5+w, y+0.5+h, 
-         wk, wk, wk, wk, wk, wk, wk, wk, wk, wk, wk);
 
   fprintf(F, "<rect style=\"fill:none;stroke:%s;stroke-width:1;"
             "stroke-linecap:butt;stroke-linejoin:miter;"
@@ -215,7 +198,6 @@ void Chromosome(FILE *F, double w, double h, double x, double y)
             "height=\"%.2lf\" "
             "x=\"%.2lf\" "
             "y=\"%.2lf\" "
-            "ry=\"12.5\" "     // COMMENT THIS FOR STRICT LINES
           "/>\n", borderColor, w, h, x, y);
   }
 

@@ -104,8 +104,9 @@ int32_t main(int argc, char *argv[]){
         }
 
       // TODO: Paint global map
-      Rect(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy,
-      "#ccc");
+      //Text(OUTPUT, Paint->width, Paint->cy+13, "14");
+      Rect(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy, 
+      "#000"); // HeatMapColor(BoundDouble(0.0, fvalue/100.0, 1.0), color, CLR)
       Paint->cy += Paint->width + Paint->space;
  
       fprintf(stderr, "  [+] Painting %s ... ", fname);
@@ -113,7 +114,7 @@ int32_t main(int argc, char *argv[]){
         off_t beg = Ftello(INPUT);
         if(fscanf(INPUT, "%"PRIu64":%"PRIu64"\n", &iPos, &ePos) != 2){
           Fseeko(INPUT, (off_t) beg, SEEK_SET);
-          Chromosome(OUTPUT, Paint->width, GetPoint(fsize), Paint->cx,
+          Chromosome(OUTPUT, Paint->width, GetPoint(fsize), Paint->cx, 
           Paint->cy);
           if(nSeq > 0) 
             Paint->cx += Paint->width + Paint->space;
@@ -126,7 +127,6 @@ int32_t main(int argc, char *argv[]){
         }
 
       Paint->cy -= Paint->width + Paint->space;
-
       fprintf(stderr, "Done!\n");
       }
     }
