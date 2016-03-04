@@ -104,9 +104,10 @@ int32_t main(int argc, char *argv[]){
         }
 
       // TODO: Paint global map
-      //Text(OUTPUT, Paint->width, Paint->cy+13, "14");
+      Text(OUTPUT, Paint->cx, Paint->cy-10, "xxx");
       Rect(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy, 
       "#000"); // HeatMapColor(BoundDouble(0.0, fvalue/100.0, 1.0), color, CLR)
+
       Paint->cy += Paint->width + Paint->space;
  
       fprintf(stderr, "  [+] Painting %s ... ", fname);
