@@ -159,7 +159,8 @@ int32_t main(int argc, char *argv[]){
           }
         else{
           Rect(OUTPUT, Paint->width, GetPoint(ePos-iPos+1), Paint->cx,
-          Paint->cy + GetPoint(iPos), GetRgbColor(LEVEL_HUE));
+          Paint->cy + GetPoint(iPos), /*HeatMapColor(0, color, CLR)*/ 
+          GetRgbColor(LEVEL_HUE));
           }
         }
 
