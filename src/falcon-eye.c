@@ -72,9 +72,7 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "==[ PROCESSING ]====================\n");
   TIME *Time = CreateClock(clock());
 
-  // OPTION TO IGNORE SCALE
-  //TODO: NEED TO GET MAXIMUM TO SET SCALE
-  //TODO: NEED TO GET NUMBER OF SEQUENCES
+  // TODO: OPTION TO IGNORE SCALE
 
   CLR = (COLORS *) Calloc(1, sizeof(COLORS));
   CLR->start     = PEYE->start;
@@ -126,7 +124,7 @@ int32_t main(int argc, char *argv[]){
         continue;
         }
 
-      char tmpTxt[1024], color[12];
+      char tmpTxt[MAX_NAME], color[12];
       sprintf(tmpTxt, "%u", (unsigned) fvalue);
       Text(OUTPUT, Paint->cx, Paint->cy-10, tmpTxt);
       Rect(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy, 
