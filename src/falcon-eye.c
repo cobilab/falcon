@@ -110,14 +110,14 @@ int32_t main(int argc, char *argv[]){
   PEYE->space), Paint->size + EXTRA, 0, 0, "#ffffff");
 
   // PRINT HEATMAP SCALE
-  uint32_t size = Paint->width + Paint->space;
+  uint32_t size = DEFAULT_CX + Paint->width;
   for(n = 0 ; n < size ; ++n){
     char color[12];
     Rect(OUTPUT, Paint->width, 1, DEFAULT_CX - (Paint->width*2), Paint->cy + n,
     HeatMapColor(((double) n / size), color, CLR));
     }
-  Text(OUTPUT, DEFAULT_CX-(Paint->width*2 + 12), Paint->cy+13, "+");
-  Text(OUTPUT, DEFAULT_CX-(Paint->width*2 + 14), Paint->cy+size, "-");
+  Text(OUTPUT, DEFAULT_CX-(Paint->width*2 + 14), Paint->cy+13,   "+");
+  Text(OUTPUT, DEFAULT_CX-(Paint->width*2 + 12), Paint->cy+size, "-");
 
   while((sym = fgetc(INPUT)) != EOF){
 
