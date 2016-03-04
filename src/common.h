@@ -44,6 +44,8 @@ char        *CloneString     (char *   );
 char        *RepString       (const char *, const char *, const char *);
 uint32_t    ArgsNum          (uint32_t , char *[], uint32_t, char *, uint32_t,
                               uint32_t);
+uint64_t    ArgsNum64        (uint64_t , char *[], uint32_t, char *, uint64_t,
+                              uint64_t);
 ModelPar    ArgsUniqModel    (char *, uint8_t);
 ModelPar    ArgsModel        (uint32_t , char *[], uint32_t, char *);
 double      ArgsDouble       (double, char *[], uint32_t, char *);

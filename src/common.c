@@ -513,6 +513,22 @@ uint32_t u){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+uint64_t ArgsNum64(uint64_t d, char *a[], uint32_t n, char *s, uint64_t l,
+uint64_t u){
+  uint64_t x;
+  for( ; --n ; ) if(!strcmp(s, a[n])){
+    if((x = atoll(a[n+1])) < l || x > u){
+      fprintf(stderr, "[x] Invalid number! Interval: [%"PRIu64";%"PRIu64"].\n", 
+      l, u);
+      exit(EXIT_FAILURE);
+      }
+    return x;
+    }
+  return d;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 double ArgsDouble(double def, char *arg[], uint32_t n, char *str)
   {
   for( ; --n ; )

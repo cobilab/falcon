@@ -16,8 +16,7 @@
 #define LEVEL_HUE              150
 #define LEVEL_HUE_N            1                              // N's HUE COLOR
 
-typedef struct
-  {
+typedef struct{
   char    *backColor;
   double  width;
   double  space;
@@ -29,16 +28,22 @@ typedef struct
   }
 Painter;
 
-typedef struct
-  {
+typedef struct{
+  double start;
+  double rotations;
+  double hue;
+  double gamma;
+  }
+COLORS;
+
+typedef struct{
   uint8_t  r;
   uint8_t  g;
   uint8_t  b;
   } 
 RgbColor;
 
-typedef struct
-  {
+typedef struct{
   uint8_t  h;
   uint8_t  s;
   uint8_t  v;
@@ -49,7 +54,9 @@ double scale;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+char      *HeatMapColor  (double, char *, COLORS *);
 Painter   *CreatePainter (double, double, char *);
+void      RemovePainter  (Painter *);
 RgbColor  HsvToRgb       (HsvColor);
 HsvColor  RgbToHsv       (RgbColor);
 char      *GetRgbColor   (uint8_t);

@@ -3,6 +3,7 @@
 #include <time.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 #include "paint.h"
 #include "common.h"
 #include "mem.h"
@@ -100,6 +101,29 @@ char *GetRgbColor(uint8_t hue)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+char *HeatMapColor(double lambda, char *color, COLORS *CLR){
+
+  // CHANGE BEHAVIOUR [SENSITIVITY: NEAR LOW SIMILARITY // COMMENT 4 UNIFORM
+  lambda = (1 + lambda*lambda*lambda + tanh(8*(lambda-1))) / 2;
+
+  double phi = 2*M_PI*(CLR->start/3+CLR->rotations*lambda);
+  double lambdaGamma = pow(lambda, CLR->gamma);
+  double a = CLR->hue*lambdaGamma*(1-lambdaGamma)/2;
+  double R = lambdaGamma - a*0.14861*cos(phi) + a*1.78277*sin(phi);
+  double G = lambdaGamma - a*0.29227*cos(phi) - a*0.90649*sin(phi);
+  double B = lambdaGamma + a*1.97294*cos(phi);
+
+  R = BoundDouble(0.0, R, 1.0);
+  G = BoundDouble(0.0, G, 1.0);
+  B = BoundDouble(0.0, B, 1.0);
+
+  sprintf(color, "#%02X%02X%02X", (int) (R * 255), (int) (G * 255), (int) (B *
+  255));
+  return color;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 Painter *CreatePainter(double size, double space, char *color){
   Painter *P    = (Painter *) Malloc(sizeof(Painter));  
   P->backColor  = color;
@@ -111,6 +135,12 @@ Painter *CreatePainter(double size, double space, char *color){
   P->width      = DEFAULT_WIDTH; 
   P->space      = space; 
   return P;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void RemovePainter(Painter *Pa){
+  Free(Pa);
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

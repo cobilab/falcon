@@ -72,6 +72,10 @@ typedef struct{
   double   gamma;
   double   width;
   double   space;
+  double   upperSimi;
+  double   lowerSimi;
+  int64_t  upperSize;
+  int64_t  lowerSize;
   int64_t  windowSize;
   int      windowType;
   int64_t  sampling;

@@ -33,6 +33,7 @@ int32_t main(int argc, char *argv[]){
   double fvalue;
   uint64_t maxSize, fsize, iPos, ePos, nSeq;
   Painter *Paint;
+  COLORS *CLR;
   
   PEYE = (EYEPARAM *) Malloc(1 * sizeof(EYEPARAM));
   if((PEYE->help = ArgsState(DEFAULT_HELP, p, argc, "-h")) == 1 || argc < 2){
@@ -45,15 +46,19 @@ int32_t main(int argc, char *argv[]){
     return EXIT_SUCCESS;
     }
 
-  PEYE->verbose    = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
-  PEYE->force      = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
-  PEYE->width      = ArgsDouble (DEFAULT_WIDTH,   p, argc, "-w");
-  PEYE->space      = ArgsDouble (DEFAULT_SPACE,   p, argc, "-s");
-  PEYE->start      = ArgsDouble (0.35,            p, argc, "-i");
-  PEYE->rotations  = ArgsDouble (1.50,            p, argc, "-r");
-  PEYE->hue        = ArgsDouble (1.92,            p, argc, "-u");
-  PEYE->gamma      = ArgsDouble (0.50,            p, argc, "-g");
-  PEYE->output     = ArgsFileGen(p, argc, "-o", "femap", ".svg");
+  PEYE->verbose   = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
+  PEYE->force     = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
+  PEYE->width     = ArgsDouble (DEFAULT_WIDTH,   p, argc, "-w");
+  PEYE->space     = ArgsDouble (DEFAULT_SPACE,   p, argc, "-s");
+  PEYE->start     = ArgsDouble (0.35,            p, argc, "-i");
+  PEYE->rotations = ArgsDouble (1.50,            p, argc, "-r");
+  PEYE->hue       = ArgsDouble (1.92,            p, argc, "-u");
+  PEYE->gamma     = ArgsDouble (0.50,            p, argc, "-g");
+  PEYE->lowerSimi = ArgsDouble (0.00,            p, argc, "-sl");
+  PEYE->upperSimi = ArgsDouble (100.00,          p, argc, "-su");
+  PEYE->lowerSize = ArgsNum64  (1,               p, argc, "-dl", 1, 9999999999);
+  PEYE->upperSize = ArgsNum64  (9999999999,      p, argc, "-du", 1, 9999999999);
+  PEYE->output    = ArgsFileGen(p, argc, "-o", "femap", ".svg");
 
   if(!PEYE->force) 
     FAccessWPerm(PEYE->output);
@@ -71,8 +76,13 @@ int32_t main(int argc, char *argv[]){
   //TODO: NEED TO GET MAXIMUM TO SET SCALE
   //TODO: NEED TO GET NUMBER OF SEQUENCES
 
-  INPUT = Fopen(argv[argc-1], "r"); 
+  CLR = (COLORS *) Calloc(1, sizeof(COLORS));
+  CLR->start     = PEYE->start;
+  CLR->rotations = PEYE->rotations;
+  CLR->hue       = PEYE->hue;
+  CLR->gamma     = PEYE->gamma;
 
+  INPUT = Fopen(argv[argc-1], "r"); 
   nSeq = 0;
   while((sym = fgetc(INPUT)) != EOF){
     if(sym == '$'){
@@ -80,6 +90,11 @@ int32_t main(int argc, char *argv[]){
         fprintf(stderr, "  [x] Error: unknown type of file!\n");
         exit(1);
         }
+      if(fsize > PEYE->upperSize ||  fsize < PEYE->lowerSize ||
+        fvalue > PEYE->upperSimi || fvalue < PEYE->lowerSimi){
+        continue;
+        }
+
       if(fsize > maxSize)
         maxSize = fsize;
       ++nSeq;
@@ -103,11 +118,19 @@ int32_t main(int argc, char *argv[]){
         exit(1);
         }
 
-      char tmpTxt[1024];
+      // SKIPS: FILTERED ATTRIBUTES
+      if(fsize > PEYE->upperSize ||  fsize < PEYE->lowerSize ||
+        fvalue > PEYE->upperSimi || fvalue < PEYE->lowerSimi){
+        while(fscanf(INPUT, "%"PRIu64":%"PRIu64"\n", &iPos, &ePos) == 2)
+          ;
+        continue;
+        }
+
+      char tmpTxt[1024], color[12];
       sprintf(tmpTxt, "%u", (unsigned) fvalue);
       Text(OUTPUT, Paint->cx, Paint->cy-10, tmpTxt);
       Rect(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy, 
-      "#000"); // HeatMapColor(BoundDouble(0.0, fvalue/100.0, 1.0), color, CLR)
+      HeatMapColor(BoundDouble(0.0, fvalue/100.0, 1.0), color, CLR));
 
       Paint->cy += Paint->width + Paint->space;
  
@@ -137,6 +160,7 @@ int32_t main(int argc, char *argv[]){
   
   if(!OUTPUT) fclose(OUTPUT);
   if(!INPUT)  fclose(INPUT);
+  Free(CLR);
 
   StopTimeNDRM(Time, clock());
   fprintf(stderr, "\n");
