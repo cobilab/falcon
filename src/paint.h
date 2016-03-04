@@ -55,7 +55,7 @@ double scale;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 char      *HeatMapColor  (double, char *, COLORS *);
-Painter   *CreatePainter (double, double, char *);
+Painter   *CreatePainter (double, double, double, char *);
 void      RemovePainter  (Painter *);
 RgbColor  HsvToRgb       (HsvColor);
 HsvColor  RgbToHsv       (RgbColor);

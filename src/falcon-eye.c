@@ -101,12 +101,12 @@ int32_t main(int argc, char *argv[]){
   rewind(INPUT);
 
   SetScale(maxSize);
-  Paint = CreatePainter(GetPoint(maxSize), DEFAULT_SPACE, "#ffffff");
+  Paint = CreatePainter(GetPoint(maxSize), PEYE->width, PEYE->space, "#ffffff");
 
-  PrintHead(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + DEFAULT_SPACE) *
-  nSeq) - DEFAULT_SPACE), Paint->size + EXTRA);
-  Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + DEFAULT_SPACE) *
-  nSeq) - DEFAULT_SPACE), Paint->size + EXTRA, 0, 0, "#ffffff");
+  PrintHead(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) *
+  nSeq) - PEYE->space), Paint->size + EXTRA + Paint->width);
+  Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) *
+  nSeq) - PEYE->space), Paint->size + EXTRA, 0, 0, "#ffffff");
 
   while((sym = fgetc(INPUT)) != EOF){
 
