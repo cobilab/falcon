@@ -31,6 +31,7 @@ int32_t main(int argc, char *argv[]){
   int sym;
   size_t len;
   double fvalue;
+  uint32_t n;
   uint64_t maxSize, fsize, iPos, ePos, nSeq;
   Painter *Paint;
   COLORS *CLR;
@@ -107,6 +108,16 @@ int32_t main(int argc, char *argv[]){
   nSeq) - PEYE->space), Paint->size + EXTRA + Paint->width);
   Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) * nSeq) - 
   PEYE->space), Paint->size + EXTRA, 0, 0, "#ffffff");
+
+  // PRINT HEATMAP SCALE
+  uint32_t size = Paint->width + Paint->space;
+  for(n = 0 ; n < size ; ++n){
+    char color[12];
+    Rect(OUTPUT, Paint->width, 1, DEFAULT_CX - (Paint->width*2), Paint->cy + n,
+    HeatMapColor(((double) n / size), color, CLR));
+    }
+  Text(OUTPUT, DEFAULT_CX-(Paint->width*2 + 12), Paint->cy+13, "+");
+  Text(OUTPUT, DEFAULT_CX-(Paint->width*2 + 14), Paint->cy+size, "-");
 
   while((sym = fgetc(INPUT)) != EOF){
 
