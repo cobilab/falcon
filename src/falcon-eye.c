@@ -105,8 +105,8 @@ int32_t main(int argc, char *argv[]){
 
   PrintHead(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) *
   nSeq) - PEYE->space), Paint->size + EXTRA + Paint->width);
-  Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) *
-  nSeq) - PEYE->space), Paint->size + EXTRA, 0, 0, "#ffffff");
+  Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) * nSeq) - 
+  PEYE->space), Paint->size + EXTRA, 0, 0, "#ffffff");
 
   while((sym = fgetc(INPUT)) != EOF){
 
@@ -126,7 +126,7 @@ int32_t main(int argc, char *argv[]){
 
       char tmpTxt[MAX_NAME], color[12];
       sprintf(tmpTxt, "%u", (unsigned) fvalue);
-      Text(OUTPUT, Paint->cx, Paint->cy-10, tmpTxt);
+      Text(OUTPUT, (Paint->cx+Paint->width/2)-4, Paint->cy-10, tmpTxt);
       Rect(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy, 
       HeatMapColor(BoundDouble(0.0, fvalue/100.0, 1.0), color, CLR));
 
