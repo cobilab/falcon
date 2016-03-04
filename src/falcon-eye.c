@@ -126,7 +126,10 @@ int32_t main(int argc, char *argv[]){
 
       char tmpTxt[MAX_NAME], color[12];
       sprintf(tmpTxt, "%u", (unsigned) fvalue);
-      Text(OUTPUT, (Paint->cx+Paint->width/2)-4, Paint->cy-10, tmpTxt);
+      if(fvalue < 10)
+        Text(OUTPUT, (Paint->cx+Paint->width/2)-4, Paint->cy-10, tmpTxt);
+      else
+        Text(OUTPUT, (Paint->cx+Paint->width/2)-9, Paint->cy-10, tmpTxt);
       Rect(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy, 
       HeatMapColor(BoundDouble(0.0, fvalue/100.0, 1.0), color, CLR));
 
