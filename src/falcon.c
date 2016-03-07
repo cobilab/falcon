@@ -788,6 +788,7 @@ int32_t main(int argc, char *argv[]){
   #else
   PrintTop(OUTPUT, P->top, topSize);
   #endif
+  fclose(OUTPUT);
   fprintf(stderr, "Done!\n");
 
   #ifdef LOCAL_SIMILARITY
@@ -831,7 +832,6 @@ int32_t main(int argc, char *argv[]){
     Free(T[ref].model);
     }
   Free(T);
-  if(!OUTPUT) fclose(OUTPUT);
 
   return EXIT_SUCCESS;
   }
