@@ -11,7 +11,7 @@ LIBS   = -lm -lpthread
 DEPS   = defs.h param.h
 PROGS  = $(BIN)/FALCON $(BIN)/FALCON-FILTER $(BIN)/FALCON-EYE
 OBJS   = mem.o time.o msg.o parser.o common.o buffer.o levels.o models.o \
-         top.o filters.o
+         top.o filters.o paint.o
 #-----------------------------------------------------------------------------
 all:
 	$(MAKE) progs
@@ -42,6 +42,8 @@ top.o: top.c top.h $(DEPS)
 	$(CC) -c $(CFLAGS) top.c
 filters.o: filters.c filters.h $(DEPS)
 	$(CC) -c $(CFLAGS) filters.c
+paint.o: paint.c paint.h $(DEPS)
+	$(CC) -c $(CFLAGS) paint.c
 #-----------------------------------------------------------------------------
 clean:
 	/bin/rm -f *.o

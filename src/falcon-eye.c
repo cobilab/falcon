@@ -26,13 +26,12 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int32_t main(int argc, char *argv[]){
-  char **p = *&argv, fname[MAX_NAME], *line = NULL;
+  char **p = *&argv, fname[MAX_NAME];
   FILE *OUTPUT = NULL, *INPUT = NULL;
   int sym;
-  size_t len;
   double fvalue;
   uint32_t n;
-  uint64_t maxSize, fsize, iPos, ePos, nSeq;
+  uint64_t maxSize = 0, fsize, iPos, ePos, nSeq;
   Painter *Paint;
   COLORS *CLR;
   

@@ -28,7 +28,6 @@
 int32_t main(int argc, char *argv[]){
   char **p = *&argv;
   FILE *OUTPUT = NULL, *INPUT = NULL;
-  uint32_t n;
   
   PEYE = (EYEPARAM *) Malloc(1 * sizeof(EYEPARAM));
   if((PEYE->help = ArgsState(DEFAULT_HELP, p, argc, "-h")) == 1 || argc < 2){
