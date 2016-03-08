@@ -15,5 +15,6 @@ add_executable (FALCON falcon.c mem.c time.c msg.c parser.c common.c buffer.c le
 add_executable (FALCON-FILTER falcon-filter.c mem.c time.c msg.c parser.c common.c buffer.c filters.c defs.h param.h) 
 add_executable (FALCON-EYE falcon-eye.c mem.c time.c msg.c parser.c common.c buffer.c paint.c defs.h param.h) 
 TARGET_LINK_LIBRARIES(FALCON pthread)
+TARGET_LINK_LIBRARIES(FALCON-FILTER)
 TARGET_LINK_LIBRARIES(FALCON-EYE)
 

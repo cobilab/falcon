@@ -112,8 +112,8 @@ int32_t main(int argc, char *argv[]){
   uint32_t size = DEFAULT_CX + Paint->width;
   for(n = 0 ; n < size ; ++n){
     char color[12];
-    Rect(OUTPUT, Paint->width, 1, DEFAULT_CX - (Paint->width*2), Paint->cy + n,
-    HeatMapColor(((double) n / size), color, CLR));
+    Rect(OUTPUT, Paint->width, 1, DEFAULT_CX - (Paint->width*2), 
+    Paint->cy + n, HeatMapColor(((double) n / size), color, CLR));
     }
   Text(OUTPUT, DEFAULT_CX-(Paint->width*2 + 14), Paint->cy+13,   "+");
   Text(OUTPUT, DEFAULT_CX-(Paint->width*2 + 12), Paint->cy+size, "-");
@@ -140,7 +140,7 @@ int32_t main(int argc, char *argv[]){
         Text(OUTPUT, (Paint->cx+Paint->width/2)-4, Paint->cy-10, tmpTxt);
       else
         Text(OUTPUT, (Paint->cx+Paint->width/2)-9, Paint->cy-10, tmpTxt);
-      Rect(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy, 
+      RectWithBorder(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy, 
       HeatMapColor(BoundDouble(0.0, 1-fvalue/100.0, 1.0), color, CLR));
 
       Paint->cy += Paint->width + Paint->space;

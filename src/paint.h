@@ -65,6 +65,7 @@ void      PrintHead      (FILE *, double, double);
 void      RectOval       (FILE *, double, double, double, double, char *);
 void      RectOvalIR     (FILE *, double, double, double, double, char *);
 void      Rect           (FILE *, double, double, double, double, char *);
+void      RectWithBorder (FILE *, double, double, double, double, char *);
 void      RectIR         (FILE *, double, double, double, double, char *);
 void      Chromosome     (FILE *, double, double, double, double);
 void      Text           (FILE *, double, double, char *);

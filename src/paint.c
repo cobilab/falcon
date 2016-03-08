@@ -180,8 +180,7 @@ void RectOvalIR(FILE *F, double w, double h, double x, double y, char *color)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Rect(FILE *F, double w, double h, double x, double y, char *color)
-  {
+void Rect(FILE *F, double w, double h, double x, double y, char *color){
   fprintf(F, "<rect style=\"fill:%s;fill-opacity:1;stroke-width:2;"
               "stroke-miterlimit:4;stroke-dasharray:none\" "
               "id=\"rect3777\" "
@@ -195,8 +194,7 @@ void Rect(FILE *F, double w, double h, double x, double y, char *color)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void RectIR(FILE *F, double w, double h, double x, double y, char *color)
-  {
+void RectIR(FILE *F, double w, double h, double x, double y, char *color){
   Rect(F, w, h, x, y, color);
   fprintf(F, "<rect "
               "style=\"fill-opacity:1;stroke-width:2;stroke-miterlimit:4;"
@@ -213,10 +211,25 @@ void RectIR(FILE *F, double w, double h, double x, double y, char *color)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Chromosome(FILE *F, double w, double h, double x, double y)
-  {
+void RectWithBorder(FILE *F, double w, double h, double x, double y, char 
+*color){
   char borderColor[] = "#000000";
+  fprintf(F, "<rect style=\"fill:%s;stroke:%s;stroke-width:1;"
+            "stroke-linecap:butt;stroke-linejoin:miter;"
+            "stroke-miterlimit:1;stroke-opacity:1;"
+            "stroke-dasharray:none\" "
+            "id=\"rect2985\" "
+            "width=\"%.2lf\" "
+            "height=\"%.2lf\" "
+            "x=\"%.2lf\" "
+            "y=\"%.2lf\" "
+          "/>\n", color, borderColor, w, h, x, y);
+  }
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void Chromosome(FILE *F, double w, double h, double x, double y){
+  char borderColor[] = "#000000";
   fprintf(F, "<rect style=\"fill:none;stroke:%s;stroke-width:1;"
             "stroke-linecap:butt;stroke-linejoin:miter;"
             "stroke-miterlimit:1;stroke-opacity:1;"
