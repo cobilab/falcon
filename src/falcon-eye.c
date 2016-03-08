@@ -58,6 +58,7 @@ int32_t main(int argc, char *argv[]){
   PEYE->upperSimi = ArgsDouble (100.00,          p, argc, "-su");
   PEYE->lowerSize = ArgsNum64  (1,               p, argc, "-dl", 1, 9999999999);
   PEYE->upperSize = ArgsNum64  (9999999999,      p, argc, "-du", 1, 9999999999);
+  PEYE->enlarge   = ArgsNum64  (0,               p, argc, "-e",  0, 9999999999);
   PEYE->output    = ArgsFileGen(p, argc, "-o", "femap", ".svg");
 
   if(!PEYE->force) 
@@ -157,9 +158,15 @@ int32_t main(int argc, char *argv[]){
           break;
           }
         else{
-          Rect(OUTPUT, Paint->width, GetPoint(ePos-iPos+1), Paint->cx,
-          Paint->cy + GetPoint(iPos), /*HeatMapColor(0, color, CLR)*/ 
-          GetRgbColor(LEVEL_HUE));
+          if(PEYE->enlarge == 0){
+            Rect(OUTPUT, Paint->width, GetPoint(ePos-iPos+1), Paint->cx,
+            Paint->cy + GetPoint(iPos), /*HeatMapColor(0, color, CLR)*/ 
+            GetRgbColor(LEVEL_HUE));
+            }
+          else{
+            Rect(OUTPUT, Paint->width, GetPoint(ePos-iPos+1+PEYE->enlarge), 
+            Paint->cx, Paint->cy + GetPoint(iPos), GetRgbColor(LEVEL_HUE));
+            }
           }
         }
 

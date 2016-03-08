@@ -80,6 +80,7 @@ typedef struct{
   int      windowType;
   int64_t  sampling;
   double   threshold;
+  int64_t  enlarge;
   char     *output;
   }
 EYEPARAM;
