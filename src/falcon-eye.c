@@ -106,7 +106,7 @@ int32_t main(int argc, char *argv[]){
   PrintHead(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) *
   nSeq) - PEYE->space), Paint->size + EXTRA + Paint->width);
   Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) * nSeq) - 
-  PEYE->space), Paint->size + EXTRA, 0, 0, "#ffffff");
+  PEYE->space), Paint->size + EXTRA + Paint->width, 0, 0, "#ffffff");
 
   // PRINT HEATMAP SCALE
   uint32_t size = DEFAULT_CX + Paint->width;
