@@ -136,11 +136,14 @@ int32_t main(int argc, char *argv[]){
         }
 
       char tmpTxt[MAX_NAME], color[12];
-      sprintf(tmpTxt, "%u", (unsigned) fvalue);
-      if(fvalue < 10)
-        Text(OUTPUT, (Paint->cx+Paint->width/2)-4, Paint->cy-10, tmpTxt);
-      else
+      if(fvalue < 10){
+        sprintf(tmpTxt, "%.1lf", fvalue);
+        Text(OUTPUT, (Paint->cx+Paint->width/2)-12, Paint->cy-10, tmpTxt);
+        }
+      else{
+        sprintf(tmpTxt, "%u", (unsigned) fvalue);
         Text(OUTPUT, (Paint->cx+Paint->width/2)-9, Paint->cy-10, tmpTxt);
+        }
       RectWithBorder(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy, 
       HeatMapColor(BoundDouble(0.0, 1-fvalue/100.0, 1.0), color, CLR));
 
