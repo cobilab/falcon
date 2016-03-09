@@ -105,19 +105,21 @@ int32_t main(int argc, char *argv[]){
   Paint = CreatePainter(GetPoint(maxSize), PEYE->width, PEYE->space, "#ffffff");
 
   PrintHead(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) *
-  nSeq) - PEYE->space), Paint->size + EXTRA + Paint->width);
-  Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) * nSeq) - 
+  (nSeq + 1)) - PEYE->space), Paint->size + EXTRA + Paint->width);
+  Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) *  (nSeq+1)) - 
   PEYE->space), Paint->size + EXTRA + Paint->width, 0, 0, "#ffffff");
 
+  Paint->cx += Paint->width + PEYE->space;
+
   // PRINT HEATMAP SCALE
-  uint32_t size = DEFAULT_CX + Paint->width;
+  uint32_t size = Paint->cx + Paint->width;
   for(n = 0 ; n < size ; ++n){
     char color[12];
-    Rect(OUTPUT, Paint->width, 1, DEFAULT_CX - (Paint->width*2), 
+    Rect(OUTPUT, Paint->width, 1, Paint->cx - (Paint->width*2), 
     Paint->cy + n, HeatMapColor(((double) n / size), color, CLR));
     }
-  Text(OUTPUT, DEFAULT_CX-(Paint->width*2 + 14), Paint->cy+13,   "+");
-  Text(OUTPUT, DEFAULT_CX-(Paint->width*2 + 12), Paint->cy+size, "-");
+  Text(OUTPUT, Paint->cx-(Paint->width*2 + 14), Paint->cy+13,   "+");
+  Text(OUTPUT, Paint->cx-(Paint->width*2 + 12), Paint->cy+size, "-");
 
   while((sym = fgetc(INPUT)) != EOF){
 
