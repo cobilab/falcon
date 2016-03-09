@@ -50,6 +50,7 @@ int32_t main(int argc, char *argv[]){
   PEYE->force     = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
   PEYE->width     = ArgsDouble (DEFAULT_WIDTH,   p, argc, "-w");
   PEYE->space     = ArgsDouble (DEFAULT_SPACE,   p, argc, "-s");
+  PEYE->showScale = ArgsState  (DEFAULT_SHOWS,   p, argc, "-ss");
   PEYE->start     = ArgsDouble (0.35,            p, argc, "-i");
   PEYE->rotations = ArgsDouble (1.50,            p, argc, "-r");
   PEYE->hue       = ArgsDouble (1.92,            p, argc, "-u");
@@ -104,22 +105,27 @@ int32_t main(int argc, char *argv[]){
   SetScale(maxSize);
   Paint = CreatePainter(GetPoint(maxSize), PEYE->width, PEYE->space, "#ffffff");
 
-  PrintHead(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) *
-  (nSeq + 1)) - PEYE->space), Paint->size + EXTRA + Paint->width);
-  Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) *  (nSeq+1)) - 
+  if(PEYE->showScale == 1)
+    nSeq += 2;
+
+  PrintHead(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) * nSeq) - 
+  PEYE->space), Paint->size + EXTRA + Paint->width);
+  Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) * nSeq) - 
   PEYE->space), Paint->size + EXTRA + Paint->width, 0, 0, "#ffffff");
 
-  Paint->cx += Paint->width + PEYE->space;
-
-  // PRINT HEATMAP SCALE
-  uint32_t size = Paint->cx + Paint->width;
-  for(n = 0 ; n < size ; ++n){
-    char color[12];
-    Rect(OUTPUT, Paint->width, 1, Paint->cx - (Paint->width*2), 
-    Paint->cy + n, HeatMapColor(((double) n / size), color, CLR));
+  if(PEYE->showScale == 1){
+    nSeq -= 2;
+    Paint->cx += (2 * Paint->width + PEYE->space);
+    // PRINT HEATMAP SCALE
+    uint32_t size = Paint->cx + Paint->width;
+    for(n = 0 ; n < size ; ++n){
+      char color[12];
+      Rect(OUTPUT, Paint->width, 1, Paint->cx - (Paint->width*2), 
+      Paint->cy + n, HeatMapColor(((double) n / size), color, CLR));
+      }
+    Text(OUTPUT, Paint->cx-(Paint->width*2 + 14), Paint->cy+13,   "+");
+    Text(OUTPUT, Paint->cx-(Paint->width*2 + 12), Paint->cy+size, "-");
     }
-  Text(OUTPUT, Paint->cx-(Paint->width*2 + 14), Paint->cy+13,   "+");
-  Text(OUTPUT, Paint->cx-(Paint->width*2 + 12), Paint->cy+size, "-");
 
   while((sym = fgetc(INPUT)) != EOF){
 

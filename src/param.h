@@ -81,6 +81,7 @@ typedef struct{
   int64_t  sampling;
   double   threshold;
   int64_t  enlarge;
+  U8       showScale;
   char     *output;
   }
 EYEPARAM;

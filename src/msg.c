@@ -96,6 +96,7 @@ void PrintMenuEye(void){
   "  -du <upper>              size upper bound,                             \n"
   "  -g  <color>              color gamma,                                  \n"
   "  -e  <size>               enlarge painted regions,                      \n"
+  "  -ss                      do NOT show global scale,                     \n"
   "  -o  <FILE>               output image filename,                        \n"
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"

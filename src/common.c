@@ -738,6 +738,8 @@ void PrintArgsFilter(EYEPARAM *PEYE){
 void PrintArgsEye(EYEPARAM *PEYE){
   fprintf(stderr, "==[ CONFIGURATION ]=================\n");
   fprintf(stderr, "Verbose mode ....................... yes\n");
+  fprintf(stderr, "Show global scale .................. %s\n", PEYE->showScale 
+  == 1 ? "yes" : "no"); 
   fprintf(stderr, "Visual characteristics:\n");
   fprintf(stderr, "  [+] Width ........................ %.3g\n", PEYE->width);
   fprintf(stderr, "  [+] Space ........................ %.3g\n", PEYE->space);

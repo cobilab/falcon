@@ -7,8 +7,8 @@
 #define DEFAULT_CY             75.0
 #define DEFAULT_TX             50.0                        // X COORD FOR TEXT
 #define DEFAULT_TY             82.0                        // Y COORD FOR TEXT
-#define DEFAULT_WIDTH          20.0                   // CHROMOSOMES THICKNESS
-#define DEFAULT_SPACE          10                 // SPACE BETWEEN CHROMOSOMES
+#define DEFAULT_WIDTH          25.0                   // CHROMOSOMES THICKNESS
+#define DEFAULT_SPACE          8                  // SPACE BETWEEN CHROMOSOMES
 #define DEFAULT_SCALE          100000                 // SCALE FOR CHROMOSOMES
 #define EXTRA                  150                   // EXTRA SPACE FOR BORDER
 #define LEVEL_SATURATION       220 
