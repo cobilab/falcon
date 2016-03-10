@@ -10,13 +10,11 @@
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-RgbColor HsvToRgb(HsvColor hsv)
-  {
+RgbColor HsvToRgb(HsvColor hsv){
   RgbColor  rgb;
   uint8_t   region, remainder, p, q, t;
 
-  if(hsv.s == 0)
-    {
+  if(hsv.s == 0){
     rgb.r = hsv.v;
     rgb.g = hsv.v;
     rgb.b = hsv.v;
@@ -30,8 +28,7 @@ RgbColor HsvToRgb(HsvColor hsv)
   q = (hsv.v * (255 - ((hsv.s * remainder) >> 8))) >> 8;
   t = (hsv.v * (255 - ((hsv.s * (255 - remainder)) >> 8))) >> 8;
 
-  switch(region)
-    {
+  switch(region){
     case 0:  rgb.r = hsv.v; rgb.g = t; rgb.b = p; break;
     case 1:  rgb.r = q; rgb.g = hsv.v; rgb.b = p; break;
     case 2:  rgb.r = p; rgb.g = hsv.v; rgb.b = t; break;
@@ -45,8 +42,7 @@ RgbColor HsvToRgb(HsvColor hsv)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-HsvColor RgbToHsv(RgbColor rgb)
-  {
+HsvColor RgbToHsv(RgbColor rgb){
   HsvColor  hsv;
   uint8_t   rgbMin, rgbMax;
 
@@ -56,16 +52,14 @@ HsvColor RgbToHsv(RgbColor rgb)
   rgb.g : rgb.b);
 
   hsv.v = rgbMax;
-  if(hsv.v == 0)
-    {
+  if(hsv.v == 0){
     hsv.h = 0;
     hsv.s = 0;
     return hsv;
     }
 
   hsv.s = 255 * (long) (rgbMax - rgbMin) / hsv.v;
-  if(hsv.s == 0)
-    {
+  if(hsv.s == 0){
     hsv.h = 0;
     return hsv;
     }
@@ -82,8 +76,7 @@ HsvColor RgbToHsv(RgbColor rgb)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-char *GetRgbColor(uint8_t hue)
-  {
+char *GetRgbColor(uint8_t hue){
   RgbColor RGB;
   HsvColor HSV;
   char *color = (char *) Malloc(8 * sizeof(char));
@@ -102,7 +95,6 @@ char *GetRgbColor(uint8_t hue)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 char *HeatMapColor(double lambda, char *color, COLORS *CLR){
-
   // CHANGE BEHAVIOUR [SENSITIVITY: NEAR LOW SIMILARITY // COMMENT 4 UNIFORM
   lambda = (1 + lambda*lambda*lambda + tanh(8*(lambda-1))) / 2;
 
@@ -124,16 +116,23 @@ char *HeatMapColor(double lambda, char *color, COLORS *CLR){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+double GetPoint(Painter *Paint, uint64_t p){
+  return p / Paint->scale;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 Painter *CreatePainter(double size, double width, double space, char *color){
   Painter *P    = (Painter *) Malloc(sizeof(Painter));  
   P->backColor  = color;
-  P->size       = size; 
   P->cx         = DEFAULT_CX;
   P->cy         = DEFAULT_CY;
   P->tx         = DEFAULT_TX;
   P->ty         = DEFAULT_TY;
   P->width      = width; 
-  P->space      = space; 
+  P->space      = space;
+  P->scale      = (double) size / 400;
+  P->size       = GetPoint(P, size);
   return P;
   }
 
@@ -145,8 +144,7 @@ void RemovePainter(Painter *Pa){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void RectOval(FILE *F, double w, double h, double x, double y, char *color)
-  {
+void RectOval(FILE *F, double w, double h, double x, double y, char *color){
   fprintf(F, "<rect "
               "style=\"fill:%s;fill-opacity:1;stroke-width:2;"
               "stroke-miterlimit:4;stroke-dasharray:none\" "
@@ -161,8 +159,7 @@ void RectOval(FILE *F, double w, double h, double x, double y, char *color)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void RectOvalIR(FILE *F, double w, double h, double x, double y, char *color)
-  {
+void RectOvalIR(FILE *F, double w, double h, double x, double y, char *color){
   RectOval(F, w, h, x, y, color);
   fprintf(F, "<rect "
               "style=\"fill-opacity:1;stroke-width:2;"
@@ -244,8 +241,7 @@ void Chromosome(FILE *F, double w, double h, double x, double y){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Text(FILE *F, double x, double y, char *name)
-  {
+void Text(FILE *F, double x, double y, char *name){
   fprintf(F, "<text xml:space=\"preserve\" "
             "style=\"font-size:40px;font-style:normal;"
             "font-weight:normal;line-height:125%%;"
@@ -269,8 +265,7 @@ void Text(FILE *F, double x, double y, char *name)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Text90d(FILE *F, double x, double y, char *name)
-  {
+void Text90d(FILE *F, double x, double y, char *name){
   fprintf(F, "<text xml:space=\"preserve\" "
             "style=\"font-size:30px;font-style:normal;"
             "font-weight:normal;line-height:125%%;"
@@ -294,8 +289,7 @@ void Text90d(FILE *F, double x, double y, char *name)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void TextFloat(FILE *F, double x, double y, double name)
-  {
+void TextFloat(FILE *F, double x, double y, double name){
   fprintf(F, "<text xml:space=\"preserve\" "
              "style=\"font-size:40px;font-style:normal;"
              "font-weight:normal;line-height:125%%;"
@@ -319,22 +313,7 @@ void TextFloat(FILE *F, double x, double y, double name)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void SetScale(double max)
-  {
-  scale = max / 80.0; 
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-double GetPoint(uint64_t p)
-  {
-  return p / (double) scale * 5;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-void PrintHead(FILE *F, double w, double u)
-  {
+void PrintHead(FILE *F, double w, double u){
   fprintf(F, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
   "<!-- IEETA 2014 using Inkscape -->\n""<svg\n"
   "xmlns:osb=\"http://www.openswatchbook.org/uri/2009/osb\"\n"
@@ -538,8 +517,7 @@ void PrintHead(FILE *F, double w, double u)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void PrintFinal(FILE *F)
-  {
+void PrintFinal(FILE *F){
   fprintf(F, "</g>\n</svg>");
   fclose(F);
   }

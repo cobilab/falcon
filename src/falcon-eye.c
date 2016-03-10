@@ -52,6 +52,7 @@ int32_t main(int argc, char *argv[]){
   PEYE->space     = ArgsDouble (DEFAULT_SPACE,   p, argc, "-s");
   PEYE->showScale = ArgsState  (DEFAULT_SHOWS,   p, argc, "-ss");
   PEYE->showNames = ArgsState  (DEFAULT_NAMES,   p, argc, "-sn");
+  PEYE->sameScale = ArgsState  (DEFAULT_RSCAL,   p, argc, "-rs");
   PEYE->start     = ArgsDouble (0.35,            p, argc, "-i");
   PEYE->rotations = ArgsDouble (1.50,            p, argc, "-r");
   PEYE->hue       = ArgsDouble (1.92,            p, argc, "-u");
@@ -111,8 +112,7 @@ int32_t main(int argc, char *argv[]){
     }
   rewind(INPUT);
 
-  SetScale(maxSize);
-  Paint = CreatePainter(GetPoint(maxSize), PEYE->width, PEYE->space, "#ffffff");
+  Paint = CreatePainter(maxSize, PEYE->width, PEYE->space, "#ffffff");
 
   extraLength = 0;
   if(PEYE->showNames == 1){
@@ -183,7 +183,7 @@ int32_t main(int argc, char *argv[]){
         off_t beg = Ftello(INPUT);
         if(fscanf(INPUT, "%"PRIu64":%"PRIu64"\n", &iPos, &ePos) != 2){
           Fseeko(INPUT, (off_t) beg, SEEK_SET);
-          Chromosome(OUTPUT, Paint->width, GetPoint(fsize), Paint->cx, 
+          Chromosome(OUTPUT, Paint->width, GetPoint(Paint, fsize), Paint->cx, 
           Paint->cy);
           if(nSeq > 0) 
             Paint->cx += Paint->width + Paint->space;
@@ -191,13 +191,13 @@ int32_t main(int argc, char *argv[]){
           }
         else{
           if(PEYE->enlarge == 0){
-            Rect(OUTPUT, Paint->width, GetPoint(ePos-iPos+1), Paint->cx,
-            Paint->cy + GetPoint(iPos), /*HeatMapColor(0, color, CLR)*/ 
+            Rect(OUTPUT, Paint->width, GetPoint(Paint, ePos-iPos+1), Paint->cx,
+            Paint->cy + GetPoint(Paint, iPos), /*HeatMapColor(0, color, CLR)*/ 
             GetRgbColor(LEVEL_HUE));
             }
           else{
-            Rect(OUTPUT, Paint->width, GetPoint(ePos-iPos+1+PEYE->enlarge), 
-            Paint->cx, Paint->cy + GetPoint(iPos), GetRgbColor(LEVEL_HUE));
+            Rect(OUTPUT, Paint->width, GetPoint(Paint, ePos-iPos+1+PEYE->enlarge), 
+            Paint->cx, Paint->cy + GetPoint(Paint, iPos), GetRgbColor(LEVEL_HUE));
             }
           }
         }

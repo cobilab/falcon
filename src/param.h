@@ -83,6 +83,7 @@ typedef struct{
   int64_t  enlarge;
   U8       showScale;
   U8       showNames;
+  U8       sameScale;
   char     *output;
   }
 EYEPARAM;
