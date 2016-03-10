@@ -269,6 +269,31 @@ void Text(FILE *F, double x, double y, char *name)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+void Text90d(FILE *F, double x, double y, char *name)
+  {
+  fprintf(F, "<text xml:space=\"preserve\" "
+            "style=\"font-size:30px;font-style:normal;"
+            "font-weight:normal;line-height:125%%;"
+            "letter-spacing:0px;word-spacing:0px;fill:#000000;"
+            "fill-opacity:1;stroke:none;font-family:Sans\" "
+            "transform=\"rotate(-90)\" "
+            "x=\"%.2lf\" "
+            "y=\"%.2lf\" "
+            "id=\"corben\" "
+            "sodipodi:linespacing=\"125%%\">"
+            "<tspan sodipodi:role=\"line\" "
+            "id=\"tspan3804\" "
+            "x=\"%.2lf\" "
+            "y=\"%.2lf\" "
+            "style=\"font-size:16px;font-style:normal;font-variant:"
+            "normal;font-weight:normal;font-stretch:normal;"
+            "text-align:start;line-height:125%%;writing-mode"
+            ":lr-tb;text-anchor:start;font-family:monospace;\">%s</tspan>\n"
+         "</text>\n", x, y-4, x, y-4, name);
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 void TextFloat(FILE *F, double x, double y, double name)
   {
   fprintf(F, "<text xml:space=\"preserve\" "

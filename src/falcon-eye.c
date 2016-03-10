@@ -30,7 +30,7 @@ int32_t main(int argc, char *argv[]){
   FILE *OUTPUT = NULL, *INPUT = NULL;
   int sym;
   double fvalue;
-  uint32_t n;
+  uint32_t n, tmp, maxName, extraLength;
   uint64_t maxSize = 0, fsize, iPos, ePos, nSeq;
   Painter *Paint;
   COLORS *CLR;
@@ -57,9 +57,12 @@ int32_t main(int argc, char *argv[]){
   PEYE->gamma     = ArgsDouble (0.50,            p, argc, "-g");
   PEYE->lowerSimi = ArgsDouble (0.00,            p, argc, "-sl");
   PEYE->upperSimi = ArgsDouble (100.00,          p, argc, "-su");
-  PEYE->lowerSize = ArgsNum64  (1,               p, argc, "-dl", 1, 9999999999);
-  PEYE->upperSize = ArgsNum64  (9999999999,      p, argc, "-du", 1, 9999999999);
-  PEYE->enlarge   = ArgsNum64  (0,               p, argc, "-e",  0, 9999999999);
+  PEYE->lowerSize = ArgsNum64  (1,               p, argc, "-dl", 1, 
+  9999999999);
+  PEYE->upperSize = ArgsNum64  (9999999999,      p, argc, "-du", 1, 
+  9999999999);
+  PEYE->enlarge   = ArgsNum64  (0,               p, argc, "-e",  0, 
+  9999999999);
   PEYE->output    = ArgsFileGen(p, argc, "-o", "femap", ".svg");
 
   if(!PEYE->force) 
@@ -74,7 +77,7 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "==[ PROCESSING ]====================\n");
   TIME *Time = CreateClock(clock());
 
-  // TODO: OPTION TO IGNORE SCALE
+  // TODO: OPTION TO IGNORE SCALE AND SET THEM AT SAME SIZE
 
   CLR = (COLORS *) Calloc(1, sizeof(COLORS));
   CLR->start     = PEYE->start;
@@ -84,6 +87,7 @@ int32_t main(int argc, char *argv[]){
 
   INPUT = Fopen(argv[argc-1], "r"); 
   nSeq = 0;
+  maxName = 0;
   while((sym = fgetc(INPUT)) != EOF){
     if(sym == '$'){
       if(fscanf(INPUT, "\t%lf\t%"PRIu64"\t%s\n", &fvalue, &fsize, fname) != 3){
@@ -97,6 +101,10 @@ int32_t main(int argc, char *argv[]){
 
       if(fsize > maxSize)
         maxSize = fsize;
+
+      if((tmp = strlen(fname)) > maxName)
+        maxName = tmp;
+     
       ++nSeq;
       }
     }
@@ -105,13 +113,16 @@ int32_t main(int argc, char *argv[]){
   SetScale(maxSize);
   Paint = CreatePainter(GetPoint(maxSize), PEYE->width, PEYE->space, "#ffffff");
 
+  extraLength = 10 * maxName; // LETTER SIZE * MAXNAME
+  Paint->cy += extraLength;
+
   if(PEYE->showScale == 1)
     nSeq += 2;
 
   PrintHead(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) * nSeq) - 
-  PEYE->space), Paint->size + EXTRA + Paint->width);
+  PEYE->space), Paint->size + EXTRA + Paint->width + extraLength);
   Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) * nSeq) - 
-  PEYE->space), Paint->size + EXTRA + Paint->width, 0, 0, "#ffffff");
+  PEYE->space), Paint->size + EXTRA + Paint->width + extraLength, 0, 0, "#ffffff");
 
   if(PEYE->showScale == 1){
     nSeq -= 2;
@@ -142,6 +153,9 @@ int32_t main(int argc, char *argv[]){
           ;
         continue;
         }
+
+      Text90d(OUTPUT, -(Paint->cy-32), Paint->cx+Paint->width-
+      (Paint->width/2.0)+10, fname); // PRINT NAMES
 
       char tmpTxt[MAX_NAME], color[12];
       if(fvalue < 10){

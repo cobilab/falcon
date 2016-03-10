@@ -69,6 +69,7 @@ void      RectWithBorder (FILE *, double, double, double, double, char *);
 void      RectIR         (FILE *, double, double, double, double, char *);
 void      Chromosome     (FILE *, double, double, double, double);
 void      Text           (FILE *, double, double, char *);
+void      Text90d        (FILE *, double, double, char *);
 void      TextFloat      (FILE *, double, double, double);
 void      SetScale       (double);
 double    GetPoint       (uint64_t);
