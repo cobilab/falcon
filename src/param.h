@@ -82,6 +82,7 @@ typedef struct{
   double   threshold;
   int64_t  enlarge;
   U8       showScale;
+  U8       showNames;
   char     *output;
   }
 EYEPARAM;

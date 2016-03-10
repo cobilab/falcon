@@ -51,6 +51,7 @@ int32_t main(int argc, char *argv[]){
   PEYE->width     = ArgsDouble (DEFAULT_WIDTH,   p, argc, "-w");
   PEYE->space     = ArgsDouble (DEFAULT_SPACE,   p, argc, "-s");
   PEYE->showScale = ArgsState  (DEFAULT_SHOWS,   p, argc, "-ss");
+  PEYE->showNames = ArgsState  (DEFAULT_NAMES,   p, argc, "-sn");
   PEYE->start     = ArgsDouble (0.35,            p, argc, "-i");
   PEYE->rotations = ArgsDouble (1.50,            p, argc, "-r");
   PEYE->hue       = ArgsDouble (1.92,            p, argc, "-u");
@@ -113,8 +114,11 @@ int32_t main(int argc, char *argv[]){
   SetScale(maxSize);
   Paint = CreatePainter(GetPoint(maxSize), PEYE->width, PEYE->space, "#ffffff");
 
-  extraLength = 10 * maxName; // LETTER SIZE * MAXNAME
-  Paint->cy += extraLength;
+  extraLength = 0;
+  if(PEYE->showNames == 1){
+    extraLength = 10 * maxName; // LETTER SIZE * MAXNAME
+    Paint->cy += extraLength;
+    }
 
   if(PEYE->showScale == 1)
     nSeq += 2;
@@ -154,8 +158,10 @@ int32_t main(int argc, char *argv[]){
         continue;
         }
 
-      Text90d(OUTPUT, -(Paint->cy-32), Paint->cx+Paint->width-
-      (Paint->width/2.0)+10, fname); // PRINT NAMES
+      if(PEYE->showNames == 1){  // PRINT NAMES 90D
+        Text90d(OUTPUT, -(Paint->cy-32), Paint->cx+Paint->width-
+        (Paint->width/2.0)+10, fname);
+        }
 
       char tmpTxt[MAX_NAME], color[12];
       if(fvalue < 10){
