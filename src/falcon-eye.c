@@ -182,7 +182,7 @@ int32_t main(int argc, char *argv[]){
       fprintf(stderr, "  [+] Painting %s ... ", fname);
       while(1){
         off_t beg = Ftello(INPUT);
-        if(fscanf(INPUT, "%"PRIu64":%"PRIu64"\n", &iPos, &ePos) != 2){
+        if(fscanf(INPUT, "%"PRIu64":%"PRIu64"\t%u\n", &iPos, &ePos, &cmp) != 3){
           Fseeko(INPUT, (off_t) beg, SEEK_SET);
           Chromosome(OUTPUT, Paint->width, GetPoint(Paint, fsize), Paint->cx, 
           Paint->cy);
