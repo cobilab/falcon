@@ -126,7 +126,8 @@ int32_t main(int argc, char *argv[]){
   PrintHead(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) * nSeq) - 
   PEYE->space), Paint->size + EXTRA + Paint->width + extraLength);
   Rect(OUTPUT, (2 * DEFAULT_CX) + (((Paint->width + PEYE->space) * nSeq) - 
-  PEYE->space), Paint->size + EXTRA + Paint->width + extraLength, 0, 0, "#ffffff");
+  PEYE->space), Paint->size + EXTRA + Paint->width + extraLength, 0, 0, 
+  "#ffffff");
 
   if(PEYE->showScale == 1){
     nSeq -= 2;
