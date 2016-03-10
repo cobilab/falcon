@@ -30,7 +30,7 @@ static double Mean(FILTER *FIL, int64_t n){
 void FilterStream(FILTER *FIL, FILE *OUT){
   int64_t  n = 1;
   double   val = Mean(FIL, 0);
-  int      region = val < FIL->threshold ? LOW_REGION : HIGH_REGION;
+  int      region = val < FIL->threshold ? LOW_REGION : HIGH_REGION, cmp = 0;
   uint64_t initPosition = 1;
   uint64_t lastPosition = n;
 
@@ -40,7 +40,7 @@ void FilterStream(FILTER *FIL, FILE *OUT){
       if((val = Mean(FIL, n)) >= FIL->threshold){
         if(region == LOW_REGION){
           region = HIGH_REGION;
-          fprintf(OUT, "%"PRIu64":%"PRIu64"\n", initPosition, n);
+          fprintf(OUT, "%"PRIu64":%"PRIu64"\t%u\n", initPosition, n, cmp);
           }
         }
       else{ // val < threshold ====> LOW_REGION
@@ -54,7 +54,7 @@ void FilterStream(FILTER *FIL, FILE *OUT){
     }
 
   if(region == LOW_REGION)
-    fprintf(OUT, "%"PRIu64":%"PRIu64"\n", initPosition, lastPosition);
+    fprintf(OUT, "%"PRIu64":%"PRIu64"\t%u\n", initPosition, lastPosition, cmp);
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

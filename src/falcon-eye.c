@@ -30,7 +30,7 @@ int32_t main(int argc, char *argv[]){
   FILE *OUTPUT = NULL, *INPUT = NULL;
   int sym;
   double fvalue;
-  uint32_t n, tmp, maxName, extraLength;
+  uint32_t n, tmp, maxName, extraLength, cmp;
   uint64_t maxSize = 0, fsize, iPos, ePos, nSeq;
   Painter *Paint;
   COLORS *CLR;
@@ -154,7 +154,8 @@ int32_t main(int argc, char *argv[]){
       // SKIPS: FILTERED ATTRIBUTES
       if(fsize > PEYE->upperSize ||  fsize < PEYE->lowerSize ||
         fvalue > PEYE->upperSimi || fvalue < PEYE->lowerSimi){
-        while(fscanf(INPUT, "%"PRIu64":%"PRIu64"\n", &iPos, &ePos) == 2)
+        while(fscanf(INPUT, "%"PRIu64":%"PRIu64"\t%u\n", &iPos, &ePos, &cmp) 
+        == 3)
           ;
         continue;
         }
@@ -190,14 +191,15 @@ int32_t main(int argc, char *argv[]){
           break;
           }
         else{
+          int color = cmp ? LEVEL_HUE : 9;
           if(PEYE->enlarge == 0){
             Rect(OUTPUT, Paint->width, GetPoint(Paint, ePos-iPos+1), Paint->cx,
             Paint->cy + GetPoint(Paint, iPos), /*HeatMapColor(0, color, CLR)*/ 
-            GetRgbColor(LEVEL_HUE));
+            GetRgbColor(color));
             }
           else{
             Rect(OUTPUT, Paint->width, GetPoint(Paint, ePos-iPos+1+PEYE->enlarge), 
-            Paint->cx, Paint->cy + GetPoint(Paint, iPos), GetRgbColor(LEVEL_HUE));
+            Paint->cx, Paint->cy + GetPoint(Paint, iPos), GetRgbColor(color));
             }
           }
         }
