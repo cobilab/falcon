@@ -98,7 +98,7 @@ void PrintMenuEye(void){
   "  -e  <size>               enlarge painted regions,                      \n"
   "  -ss                      do NOT show global scale,                     \n"
   "  -sn                      do NOT show names,                            \n"
-  "  -rs                      use relative scale,                           \n"
+//  "  -rs                      use relative scale,                           \n"
   "  -o  <FILE>               output image filename,                        \n"
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
