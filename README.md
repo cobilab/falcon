@@ -5,7 +5,7 @@ alt="FALCON" width="350" height="200" border="0" /></p>
 
 <p align="justify">
 <b>FALCON is an alignment-free unsupervised machine learning system to detect pathogens in genomic and metagenomic samples</b>. The core of the method is based on the <b>relative algorithmic entropy</b>, a notion that uses model-freezing and exclusive information from a reference, allowing to use <b>much lower computational resources</b>. Moreover, it uses <b>variable multi-threading</b>, without multiplying the memory for each thread, being able to <b>run efficiently from a powerful server to a common laptop</b>. To measure the similarity, the system will build <b>multiple finite-context models</b> that at the end of the reference sequence will be kept frozen. The target reads will then be measured using a mixture of the frozen models. The <b>mixture</b> estimates the probabilities assuming dependency from model performance, and thus, it will allow to adapt the usage of the models according to the nature of the target sequence. Furthermore, it uses <b>fault tolerant (substitution edits) finite-context models</b> that bridge the gap between context sizes.
-The tool is also able to <b>identify locally where, in each database sequence, the similarity occur</b>. FALCON provides a program, <b>FALCON-EYE, to visualize the results</b>. <b>Several running modes</b> are available for different hardware and speed specifications. <b>The system is able to automatically learn to measure similarity</b>, whose properties are characteristics of the <b>Artificial Intelligence</b> field.
+The tool is also able to <b>identify locally where, in each database sequence, the similarity occur</b>. FALCON provides programs to <b>filter de local results (FALCON-FILTER)</b> and <b>to visualize the results (FALCON-EYE)</b>. <b>Several running modes</b> are available for different hardware and speed specifications. <b>The system is able to automatically learn to measure similarity</b>, whose properties are characteristics of the <b>Artificial Intelligence</b> field.
 </p>
 
 ## INSTALLATION ##
@@ -46,13 +46,12 @@ cp FALCON-FILTER ../../
 cp FALCON-EYE ../../
 cd ../../
 </pre>
-This will create three binary file: 
+This will create three binary files:
 <pre>
 FALCON 
 FALCON-FILTER
 FALCON-EYE
 </pre>
-to measure the the top relative similarity.
 
 ## DEMO ##
 
@@ -103,6 +102,7 @@ Non-mandatory arguments:
   -t &#60top&#62                 top of similarity (default: 20),                            
   -n &#60nThreads&#62            number of threads (default: 2),                            
   -x &#60FILE&#62                similarity top filename,                      
+  -y &#60FILE&#62                local similarities filename,
                                                                          
 Mandatory arguments:                                                     
                                                                          
@@ -126,6 +126,7 @@ All the parameters can be better explained trough the following table:
 | -t &#60;top&#62;      | It will create a top with this size.              |
 | -n &#60;nThreads&#62; | It will use multiple-threading. The time to accomplish the task will be much lower, without use more RAM memory.                   |
 | -x &#60;FILE&#62;     | Output top filename. |
+| -y &#60;FILE&#62;     | Output local similarities filename. Only when -Z option is used. |
 | [FILE1]           | The metagenomic filename (direct from the NGS sequencing platform). Possible file formats: FASTQ, multi-FASTA, FASTA or sequence [ACGTN]. |
 | [FILE2]           | The database filename (e.g. virus or bacteria database). Possible file formats: FASTA, multi-FASTA or sequence [ACGTN]. There are several scripts, on directory scripts, to download several databases. |
 
