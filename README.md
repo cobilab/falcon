@@ -133,7 +133,9 @@ All the parameters can be better explained trough the following table:
 
 ### Local detection
 
-For local interactions detection the package provides FALCON-FILTER. It will filter and segment the output from option -y &#60;FILE&#62; (FALCON program). 
+<b>For local interactions detection and visualization</b> the package provides <b>FALCON-FILTER</b> and <b>FALCON-EYE</b>. 
+
+#### Filter
 
 To see the possible options of FALCON-FILTER type
 <pre>
@@ -182,8 +184,49 @@ All the parameters can be better explained trough the following table:
 | -o &#60;FILE&#62;     | Output filename to be, for example, computed in FALCON-EYE. It contains the local positions with the intervals describing similarity. |
 | [FILE]           | Profile filename given by the output of FALCON (option: &#60;FILE&#62;). |
 
+#### Visualization
 
+To see the possible options of FALCON-EYE type
+<pre>
+./FALCON-EYE
+</pre>
+or
+<pre>
+./FALCON-EYE -h
+</pre>
+These will print the following options:
+<pre>
+<p>
+Usage: FALCON-EYE [OPTION]... [FILE]                                     
+Vizualise FALCON output.                                                 
+                                                                         
+Non-mandatory arguments:                                                 
+                                                                         
+  -h                       give this help,                               
+  -F                       force mode (overwrites top file),             
+  -V                       display version number,                       
+  -v                       verbose mode (more information),              
+  -w  &#60width&#62              square width (for each value),                
+  -s  &#60ispace&#62             square inter-space (between each value),      
+  -i  &#60indexs&#62             color index start,                            
+  -r  &#60indexr&#62             color index rotations,                        
+  -u  &#60hue&#62                color hue,                                    
+  -sl &#60lower&#62              similarity lower bound,                       
+  -su &#60upper&#62              similarity upper bound,                       
+  -dl &#60lower&#62              size lower bound,                             
+  -du &#60upper&#62              size upper bound,                             
+  -g  &#60color&#62              color gamma,                                  
+  -e  &#60size&#62               enlarge painted regions,                      
+  -ss                      do NOT show global scale,                     
+  -sn                      do NOT show names,                            
+  -o  &#60FILE&#62               output image filename,                        
+                                                                         
+Mandatory arguments:                                                     
+                                                                         
+  [FILE]                   profile filename (from FALCON-FILTER), 
 
+Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
+</pre>
 
 
 
