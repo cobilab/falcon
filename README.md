@@ -135,7 +135,7 @@ All the parameters can be better explained trough the following table:
 
 <b>For local interactions detection and visualization</b> the package provides <b>FALCON-FILTER</b> and <b>FALCON-EYE</b>. 
 
-#### Filter
+#### Filtering
 
 To see the possible options of FALCON-FILTER type
 <pre>
