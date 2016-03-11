@@ -4,7 +4,8 @@ alt="FALCON" width="350" height="200" border="0" /></p>
 <br>
 
 <p align="justify">
-<b>FALCON is an alignment-free unsupervised machine learning system to detect pathogens in genomic and metagenomic samples</b>. The core of the method is based on the <b>relative algorithmic entropy</b>, a notion that uses model-freezing and exclusive information from a reference, allowing to use <b>much lower computational resources</b>. Moreover, it uses <b>variable multi-threading</b>, without multiplying the memory for each thread, being able to <b>run efficiently from a powerful server to a common laptop</b>. To measure the similarity, the system will build <b>multiple finite-context models</b> that at the end of the reference sequence will be kept frozen. The target reads will then be measured using a mixture of the frozen models. The <b>mixture</b> estimates the probabilities assuming dependency from model performance, and thus, it will allow to adapt the usage of the models according to the nature of the target sequence. Furthermore, it uses <b>fault tolerant (substitution edits) finite-context models</b> that bridge the gap between context sizes. <b>Several running modes</b> are available for different hardware and speed specifications. <b>The system is able to automatically learn to measure similarity</b>, whose properties are characteristics of the <b>Artificial Intelligence</b> field.
+<b>FALCON is an alignment-free unsupervised machine learning system to detect pathogens in genomic and metagenomic samples</b>. The core of the method is based on the <b>relative algorithmic entropy</b>, a notion that uses model-freezing and exclusive information from a reference, allowing to use <b>much lower computational resources</b>. Moreover, it uses <b>variable multi-threading</b>, without multiplying the memory for each thread, being able to <b>run efficiently from a powerful server to a common laptop</b>. To measure the similarity, the system will build <b>multiple finite-context models</b> that at the end of the reference sequence will be kept frozen. The target reads will then be measured using a mixture of the frozen models. The <b>mixture</b> estimates the probabilities assuming dependency from model performance, and thus, it will allow to adapt the usage of the models according to the nature of the target sequence. Furthermore, it uses <b>fault tolerant (substitution edits) finite-context models</b> that bridge the gap between context sizes.
+The tool is also able to <b>identify locally where, in each database sequence, the similarity occur</b>. FALCON provides a program, <b>FALCON-EYE, to visualize the results</b>. <b>Several running modes</b> are available for different hardware and speed specifications. <b>The system is able to automatically learn to measure similarity</b>, whose properties are characteristics of the <b>Artificial Intelligence</b> field.
 </p>
 
 ## INSTALLATION ##
@@ -18,6 +19,8 @@ cd falcon/src/
 cmake .
 make
 cp FALCON ../../
+cp FALCON-FILTER ../../
+cp FALCON-EYE ../../
 cd ../../
 </pre>
 Alternatively to git use wget:
@@ -28,6 +31,8 @@ cd falcon-master/src
 cmake .
 make
 cp FALCON ../../
+cp FALCON-FILTER ../../
+cp FALCON-EYE ../../
 cd ../../
 </pre>
 or alternatively to cmake, for Linux, use the following:
@@ -37,13 +42,17 @@ cd falcon/src/
 cp Makefile.linux Makefile
 make
 cp FALCON ../../
+cp FALCON-FILTER ../../
+cp FALCON-EYE ../../
 cd ../../
 </pre>
-This will create a binary file: 
+This will create three binary file: 
 <pre>
 FALCON 
+FALCON-FILTER
+FALCON-EYE
 </pre>
-to measure the similarity between sequences.
+to measure the the top relative similarity.
 
 ## DEMO ##
 
@@ -67,7 +76,7 @@ perl -MCPAN -e'install "LWP::Simple"'
 
 ## USAGE ##
 
-To see the possible options type
+To see the possible options of FALCON type
 <pre>
 ./FALCON
 </pre>
@@ -124,7 +133,9 @@ All the parameters can be better explained trough the following table:
 
 On using this software/method please cite: 
 
-D. Pratas, A. J. Pinho, P. J. S. G. Ferreira, J. M. O. S. Rodrigues (2015). FALCON: a machine learning system to detect pathogens in genomic and metagenomic samples. Zenodo. 10.5281/zenodo.35745
+D. Pratas, A. J. Pinho, P. J. S. G. Ferreira, J. M. O. S. Rodrigues (2015). FALCON: a machine learning system to detect pathogens in genomic and metagenomic samples. Zenodo. 10.5281/zenodo.35745.
+
+D. Pratas, R. M. Silva, A. J. Pinho, P. J. S. G. Ferreira. An alignment-free method to find and visualise rearrangements between pairs of DNA sequences. Sci. Rep. 5, 10203; doi: 10.1038/srep10203 (2015).
 
 ## ISSUES ##
 
