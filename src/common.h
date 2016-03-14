@@ -37,7 +37,7 @@ double      BoundDouble      (double, double, double);
 double      BPBB             (double, uint64_t);
 unsigned    QuadQuantization (double);
 uint8_t     PackByte         (double, uint8_t);
-SymValue    UnPackByte       (uint8_t);
+void        UnPackByte       (SymValue *, uint8_t);
 FILE        *Fopen           (const char *, const char *);
 uint64_t    SumWriteBits     (uint8_t **, int, uint64_t, FILE *, FILE *);
 void        ShiftBuffer      (uint8_t *, int, uint8_t);

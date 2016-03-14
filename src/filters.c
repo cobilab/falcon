@@ -88,13 +88,13 @@ void InitWeights(FILTER *FIL){
 void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
   int c;
   uint64_t idx;
+//SymValue *SM = Calloc(1, sizeof(SymValue));
 
   FIL->nEntries = nEntries;
   FIL->entries  = (double *) Malloc(FIL->nEntries * sizeof(double)); 
   for(idx = 0 ; idx < FIL->nEntries ; ++idx){
-//    SymValue SM;
-//    SM = UnPackByte(fgetc(INPUT));
-//    c = SM.value;
+//    UnPackByte(SM, fgetc(INPUT));
+//    c = SM->value;
     c = fgetc(INPUT);
 
     if(c == EOF || c == '\n'){
@@ -103,6 +103,7 @@ void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
       }
     FIL->entries[idx] = (double) ((c-48)*0.25);
     }
+//Free(SM);
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
