@@ -92,7 +92,11 @@ void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
   FIL->nEntries = nEntries;
   FIL->entries  = (double *) Malloc(FIL->nEntries * sizeof(double)); 
   for(idx = 0 ; idx < FIL->nEntries ; ++idx){
+//    SymValue SM;
+//    SM = UnPackByte(fgetc(INPUT));
+//    c = SM.value;
     c = fgetc(INPUT);
+
     if(c == EOF || c == '\n'){
       fprintf(stderr, "  [x] Error: filtering symbols larger than size!");
       exit(1);
