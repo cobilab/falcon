@@ -122,9 +122,6 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
         UpdateCBuffer(symBuf);
         }
 
-      // fprintf(stderr, "x=%6.3lf, %"PRIu64"\n", 
-      // (1.0-BPBB(bits, nBase))*100.0, nBase);
-
       if(entry < topSize - 1){ // RESET MODELS & PROPERTIES
         ResetCBuffer(symBuf);
         for(n = 0 ; n < P->nModels ; ++n)

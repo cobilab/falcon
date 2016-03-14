@@ -191,7 +191,7 @@ int32_t main(int argc, char *argv[]){
           break;
           }
         else{
-          int color = cmp ? LEVEL_HUE : 9;
+          int color = cmp ? LEVEL_HUE : 9; // DARK-RED BY DEFAULT
           if(PEYE->enlarge == 0){
             Rect(OUTPUT, Paint->width, GetPoint(Paint, ePos-iPos+1), Paint->cx,
             Paint->cy + GetPoint(Paint, iPos), /*HeatMapColor(0, color, CLR)*/ 

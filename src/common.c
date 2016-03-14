@@ -106,27 +106,80 @@ unsigned QuadQuantization(double v){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UnPackByte(uint8_t *bin, uint8_t sym){
-  *bin++ = (sym & 0x80) >> 7;
-  *bin++ = (sym & 0x40) >> 6;
-  *bin++ = (sym & 0x20) >> 5;
-  *bin++ = (sym & 0x10) >> 4;
-  *bin++ = (sym & 0x08) >> 3;
-  *bin++ = (sym & 0x04) >> 2;
-  *bin++ = (sym & 0x02) >> 1;
-  *bin++ = (sym & 0x01);
+uint8_t PackByte(double v, uint8_t sym){
+  uint8_t PackLT[5][10] = {
+  { 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29 },
+  { 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33 },
+  { 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D },
+  { 0x3E, 0x3F, 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47 },
+  { 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x51 }
+  };
+
+  //TODO: FAZER COM SWITCH!
+
+  return (uint8_t) PackLT[sym][QuadQuantization(v)];
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-uint8_t PackByte(uint8_t *bin){
-  uint8_t byte = 0;
-/*
-          byte = (((*bin++)<<7) | ((*bin++)<<6) | ((*bin++)<<5) | 
-                  ((*bin++)<<4) | ((*bin++)<<3) | ((*bin++)<<2) | 
-                  ((*bin++)<<1) |  (*bin)); // 48 = '0' in decimal
-*/
-  return byte;
+SymValue UnPackByte(uint8_t b){
+  SymValue SM;
+  switch(b){
+    case 0x21: SM.sym = 0; SM.value = 0; break;
+    case 0x22: SM.sym = 0; SM.value = 1; break;
+    case 0x23: SM.sym = 0; SM.value = 2; break;
+    case 0x24: SM.sym = 0; SM.value = 3; break;
+    case 0x25: SM.sym = 0; SM.value = 4; break;
+    case 0x26: SM.sym = 0; SM.value = 5; break;
+    case 0x27: SM.sym = 0; SM.value = 6; break;
+    case 0x28: SM.sym = 0; SM.value = 7; break;
+    case 0x29: SM.sym = 0; SM.value = 8; break;
+    case 0x2A: SM.sym = 0; SM.value = 9; break;
+    case 0x2B: SM.sym = 1; SM.value = 0; break;
+    case 0x2C: SM.sym = 1; SM.value = 1; break;
+    case 0x2D: SM.sym = 1; SM.value = 2; break;
+    case 0x2E: SM.sym = 1; SM.value = 3; break;
+    case 0x2F: SM.sym = 1; SM.value = 4; break;
+    case 0x30: SM.sym = 1; SM.value = 5; break;
+    case 0x31: SM.sym = 1; SM.value = 6; break;
+    case 0x32: SM.sym = 1; SM.value = 7; break;
+    case 0x33: SM.sym = 1; SM.value = 8; break;
+    case 0x34: SM.sym = 1; SM.value = 9; break;
+    case 0x35: SM.sym = 2; SM.value = 0; break;
+    case 0x36: SM.sym = 2; SM.value = 1; break;
+    case 0x37: SM.sym = 2; SM.value = 2; break;
+    case 0x38: SM.sym = 2; SM.value = 3; break;
+    case 0x39: SM.sym = 2; SM.value = 4; break;
+    case 0x3A: SM.sym = 2; SM.value = 5; break;
+    case 0x3B: SM.sym = 2; SM.value = 6; break;
+    case 0x3C: SM.sym = 2; SM.value = 7; break;
+    case 0x3D: SM.sym = 2; SM.value = 8; break;
+    case 0x3E: SM.sym = 2; SM.value = 9; break;
+    case 0x3F: SM.sym = 3; SM.value = 0; break;
+    case 0x40: SM.sym = 3; SM.value = 1; break;
+    case 0x41: SM.sym = 3; SM.value = 2; break;
+    case 0x42: SM.sym = 3; SM.value = 3; break;
+    case 0x43: SM.sym = 3; SM.value = 4; break;
+    case 0x44: SM.sym = 3; SM.value = 5; break;
+    case 0x45: SM.sym = 3; SM.value = 6; break;
+    case 0x46: SM.sym = 3; SM.value = 7; break;
+    case 0x47: SM.sym = 3; SM.value = 8; break;
+    case 0x48: SM.sym = 3; SM.value = 9; break;
+    case 0x49: SM.sym = 4; SM.value = 0; break;
+    case 0x4A: SM.sym = 4; SM.value = 1; break;
+    case 0x4B: SM.sym = 4; SM.value = 2; break;
+    case 0x4C: SM.sym = 4; SM.value = 3; break;
+    case 0x4D: SM.sym = 4; SM.value = 4; break;
+    case 0x4E: SM.sym = 4; SM.value = 5; break;
+    case 0x4F: SM.sym = 4; SM.value = 6; break;
+    case 0x50: SM.sym = 4; SM.value = 7; break;
+    case 0x51: SM.sym = 4; SM.value = 8; break;
+    case 0x52: SM.sym = 4; SM.value = 9; break;
+    default: fprintf(stderr, "  [x] Error: unpacking byte!\n");
+    exit(1);
+    }
+  
+  return SM;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
