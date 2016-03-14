@@ -107,17 +107,86 @@ unsigned QuadQuantization(double v){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 uint8_t PackByte(double v, uint8_t sym){
-  uint8_t PackLT[5][10] = {
-  { 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29 },
-  { 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33 },
-  { 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D },
-  { 0x3E, 0x3F, 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47 },
-  { 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x51 }
-  };
-
-  //TODO: FAZER COM SWITCH!
-
-  return (uint8_t) PackLT[sym][QuadQuantization(v)];
+  switch(sym){
+    case 0: 
+      switch(QuadQuantization(v)){
+        case 0: return 0x20;
+        case 1: return 0x21;
+        case 2: return 0x22;
+        case 3: return 0x23;
+        case 4: return 0x24;
+        case 5: return 0x25;
+        case 6: return 0x26;
+        case 7: return 0x27;
+        case 8: return 0x28;
+        case 9: return 0x29;
+        default: break;
+        }
+    break;
+    case 1:
+      switch(QuadQuantization(v)){
+        case 0: return 0x2A;
+        case 1: return 0x2B;
+        case 2: return 0x2C;
+        case 3: return 0x2D;
+        case 4: return 0x2E;
+        case 5: return 0x2F;
+        case 6: return 0x30;
+        case 7: return 0x31;
+        case 8: return 0x32;
+        case 9: return 0x33;
+        default: break;
+        }
+    break;
+    case 2:
+      switch(QuadQuantization(v)){
+        case 0: return 0x34;
+        case 1: return 0x35;
+        case 2: return 0x36;
+        case 3: return 0x37;
+        case 4: return 0x38;
+        case 5: return 0x39;
+        case 6: return 0x3A;
+        case 7: return 0x3B;
+        case 8: return 0x3C;
+        case 9: return 0x3D;
+        default: break;
+        }
+    break;
+    case 3:
+      switch(QuadQuantization(v)){
+        case 0: return 0x3E;
+        case 1: return 0x3F;
+        case 2: return 0x40;
+        case 3: return 0x41;
+        case 4: return 0x42;
+        case 5: return 0x43;
+        case 6: return 0x44;
+        case 7: return 0x45;
+        case 8: return 0x46;
+        case 9: return 0x47;
+        default: break;
+        }
+    break;
+    case 4:
+      switch(QuadQuantization(v)){
+        case 0: return 0x48;
+        case 1: return 0x49;
+        case 2: return 0x4A;
+        case 3: return 0x4B;
+        case 4: return 0x4C;
+        case 5: return 0x4D;
+        case 6: return 0x4E;
+        case 7: return 0x4F;
+        case 8: return 0x50;
+        case 9: return 0x51;
+        default: break;
+        }
+    break;
+    default: break;
+    }
+  fprintf(stderr, "  [x] Error: PackByte!\n"); 
+  exit(1);
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
