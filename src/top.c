@@ -113,13 +113,18 @@ iPos, uint64_t ePos){
 
 void PrintTop(FILE *F, TOP *Top, uint32_t size){
   uint32_t n;
+  double pttmp;
   if(size > Top->size){
     fprintf(stderr, "  [x] Error: top is larger than size!\n");
     exit(1);
     }
-  for(n = 0 ; n < size ; ++n)
-    fprintf(F, "%u\t%"PRIu64"\t%6.3lf\t%s\n", n+1, Top->V[n].size, 
-    (1.0-Top->V[n].value)*100.0, Top->V[n].name);
+  for(n = 0 ; n < size ; ++n){
+    pttmp = (1.0-Top->V[n].value) * 100.0;
+    fprintf(F, "%u\t%"PRIu64"\t%6.3lf\t%s\n", n+1, Top->V[n].size, pttmp, 
+    Top->V[n].name);
+    if(pttmp == 0.0)
+      return;
+    }
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -127,14 +132,18 @@ void PrintTop(FILE *F, TOP *Top, uint32_t size){
 #ifdef LOCAL_SIMILARITY
 void PrintTopWP(FILE *F, TOP *Top, uint32_t size){
   uint32_t n;
+  double pttmp;
   if(size > Top->size){
     fprintf(stderr, "  [x] Error: top is larger than size!\n");
     exit(1);
     }
-  for(n = 0 ; n < size ; ++n)
+  for(n = 0 ; n < size ; ++n){
+    pttmp = (1.0-Top->V[n].value) * 100.0;
     fprintf(F, "%u\t%"PRIu64"\t%6.3lf\t%s\t%"PRIu64"\t%"PRIu64"\n", n+1,
-    Top->V[n].size, (1.0-Top->V[n].value)*100.0, Top->V[n].name,
-    Top->V[n].iPos, Top->V[n].ePos);
+    Top->V[n].size, pttmp, Top->V[n].name, Top->V[n].iPos, Top->V[n].ePos);
+    if(pttmp == 0.0)
+      return;
+    }
   }
 #endif
 
