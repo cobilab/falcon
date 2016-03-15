@@ -92,8 +92,9 @@ double BPBB(double bits, uint64_t nBase){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-unsigned QuadQuantization(double v){
-  if     (v >= 2.00) return 8;
+uint8_t QuadQuantization(double v){
+  if     (v >= 2.25) return 9;
+  else if(v >= 2.00) return 8;
   else if(v >= 1.75) return 7;
   else if(v >= 1.50) return 6;
   else if(v >= 1.25) return 5;
@@ -107,145 +108,148 @@ unsigned QuadQuantization(double v){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 uint8_t PackByte(double v, uint8_t sym){
+  //return QuadQuantization(v) * sym + SBASE;
   switch(sym){
-    case 0: 
+    case 0:
       switch(QuadQuantization(v)){
-        case 0: return 0x20;
-        case 1: return 0x21;
-        case 2: return 0x22;
-        case 3: return 0x23;
-        case 4: return 0x24;
-        case 5: return 0x25;
-        case 6: return 0x26;
-        case 7: return 0x27;
-        case 8: return 0x28;
-        case 9: return 0x29;
+        case 0: return 65; 
+        case 1: return 66;
+        case 2: return 67;
+        case 3: return 68;
+        case 4: return 69;
+        case 5: return 70;
+        case 6: return 71;
+        case 7: return 72;
+        case 8: return 73;
+        case 9: return 74;
         default: break;
         }
     break;
     case 1:
       switch(QuadQuantization(v)){
-        case 0: return 0x2A;
-        case 1: return 0x2B;
-        case 2: return 0x2C;
-        case 3: return 0x2D;
-        case 4: return 0x2E;
-        case 5: return 0x2F;
-        case 6: return 0x30;
-        case 7: return 0x31;
-        case 8: return 0x32;
-        case 9: return 0x33;
+        case 0: return 75;
+        case 1: return 76;
+        case 2: return 77;
+        case 3: return 78;
+        case 4: return 79;
+        case 5: return 80;
+        case 6: return 81;
+        case 7: return 82;
+        case 8: return 83;
+        case 9: return 84;
         default: break;
         }
     break;
     case 2:
       switch(QuadQuantization(v)){
-        case 0: return 0x34;
-        case 1: return 0x35;
-        case 2: return 0x36;
-        case 3: return 0x37;
-        case 4: return 0x38;
-        case 5: return 0x39;
-        case 6: return 0x3A;
-        case 7: return 0x3B;
-        case 8: return 0x3C;
-        case 9: return 0x3D;
+        case 0: return 85;
+        case 1: return 86;
+        case 2: return 87;
+        case 3: return 88;
+        case 4: return 89;
+        case 5: return 90;
+        // SKIP
+        case 6: return 97;
+        case 7: return 98;
+        case 8: return 99;
+        case 9: return 100;
         default: break;
         }
     break;
     case 3:
       switch(QuadQuantization(v)){
-        case 0: return 0x3E;
-        case 1: return 0x3F;
-        case 2: return 0x40;
-        case 3: return 0x41;
-        case 4: return 0x42;
-        case 5: return 0x43;
-        case 6: return 0x44;
-        case 7: return 0x45;
-        case 8: return 0x46;
-        case 9: return 0x47;
+        case 0: return 101;
+        case 1: return 102;
+        case 2: return 103;
+        case 3: return 104;
+        case 4: return 105;
+        case 5: return 106;
+        case 6: return 107;
+        case 7: return 108;
+        case 8: return 109;
+        case 9: return 110;
         default: break;
         }
     break;
     case 4:
       switch(QuadQuantization(v)){
-        case 0: return 0x48;
-        case 1: return 0x49;
-        case 2: return 0x4A;
-        case 3: return 0x4B;
-        case 4: return 0x4C;
-        case 5: return 0x4D;
-        case 6: return 0x4E;
-        case 7: return 0x4F;
-        case 8: return 0x50;
-        case 9: return 0x51;
+        case 0: return 111;
+        case 1: return 112;
+        case 2: return 113;
+        case 3: return 114;
+        case 4: return 115;
+        case 5: return 116;
+        case 6: return 117;
+        case 7: return 118;
+        case 8: return 119;
+        case 9: return 120;
         default: break;
         }
     break;
     default: break;
-    }
-  fprintf(stderr, "  [x] Error: PackByte!\n"); 
+    } 
+  fprintf(stderr, "  [x] Error: packing byte!\n");
   exit(1);
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void UnPackByte(SymValue *SM, uint8_t b){
   switch(b){
-    case 0x21: SM->sym = 0; SM->value = 0; break;
-    case 0x22: SM->sym = 0; SM->value = 1; break;
-    case 0x23: SM->sym = 0; SM->value = 2; break;
-    case 0x24: SM->sym = 0; SM->value = 3; break;
-    case 0x25: SM->sym = 0; SM->value = 4; break;
-    case 0x26: SM->sym = 0; SM->value = 5; break;
-    case 0x27: SM->sym = 0; SM->value = 6; break;
-    case 0x28: SM->sym = 0; SM->value = 7; break;
-    case 0x29: SM->sym = 0; SM->value = 8; break;
-    case 0x2A: SM->sym = 0; SM->value = 9; break;
-    case 0x2B: SM->sym = 1; SM->value = 0; break;
-    case 0x2C: SM->sym = 1; SM->value = 1; break;
-    case 0x2D: SM->sym = 1; SM->value = 2; break;
-    case 0x2E: SM->sym = 1; SM->value = 3; break;
-    case 0x2F: SM->sym = 1; SM->value = 4; break;
-    case 0x30: SM->sym = 1; SM->value = 5; break;
-    case 0x31: SM->sym = 1; SM->value = 6; break;
-    case 0x32: SM->sym = 1; SM->value = 7; break;
-    case 0x33: SM->sym = 1; SM->value = 8; break;
-    case 0x34: SM->sym = 1; SM->value = 9; break;
-    case 0x35: SM->sym = 2; SM->value = 0; break;
-    case 0x36: SM->sym = 2; SM->value = 1; break;
-    case 0x37: SM->sym = 2; SM->value = 2; break;
-    case 0x38: SM->sym = 2; SM->value = 3; break;
-    case 0x39: SM->sym = 2; SM->value = 4; break;
-    case 0x3A: SM->sym = 2; SM->value = 5; break;
-    case 0x3B: SM->sym = 2; SM->value = 6; break;
-    case 0x3C: SM->sym = 2; SM->value = 7; break;
-    case 0x3D: SM->sym = 2; SM->value = 8; break;
-    case 0x3E: SM->sym = 2; SM->value = 9; break;
-    case 0x3F: SM->sym = 3; SM->value = 0; break;
-    case 0x40: SM->sym = 3; SM->value = 1; break;
-    case 0x41: SM->sym = 3; SM->value = 2; break;
-    case 0x42: SM->sym = 3; SM->value = 3; break;
-    case 0x43: SM->sym = 3; SM->value = 4; break;
-    case 0x44: SM->sym = 3; SM->value = 5; break;
-    case 0x45: SM->sym = 3; SM->value = 6; break;
-    case 0x46: SM->sym = 3; SM->value = 7; break;
-    case 0x47: SM->sym = 3; SM->value = 8; break;
-    case 0x48: SM->sym = 3; SM->value = 9; break;
-    case 0x49: SM->sym = 4; SM->value = 0; break;
-    case 0x4A: SM->sym = 4; SM->value = 1; break;
-    case 0x4B: SM->sym = 4; SM->value = 2; break;
-    case 0x4C: SM->sym = 4; SM->value = 3; break;
-    case 0x4D: SM->sym = 4; SM->value = 4; break;
-    case 0x4E: SM->sym = 4; SM->value = 5; break;
-    case 0x4F: SM->sym = 4; SM->value = 6; break;
-    case 0x50: SM->sym = 4; SM->value = 7; break;
-    case 0x51: SM->sym = 4; SM->value = 8; break;
-    case 0x52: SM->sym = 4; SM->value = 9; break;
+    case '\n': SM->sym = 5; SM->value = 8; break;
+    case 65  : SM->sym = 0; SM->value = 0; break;
+    case 66  : SM->sym = 0; SM->value = 1; break;
+    case 67  : SM->sym = 0; SM->value = 2; break;
+    case 68  : SM->sym = 0; SM->value = 3; break;
+    case 69  : SM->sym = 0; SM->value = 4; break;
+    case 70  : SM->sym = 0; SM->value = 5; break;
+    case 71  : SM->sym = 0; SM->value = 6; break;
+    case 72  : SM->sym = 0; SM->value = 7; break;
+    case 73  : SM->sym = 0; SM->value = 8; break;
+    case 74  : SM->sym = 0; SM->value = 9; break;
+    case 75  : SM->sym = 1; SM->value = 0; break;
+    case 76  : SM->sym = 1; SM->value = 1; break;
+    case 77  : SM->sym = 1; SM->value = 2; break;
+    case 78  : SM->sym = 1; SM->value = 3; break;
+    case 79  : SM->sym = 1; SM->value = 4; break;
+    case 80  : SM->sym = 1; SM->value = 5; break;
+    case 81  : SM->sym = 1; SM->value = 6; break;
+    case 82  : SM->sym = 1; SM->value = 7; break;
+    case 83  : SM->sym = 1; SM->value = 8; break;
+    case 84  : SM->sym = 1; SM->value = 9; break;
+    case 85  : SM->sym = 2; SM->value = 0; break;
+    case 86  : SM->sym = 2; SM->value = 1; break;
+    case 87  : SM->sym = 2; SM->value = 2; break;
+    case 88  : SM->sym = 2; SM->value = 3; break;
+    case 89  : SM->sym = 2; SM->value = 4; break;
+    case 90  : SM->sym = 2; SM->value = 5; break;
+    // SKIP ID
+    case 97  : SM->sym = 2; SM->value = 6; break;
+    case 98  : SM->sym = 2; SM->value = 7; break;
+    case 99  : SM->sym = 2; SM->value = 8; break;
+    case 100 : SM->sym = 2; SM->value = 9; break;
+    case 101 : SM->sym = 3; SM->value = 0; break;
+    case 102 : SM->sym = 3; SM->value = 1; break;
+    case 103 : SM->sym = 3; SM->value = 2; break;
+    case 104 : SM->sym = 3; SM->value = 3; break;
+    case 105 : SM->sym = 3; SM->value = 4; break;
+    case 106 : SM->sym = 3; SM->value = 5; break;
+    case 107 : SM->sym = 3; SM->value = 6; break;
+    case 108 : SM->sym = 3; SM->value = 7; break;
+    case 109 : SM->sym = 3; SM->value = 8; break;
+    case 110 : SM->sym = 3; SM->value = 9; break;
+    case 111 : SM->sym = 4; SM->value = 0; break;
+    case 112 : SM->sym = 4; SM->value = 1; break;
+    case 113 : SM->sym = 4; SM->value = 2; break;
+    case 114 : SM->sym = 4; SM->value = 3; break;
+    case 115 : SM->sym = 4; SM->value = 4; break;
+    case 116 : SM->sym = 4; SM->value = 5; break;
+    case 117 : SM->sym = 4; SM->value = 6; break;
+    case 118 : SM->sym = 4; SM->value = 7; break;
+    case 119 : SM->sym = 4; SM->value = 8; break;
+    case 120 : SM->sym = 4; SM->value = 9; break;
     default: fprintf(stderr, "  [x] Error: unpacking byte!\n");
     exit(1);
     }
-  return;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

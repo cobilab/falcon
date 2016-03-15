@@ -87,8 +87,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
         if(sym == '\n') continue;  // SKIP '\n' IN FASTA
 
         if((sym = DNASymToNum(sym)) == 4){
-          fprintf(OUT, "%u", QuadQuantization(2.0)); // PRINT AS UPPER BOUND
-          //fprintf(OUT, "%c", PackByte(2.0, sym)); // PRINT COMPLEXITY VALUE
+          fprintf(OUT, "%c", PackByte(2.0, sym)); // PRINT COMPLEXITY & SYM IN1
           continue; // IT IGNORES EXTRA SYMBOLS
           }
 
@@ -115,8 +114,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
         ComputeMXProbs(PT, MX);
         instant = PModelSymbolLog(MX, sym);
         bits += instant;
-        fprintf(OUT, "%u", QuadQuantization(instant)); // PRINT COMPLEXITY VALUE
-        //fprintf(OUT, "%c", PackByte(instant, sym)); // PRINT COMPLEXITY VALUE
+        fprintf(OUT, "%c", PackByte(instant, sym)); // PRINT COMPLEX & SYM IN1
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
