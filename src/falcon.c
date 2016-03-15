@@ -817,7 +817,7 @@ int32_t main(int argc, char *argv[]){
     #endif
     }
   else{
-    fprintf(stderr, "  [+] Top results have been sent to file.\n");
+    fprintf(stderr, "Top results have been sent to file.\n");
     }
   fprintf(stderr, "\n");
 
