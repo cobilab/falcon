@@ -40,6 +40,8 @@ void FilterStream(FILTER *FIL, FILE *OUT){
       if((val = Mean(FIL, n)) >= FIL->threshold){
         if(region == LOW_REGION){
           region = HIGH_REGION;
+          // TODO: EVALUATE SELF-SIMILARITY OF LOW REGION
+          // cmp = SelfSimilarity(FIL->bases, initPosition, n);
           fprintf(OUT, "%"PRIu64":%"PRIu64"\t%u\n", initPosition, n, cmp);
           }
         }
@@ -53,8 +55,11 @@ void FilterStream(FILTER *FIL, FILE *OUT){
       }
     }
 
-  if(region == LOW_REGION)
+  if(region == LOW_REGION){
+    // TODO: EVALUATE SELF-SIMILARITY OF LOW REGION
+    // cmp = SelfSimilarity(FIL->bases, initPosition, n);
     fprintf(OUT, "%"PRIu64":%"PRIu64"\t%u\n", initPosition, lastPosition, cmp);
+    }
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
