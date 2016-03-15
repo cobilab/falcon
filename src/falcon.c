@@ -806,7 +806,7 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "\n");
 
   fprintf(stderr, "==[ RESULTS ]=======================\n");
-  if(P->verbose && topSize <= 100){
+  if(topSize <= 100){
     #ifdef LOCAL_SIMILARITY
     if(P->local == 1)
       PrintTopInfoWP(P->top, topSize);
@@ -815,6 +815,9 @@ int32_t main(int argc, char *argv[]){
     #else
     PrintTopInfo(P->top, topSize);
     #endif
+    }
+  else{
+    fprintf(stderr, "  [+] Top results have been sent to file.\n");
     }
   fprintf(stderr, "\n");
 
