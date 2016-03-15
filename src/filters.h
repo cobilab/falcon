@@ -17,7 +17,8 @@ typedef struct{
   int64_t  size;
   int64_t  drop;
   int64_t  nEntries;
-  double   *entries;
+  double   *entries; // TODO: SET PRECISION WITH MACRO
+  uint8_t  *bases;
   double   *weights;
   double   threshold;
   uint8_t  type;

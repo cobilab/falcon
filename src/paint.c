@@ -122,7 +122,8 @@ double GetPoint(Painter *Paint, uint64_t p){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Painter *CreatePainter(double size, double width, double space, char *color){
+Painter *CreatePainter(double size, double width, double space, double 
+proportion, char *color){
   Painter *P    = (Painter *) Malloc(sizeof(Painter));  
   P->backColor  = color;
   P->cx         = DEFAULT_CX;
@@ -131,7 +132,7 @@ Painter *CreatePainter(double size, double width, double space, char *color){
   P->ty         = DEFAULT_TY;
   P->width      = width; 
   P->space      = space;
-  P->scale      = (double) size / 400;
+  P->scale      = (double) size / proportion;
   P->size       = GetPoint(P, size);
   return P;
   }

@@ -54,7 +54,7 @@ HsvColor;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 char      *HeatMapColor  (double, char *, COLORS *);
-Painter   *CreatePainter (double, double, double, char *);
+Painter   *CreatePainter (double, double, double, double, char *);
 void      RemovePainter  (Painter *);
 RgbColor  HsvToRgb       (HsvColor);
 HsvColor  RgbToHsv       (RgbColor);

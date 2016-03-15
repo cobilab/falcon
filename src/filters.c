@@ -90,7 +90,8 @@ void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
   uint64_t idx;
   SymValue *SM  = Calloc(1, sizeof(SymValue));
   FIL->nEntries = nEntries;
-  FIL->entries  = (double *) Malloc(FIL->nEntries * sizeof(double)); 
+  FIL->entries  = (double  *) Malloc(FIL->nEntries * sizeof(double )); 
+  FIL->bases    = (uint8_t *) Malloc(FIL->nEntries * sizeof(uint8_t)); 
   for(idx = 0 ; idx < FIL->nEntries ; ++idx){
     c = fgetc(INPUT);
     if(c == EOF || c == '\n'){
@@ -98,7 +99,8 @@ void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
       exit(1);
       }
     UnPackByte(SM, c);
-    FIL->entries[idx] = (double) SM->value * 0.25;
+    FIL->bases  [idx] = (uint8_t) SM->sym;
+    FIL->entries[idx] = (double)  SM->value * 0.25;
     }
   Free(SM);
   }
@@ -107,7 +109,9 @@ void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
 
 void DeleteEntries(FILTER *FIL){
   Free(FIL->entries);
+  Free(FIL->bases);
   FIL->entries = NULL;
+  FIL->bases   = NULL;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -122,6 +126,7 @@ threshold){
   FIL->weights   = (double *) Malloc((2*FIL->size+1) * sizeof(double));
   InitWeights(FIL);
   FIL->entries   = NULL;
+  FIL->bases     = NULL;
   return FIL;
   }
 
@@ -131,6 +136,8 @@ void DeleteFilter(FILTER *FIL){
   Free(FIL->weights);
   if(FIL->entries != NULL)
     Free(FIL->entries);
+  if(FIL->bases   != NULL)
+    Free(FIL->bases);
   Free(FIL);
   }
 

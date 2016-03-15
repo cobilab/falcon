@@ -871,6 +871,8 @@ void PrintArgsEye(EYEPARAM *PEYE){
   PEYE->rotations);
   fprintf(stderr, "  [+] Hue .......................... %.3g\n", PEYE->hue);
   fprintf(stderr, "  [+] Gamma ........................ %.3g\n", PEYE->gamma);
+  fprintf(stderr, "  [+] Proportion ................... %.3g\n", 
+  PEYE->proportion);
   fprintf(stderr, "  [+] Enlarge ...................... %"PRIu64"\n", 
   PEYE->enlarge);
   fprintf(stderr, "Output visual filename ............. %s\n",  PEYE->output);

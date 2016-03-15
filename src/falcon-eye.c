@@ -46,26 +46,27 @@ int32_t main(int argc, char *argv[]){
     return EXIT_SUCCESS;
     }
 
-  PEYE->verbose   = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
-  PEYE->force     = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
-  PEYE->width     = ArgsDouble (DEFAULT_WIDTH,   p, argc, "-w");
-  PEYE->space     = ArgsDouble (DEFAULT_SPACE,   p, argc, "-s");
-  PEYE->showScale = ArgsState  (DEFAULT_SHOWS,   p, argc, "-ss");
-  PEYE->showNames = ArgsState  (DEFAULT_NAMES,   p, argc, "-sn");
-  PEYE->sameScale = ArgsState  (DEFAULT_RSCAL,   p, argc, "-rs");
-  PEYE->start     = ArgsDouble (0.35,            p, argc, "-i");
-  PEYE->rotations = ArgsDouble (1.50,            p, argc, "-r");
-  PEYE->hue       = ArgsDouble (1.92,            p, argc, "-u");
-  PEYE->gamma     = ArgsDouble (0.50,            p, argc, "-g");
-  PEYE->lowerSimi = ArgsDouble (0.00,            p, argc, "-sl");
-  PEYE->upperSimi = ArgsDouble (100.00,          p, argc, "-su");
-  PEYE->lowerSize = ArgsNum64  (1,               p, argc, "-dl", 1, 
+  PEYE->verbose    = ArgsState  (DEFAULT_VERBOSE, p, argc, "-v");
+  PEYE->force      = ArgsState  (DEFAULT_FORCE,   p, argc, "-F");
+  PEYE->width      = ArgsDouble (DEFAULT_WIDTH,   p, argc, "-w");
+  PEYE->space      = ArgsDouble (DEFAULT_SPACE,   p, argc, "-s");
+  PEYE->showScale  = ArgsState  (DEFAULT_SHOWS,   p, argc, "-ss");
+  PEYE->showNames  = ArgsState  (DEFAULT_NAMES,   p, argc, "-sn");
+  PEYE->sameScale  = ArgsState  (DEFAULT_RSCAL,   p, argc, "-rs");
+  PEYE->start      = ArgsDouble (0.35,            p, argc, "-i");
+  PEYE->rotations  = ArgsDouble (1.50,            p, argc, "-r");
+  PEYE->hue        = ArgsDouble (1.92,            p, argc, "-u");
+  PEYE->gamma      = ArgsDouble (0.50,            p, argc, "-g");
+  PEYE->proportion = ArgsDouble (500,             p, argc, "-p");
+  PEYE->lowerSimi  = ArgsDouble (0.00,            p, argc, "-sl");
+  PEYE->upperSimi  = ArgsDouble (100.00,          p, argc, "-su");
+  PEYE->lowerSize  = ArgsNum64  (1,               p, argc, "-dl", 1, 
   9999999999);
-  PEYE->upperSize = ArgsNum64  (9999999999,      p, argc, "-du", 1, 
+  PEYE->upperSize  = ArgsNum64  (9999999999,      p, argc, "-du", 1, 
   9999999999);
-  PEYE->enlarge   = ArgsNum64  (0,               p, argc, "-e",  0, 
+  PEYE->enlarge    = ArgsNum64  (0,               p, argc, "-e",  0, 
   9999999999);
-  PEYE->output    = ArgsFileGen(p, argc, "-o", "femap", ".svg");
+  PEYE->output     = ArgsFileGen(p, argc, "-o", "femap", ".svg");
 
   if(!PEYE->force) 
     FAccessWPerm(PEYE->output);
@@ -112,7 +113,8 @@ int32_t main(int argc, char *argv[]){
     }
   rewind(INPUT);
 
-  Paint = CreatePainter(maxSize, PEYE->width, PEYE->space, "#ffffff");
+  Paint = CreatePainter(maxSize, PEYE->width, PEYE->space, PEYE->proportion, 
+  "#ffffff");
 
   extraLength = 0;
   if(PEYE->showNames == 1){

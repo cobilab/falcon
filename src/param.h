@@ -80,6 +80,7 @@ typedef struct{
   int      windowType;
   int64_t  sampling;
   double   threshold;
+  double   proportion;
   int64_t  enlarge;
   U8       showScale;
   U8       showNames;
