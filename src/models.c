@@ -514,16 +514,45 @@ double PModelSymbolLog(PModel *P, U32 s){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int SelfSimilarity(uint8_t *seq, uint64_t init, uint64_t end){
-  uint64_t n, similarity = 0, bases = 0, bits = 0;
+  uint64_t n, bases = 0;
+  double   bits = 0;
+  CBUF     *symBuf  = CreateCBuffer(BUFFER_SIZE, BGUARD);
+  uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t));
+  uint8_t  sym, irSym = 0;
+  CModel   *CM = CreateCModel(13, 1, 1, 1, 0, 0, 0);
+  PModel   *PM = CreatePModel(ALPHABET_SIZE);
   
-  for(n = init ; n <= end ; ++n){
+  for(n = init-1 ; n < end ; ++n){
+    symBuf->buf[symBuf->idx] = sym = seq[n];
 
-    //seq[n]  
+    if(sym == 4){ // IF EXIST: SKIP OTHER CHARS
+      bits += 2.0;
+      ++bases;
+      continue;
+      }
 
+    GetPModelIdx(symBuf->buf+symBuf->idx-1, CM);
+    if(CM->ir == 1) // INVERTED REPEATS
+      irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, CM);
 
+    ComputePModel(CM, PM, CM->pModelIdx, CM->alphaDen);
+    bits += PModelSymbolLog(PM, sym);
+
+    if(bases >= CM->ctx){
+      UpdateCModelCounter(CM, sym, CM->pModelIdx);
+      if(CM->ir == 1) // INVERTED REPEATS
+        UpdateCModelCounter(CM, irSym, CM->pModelIdxIR);
+      }
+
+    ++bases;
     }
 
-  return similarity;
+  FreeCModel(CM);  
+  RemovePModel(PM);
+  RemoveCBuffer(symBuf);
+  Free(readBuf);
+
+  return bits / 2 > bases ? 1 : 0; // 1-COMPLEX, 0-LOWCOMPLEX
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
