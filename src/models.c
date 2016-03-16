@@ -8,20 +8,6 @@
 #include "common.h"
 #include "models.h"
 
-/*
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-static uint64_t XHASH(uint64_t x){
-  return (x * 786433 + 196613) % 68719476735;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-static uint64_t YHASH(uint64_t y){
-  return (y * 786491 + 216617) % 66719476787;
-  }
-*/
-
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 static uint64_t ZHASH(uint64_t z){
@@ -523,6 +509,21 @@ inline void ComputeWeightedFreqs(double w, PModel *P, FloatPModel *PT){
 double PModelSymbolLog(PModel *P, U32 s){
   // TODO: LOG_2 FAST ?
   return log((double) P->sum / P->freqs[s]) / M_LN2;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+int SelfSimilarity(uint8_t *seq, uint64_t init, uint64_t end){
+  uint64_t n, similarity = 0, bases = 0, bits = 0;
+  
+  for(n = init ; n <= end ; ++n){
+
+    //seq[n]  
+
+
+    }
+
+  return similarity;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

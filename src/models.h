@@ -125,6 +125,7 @@ void            CorrectXModels       (CModel **, PModel **, uint8_t);
 void            RenormalizeWeights   (CMWeight *);
 void            CalcDecayment        (CMWeight *, PModel **, uint8_t, double);
 void            DeleteWeightModel    (CMWeight *);
+int             SelfSimilarity       (uint8_t *, uint64_t, uint64_t);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
