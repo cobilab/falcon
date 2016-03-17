@@ -148,13 +148,16 @@ int32_t main(int argc, char *argv[]){
     Rect(OUTPUT, Paint->width, Paint->width, Paint->cx - (Paint->width*2), 
     Paint->cy + Paint->width + size, GetRgbColor(HIGH_COMPLEX));
     Text(OUTPUT, Paint->cx-(Paint->width*2 + 14), (Paint->cy+Paint->width+size)+(Paint->width/2)+5, "+");
-    // MEDIUM COMPLEX SCALE
+    // MEDIUMH COMPLEX SCALE
     Rect(OUTPUT, Paint->width, Paint->width, Paint->cx - (Paint->width*2),
-    Paint->cy + 2*Paint->width + size, GetRgbColor(MEDIUM_COMPLEX));
+    Paint->cy + 2*Paint->width + size, GetRgbColor(MEDIUMH_COMPLEX));
+    // MEDIUML COMPLEX SCALE
+    Rect(OUTPUT, Paint->width, Paint->width, Paint->cx - (Paint->width*2),
+    Paint->cy + 3*Paint->width + size, GetRgbColor(MEDIUML_COMPLEX));
     // LOW COMPLEX SCALE
     Rect(OUTPUT, Paint->width, Paint->width, Paint->cx - (Paint->width*2), 
-    Paint->cy + 3*Paint->width + size, GetRgbColor(LOW_COMPLEX));
-    Text(OUTPUT, Paint->cx-(Paint->width*2 + 12), (Paint->cy+3*Paint->width+size)+(Paint->width/2)+4, "-");
+    Paint->cy + 4*Paint->width + size, GetRgbColor(LOW_COMPLEX));
+    Text(OUTPUT, Paint->cx-(Paint->width*2 + 12), (Paint->cy+4*Paint->width+size)+(Paint->width/2)+4, "-");
     }
 
   while((sym = fgetc(INPUT)) != EOF){
@@ -207,9 +210,10 @@ int32_t main(int argc, char *argv[]){
         else{
           int color = 0;
           switch(cmp){
-            case 0: color = LOW_COMPLEX;    break;
-            case 1: color = MEDIUM_COMPLEX; break;
-            case 2: color = HIGH_COMPLEX;   break;
+            case 0: color = LOW_COMPLEX;     break;
+            case 1: color = MEDIUML_COMPLEX; break;
+            case 2: color = MEDIUMH_COMPLEX; break;
+            case 3: color = HIGH_COMPLEX;    break;
             default: color = 0;
             }
           if(PEYE->enlarge == 0){

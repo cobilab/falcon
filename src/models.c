@@ -519,7 +519,7 @@ int SelfSimilarity(uint8_t *seq, uint64_t init, uint64_t end){
   CBUF     *symBuf  = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t));
   uint8_t  sym, irSym = 0;
-  CModel   *CM = CreateCModel(13, 1, 1, 1, 0, 0, 0);
+  CModel   *CM = CreateCModel(13, 10, 1, 1, 0, 0, 0);
   PModel   *PM = CreatePModel(ALPHABET_SIZE);
   
   for(n = init-1 ; n < end ; ++n){
@@ -547,19 +547,22 @@ int SelfSimilarity(uint8_t *seq, uint64_t init, uint64_t end){
     ++bases;
     }
 
+  if(bases > CM->ctx)  // FOR SHORT PIECES IGNORE CTX
+    bases -= CM->ctx;
+
   FreeCModel(CM);  
   RemovePModel(PM);
   RemoveCBuffer(symBuf);
   Free(readBuf);
 
   if(bits / 2 > bases)
+    return 3;
+  else if (bits > bases + (bases / 4))
     return 2;
   else if (bits > bases)
     return 1;
   else
     return 0;
-
-  //return bits > bases ? 1 : 0; // 1-COMPLEX, 0-LOWCOMPLEX
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
