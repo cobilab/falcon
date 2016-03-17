@@ -535,10 +535,9 @@ int SelfSimilarity(uint8_t *seq, uint64_t init, uint64_t end){
     if(CM->ir == 1) // INVERTED REPEATS
       irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, CM);
 
-    ComputePModel(CM, PM, CM->pModelIdx, CM->alphaDen);
-    bits += PModelSymbolLog(PM, sym);
-
     if(bases >= CM->ctx){
+      ComputePModel(CM, PM, CM->pModelIdx, CM->alphaDen);
+      bits += PModelSymbolLog(PM, sym);
       UpdateCModelCounter(CM, sym, CM->pModelIdx);
       if(CM->ir == 1) // INVERTED REPEATS
         UpdateCModelCounter(CM, irSym, CM->pModelIdxIR);
@@ -556,9 +555,9 @@ int SelfSimilarity(uint8_t *seq, uint64_t init, uint64_t end){
   Free(readBuf);
 
   double bavg = bits / bases;
-  if      (bavg > 2.0) return 0;
-  else if (bavg > 1.5) return 1;
-  else if (bavg > 1.0) return 2;
+  if      (bavg > 1.9) return 0;
+  else if (bavg > 1.7) return 1;
+  else if (bavg > 1.2) return 2;
   else                 return 3;
   }
 
