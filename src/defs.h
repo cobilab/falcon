@@ -37,7 +37,7 @@ typedef int8_t   I8;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #define LOW_COMPLEX            10 //150  // BLUE
-#define MEDIUML_COMPLEX        110  // ?
+#define MEDIUML_COMPLEX        40  // ?
 #define MEDIUMH_COMPLEX        135  // ?
 #define HIGH_COMPLEX           155//10    // RED
 #define SBASE                  65

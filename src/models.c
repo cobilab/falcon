@@ -555,14 +555,11 @@ int SelfSimilarity(uint8_t *seq, uint64_t init, uint64_t end){
   RemoveCBuffer(symBuf);
   Free(readBuf);
 
-  if(bits / 2 > bases)
-    return 3;
-  else if (bits > bases + (bases / 4))
-    return 2;
-  else if (bits > bases)
-    return 1;
-  else
-    return 0;
+  double bavg = bits / bases;
+  if      (bavg > 2.0) return 0;
+  else if (bavg > 1.5) return 1;
+  else if (bavg > 1.0) return 2;
+  else                 return 3;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
