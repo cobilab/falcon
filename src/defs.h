@@ -36,6 +36,9 @@ typedef int8_t   I8;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+#define LOW_COMPLEX            150  // BLUE
+#define MEDIUM_COMPLEX         66   // ?
+#define HIGH_COMPLEX           4    // RED
 #define SBASE                  65
 #define LOCAL_SIMILARITY       1
 #define MAX_LABEL              1024

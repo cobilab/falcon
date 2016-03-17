@@ -552,7 +552,14 @@ int SelfSimilarity(uint8_t *seq, uint64_t init, uint64_t end){
   RemoveCBuffer(symBuf);
   Free(readBuf);
 
-  return bits / 2 > bases ? 1 : 0; // 1-COMPLEX, 0-LOWCOMPLEX
+  if(bits / 2 > bases)
+    return 2;
+  else if (bits > bases)
+    return 1;
+  else
+    return 0;
+
+  //return bits > bases ? 1 : 0; // 1-COMPLEX, 0-LOWCOMPLEX
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
