@@ -77,7 +77,7 @@ void PrintMenuFilter(void){
 void PrintMenuEye(void){
   fprintf(stderr,
   "Usage: FALCON-EYE [OPTION]... [FILE]                                     \n"
-  "Visualize FALCON output.                                                 \n"
+  "Visualize FALCON-FILTER output.                                          \n"
   "                                                                         \n"
   "Non-mandatory arguments:                                                 \n"
   "                                                                         \n"

@@ -198,7 +198,7 @@ These will print the following options:
 <pre>
 <p>
 Usage: FALCON-EYE [OPTION]... [FILE]                                     
-Vizualise FALCON output.                                                 
+Vizualise FALCON-FILTER output.                                                 
                                                                          
 Non-mandatory arguments:                                                 
                                                                          

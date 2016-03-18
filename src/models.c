@@ -555,10 +555,10 @@ int SelfSimilarity(uint8_t *seq, uint64_t init, uint64_t end){
   Free(readBuf);
 
   double bavg = bits / bases;
-  if      (bavg > 1.9) return 0;
-  else if (bavg > 1.7) return 1;
-  else if (bavg > 1.2) return 2;
-  else                 return 3;
+  if      (bavg > 1.95) return 0;
+  else if (bavg > 1.60) return 1;
+  else if (bavg > 1.25) return 2;
+  else                  return 3;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
