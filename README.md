@@ -182,7 +182,7 @@ All the parameters can be better explained trough the following table:
 | -x &#60;sampling&#62;      | Filtering window sampling (it will drop this number of bases).          |
 | -t &#60;threshold&#62;      | Threshold to segment regions of similarity [0;2].              |
 | -o &#60;FILE&#62;     | Output filename to be, for example, computed in FALCON-EYE. It contains the local positions with the intervals describing similarity. |
-| [FILE]           | Profile filename given by the output of FALCON (option: &#60;FILE&#62;). |
+| [FILE]           | Profile filename given by the output of FALCON (option:-Z -y &#60;FILE&#62;). |
 
 #### Visualization
 
