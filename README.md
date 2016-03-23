@@ -228,7 +228,29 @@ Mandatory arguments:
 Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
 </pre>
 
+All the parameters can be better explained trough the following table:
 
+| Parameters          | Meaning                                                     |
+|---------------------|:------------------------------------------------------------|
+| -h                  | It will print the parameters menu (help menu)                                        |
+| -F                  | It will use the force mode, namely overwriting the output top file.                                        |
+| -V                  | It will print the FALCON version number, license type and authors.    |
+| -v                  | It will print progress information.    |
+| -w &#60;width&#62;      | square width.              |
+| -s &#60;iSpace&#62;      | space between squares.              |
+| -i &#60;indexs&#62;      | color index start.              |
+| -r &#60;indexr&#62;      | color index rotations.              |
+| -u &#60;hue&#62;      | color hue.              |
+| -g &#60;color&#62;      | color gamma.              |
+| -sl &#60;lower&#62;      | similarity lower bound.              |
+| -su &#60;upper&#62;      | similarity upper bound.              |
+| -dl &#60;lower&#62;      | size lower bound.              |
+| -du &#60;upper&#62;      | size upper bound.              |
+| -e &#60;size&#62;      | enlarge painter local regions.              |
+| -ss                    | Does not show global scale.              |
+| -sn                    | Does not show names.             |
+| -o &#60;FILE&#62;     | Output SVG image filename. |
+| [FILE]           | Profile filename given by the output of FALCON-FILTER. |
 
 ## CITATION ##
 
