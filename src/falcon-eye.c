@@ -135,19 +135,20 @@ int32_t main(int argc, char *argv[]){
     nSeq -= 2;
     Paint->cx += (2 * Paint->width + PEYE->space);
     // PRINT HEATMAP SCALE
-    uint32_t size = Paint->cx + Paint->width;
+    uint32_t size = 4 * Paint->width;
     for(n = 0 ; n < size ; ++n){
       char color[12];
       Rect(OUTPUT, Paint->width, 1, Paint->cx - (Paint->width*2), 
       Paint->cy + n, HeatMapColor(((double) n / size), color, CLR));
       }
-    Text(OUTPUT, Paint->cx-(Paint->width*2 + 14), Paint->cy+13,   "+");
-    Text(OUTPUT, Paint->cx-(Paint->width*2 + 12), Paint->cy+size, "-");
+    Text(OUTPUT, Paint->cx-(Paint->width*2 + 14), Paint->cy+18,     "+");
+    Text(OUTPUT, Paint->cx-(Paint->width*2 + 12), Paint->cy+size-6, "-");
 
     // HIGH COMPLEX SCALE
     Rect(OUTPUT, Paint->width, Paint->width, Paint->cx - (Paint->width*2), 
     Paint->cy + Paint->width + size, GetRgbColor(HIGH_COMPLEX));
-    Text(OUTPUT, Paint->cx-(Paint->width*2 + 14), (Paint->cy+Paint->width+size)+(Paint->width/2)+5, "+");
+    Text(OUTPUT, Paint->cx-(Paint->width*2 + 14), (Paint->cy+Paint->width+size)
+    +(Paint->width/2)+5, "+");
     // MEDIUMH COMPLEX SCALE
     Rect(OUTPUT, Paint->width, Paint->width, Paint->cx - (Paint->width*2),
     Paint->cy + 2*Paint->width + size, GetRgbColor(MEDIUMH_COMPLEX));
@@ -157,7 +158,8 @@ int32_t main(int argc, char *argv[]){
     // LOW COMPLEX SCALE
     Rect(OUTPUT, Paint->width, Paint->width, Paint->cx - (Paint->width*2), 
     Paint->cy + 4*Paint->width + size, GetRgbColor(LOW_COMPLEX));
-    Text(OUTPUT, Paint->cx-(Paint->width*2 + 12), (Paint->cy+4*Paint->width+size)+(Paint->width/2)+4, "-");
+    Text(OUTPUT, Paint->cx-(Paint->width*2+12), (Paint->cy+4*Paint->width+size)
+    +(Paint->width/2)+4, "-");
     }
 
   while((sym = fgetc(INPUT)) != EOF){
