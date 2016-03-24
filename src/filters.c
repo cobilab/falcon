@@ -11,9 +11,9 @@
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-static double Mean(FILTER *FIL, int64_t n){
+static ENTP Mean(FILTER *FIL, int64_t n){
   int64_t k, s;
-  double  sum = 0, wSum = 0, tmp;
+  ENTP sum = 0, wSum = 0, tmp;
 
   for(k = -FIL->size ; k <= FIL->size ; ++k){
     s = n+k;
@@ -30,7 +30,7 @@ static double Mean(FILTER *FIL, int64_t n){
 
 void FilterStream(FILTER *FIL, FILE *OUT){
   int64_t  n = 1;
-  double   val = Mean(FIL, 0);
+  ENTP     val = Mean(FIL, 0);
   int      region = val < FIL->threshold ? LOW_REGION : HIGH_REGION, cmp = 0;
   uint64_t initPosition = 1;
   uint64_t lastPosition = n;
@@ -94,7 +94,7 @@ void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
   uint64_t idx;
   SymValue *SM  = Calloc(1, sizeof(SymValue));
   FIL->nEntries = nEntries;
-  FIL->entries  = (double  *) Malloc(FIL->nEntries * sizeof(double )); 
+  FIL->entries  = (ENTP    *) Malloc(FIL->nEntries * sizeof(ENTP   )); 
   FIL->bases    = (uint8_t *) Malloc(FIL->nEntries * sizeof(uint8_t)); 
   for(idx = 0 ; idx < FIL->nEntries ; ++idx){
     c = fgetc(INPUT);
@@ -104,7 +104,7 @@ void InitEntries(FILTER *FIL, uint64_t nEntries, FILE *INPUT){
       }
     UnPackByte(SM, c);
     FIL->bases  [idx] = (uint8_t) SM->sym;
-    FIL->entries[idx] = (double)  SM->value * 0.25;
+    FIL->entries[idx] = (ENTP)    SM->value * 0.25;
     }
   Free(SM);
   }
@@ -127,7 +127,7 @@ threshold){
   FIL->drop      = drop;
   FIL->type      = type;
   FIL->threshold = threshold;
-  FIL->weights   = (double *) Malloc((2*FIL->size+1) * sizeof(double));
+  FIL->weights   = (ENTP *) Malloc((2*FIL->size+1) * sizeof(ENTP));
   InitWeights(FIL);
   FIL->entries   = NULL;
   FIL->bases     = NULL;

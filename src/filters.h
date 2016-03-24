@@ -11,15 +11,17 @@
 #define LOW_REGION    0
 #define HIGH_REGION   1
 
+typedef double ENTP;
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 typedef struct{
   int64_t  size;
   int64_t  drop;
   int64_t  nEntries;
-  double   *entries; // TODO: SET PRECISION WITH MACRO
+  ENTP     *entries;
   uint8_t  *bases;
-  double   *weights;
+  ENTP     *weights;
   double   threshold;
   uint8_t  type;
   }
