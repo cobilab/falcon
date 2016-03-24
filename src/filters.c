@@ -14,7 +14,6 @@
 static ENTP Mean(FILTER *FIL, int64_t n){
   int64_t k, s;
   ENTP sum = 0, wSum = 0, tmp;
-
   for(k = -FIL->size ; k <= FIL->size ; ++k){
     s = n+k;
     if(s >= 0 && s < FIL->nEntries){
@@ -22,7 +21,6 @@ static ENTP Mean(FILTER *FIL, int64_t n){
       wSum += tmp;
       }
     }
-  
   return sum/wSum;
   }
 
@@ -34,10 +32,8 @@ void FilterStream(FILTER *FIL, FILE *OUT){
   int      region = val < FIL->threshold ? LOW_REGION : HIGH_REGION, cmp = 0;
   uint64_t initPosition = 1;
   uint64_t lastPosition = n;
-
   for(n = 1 ; n < FIL->nEntries ; ++n){
     if(n % FIL->drop == 0){
-      //fprintf(OUT, "%"PRIu64"\t%.2lf\n", n, Mean(FIL, n));
       if((val = Mean(FIL, n)) >= FIL->threshold){
         if(region == LOW_REGION){
           region = HIGH_REGION;
@@ -54,7 +50,6 @@ void FilterStream(FILTER *FIL, FILE *OUT){
       lastPosition = n;
       }
     }
-
   if(region == LOW_REGION){
     cmp = SelfSimilarity(FIL->bases, initPosition, n);
     fprintf(OUT, "%"PRIu64":%"PRIu64"\t%u\n", initPosition, lastPosition, cmp);
@@ -65,7 +60,6 @@ void FilterStream(FILTER *FIL, FILE *OUT){
 
 void InitWeights(FILTER *FIL){
   int64_t k, sizedb = 2 * FIL->size + 1;
-
   switch(FIL->type){
     case W_HAMMING:
       for(k = -FIL->size ; k <= FIL->size ; ++k)
