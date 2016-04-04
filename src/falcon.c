@@ -439,7 +439,7 @@ void DoubleCompressTarget(Threads T){
                 ComputeMXProbs(PT, MX);
       
                 // MINIMUM CALC
-                if((instant = PModelSymbolLog(MX, sym)) <= AUX->bits[AUX->idx])
+                if((instant = PModelSymbolLog(MX, sym)) <= AUX->bits[AUX->size-AUX->idx])
                   bits += instant;
                 else
                   bits += AUX->bits[AUX->idx];
