@@ -409,7 +409,6 @@ void DoubleCompressTarget(Threads T){
             bits = 0;
             if((PA->nRead-1) % P->nThreads == T.id && PA->nRead>1 && nBase>1){
              
-printf("x\n");
               for( ; AUX->idx > 0 ; AUX->idx--){  // COMPRESSING USING REVERSE DIRECTION
 
                 if((sym = AUX->bases[AUX->idx]) == 4){
@@ -451,7 +450,6 @@ printf("x\n");
                 UpdateCBuffer(symBuf);
                 } 
 
-printf("y\n");
               #ifdef LOCAL_SIMILARITY
               if(P->local == 1){
                 UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase, 
