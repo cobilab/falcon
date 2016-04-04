@@ -14,7 +14,7 @@ typedef struct{
   SPREC    *bits;
   uint64_t size;
   uint64_t init;
-  uint64_t idx;
+  int64_t  idx;
   }
 STREAM;
 
