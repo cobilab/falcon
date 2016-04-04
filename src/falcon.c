@@ -367,7 +367,7 @@ void FalconCompressTarget(Threads T){
 void DoubleCompressTarget(Threads T){
   FILE        *Reader = Fopen(P->base, "r");
   double      bits = 0, instant = 0;
-  uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol;
+  uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol, idx = 0;
   uint32_t    n, k, idxPos, totModels, cModel;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
@@ -499,26 +499,32 @@ void DoubleCompressTarget(Threads T){
         for(cModel = 0 ; cModel < P->nModels ; ++cModel){
           CModel *CM = Shadow[cModel];
           GetPModelIdx(pos, CM);
-          ComputePModel(Models[cModel], pModel[n], CM->pModelIdx, CM->alphaDen);
-          ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-          if(CM->edits != 0){
-            ++n;
-            CM->SUBS.seq->buf[CM->SUBS.seq->idx] = sym;
-            CM->SUBS.idx = GetPModelIdxCorr(CM->SUBS.seq->buf+CM->SUBS.seq->idx
-            -1, CM, CM->SUBS.idx);
-            ComputePModel(Models[cModel], pModel[n], CM->SUBS.idx, CM->SUBS.eDen);
+          if(idx >= CM->ctx){ //XXX: ADDED
+            ComputePModel(Models[cModel], pModel[n], CM->pModelIdx, CM->alphaDen);
             ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-            }
-          ++n;
+            if(CM->edits != 0){
+              ++n;
+              CM->SUBS.seq->buf[CM->SUBS.seq->idx] = sym;
+              CM->SUBS.idx = GetPModelIdxCorr(CM->SUBS.seq->buf+CM->SUBS.seq->idx
+              -1, CM, CM->SUBS.idx);
+              ComputePModel(Models[cModel], pModel[n], CM->SUBS.idx, CM->SUBS.eDen);
+              ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
+              }
+            ++n;
+            } //XXX: ADDED
           }
 
-        ComputeMXProbs(PT, MX);
-        bits += (instant = PModelSymbolLog(MX, sym));
-        UpdateStream(AUX, sym, instant);
-        ++nBase;
-        CalcDecayment(CMW, pModel, sym, P->gamma);
-        RenormalizeWeights(CMW);
-        CorrectXModels(Shadow, pModel, sym);
+        if(idx >= Shadow[cModel]->ctx){ // XXX: ADDED
+          ComputeMXProbs(PT, MX);
+          bits += (instant = PModelSymbolLog(MX, sym));
+          UpdateStream(AUX, sym, instant);
+          ++nBase;
+          CalcDecayment(CMW, pModel, sym, P->gamma);
+          RenormalizeWeights(CMW);
+          CorrectXModels(Shadow, pModel, sym);
+          } // XXX: ADDED
+
+        ++idx; //XXX: ADDED
         UpdateCBuffer(symBuf);
         }
       }
