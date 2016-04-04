@@ -410,7 +410,7 @@ void DoubleCompressTarget(Threads T){
             if((PA->nRead-1) % P->nThreads == T.id && PA->nRead>1 && nBase>1){
              
 printf("x\n");
-              for( ; AUX->idx >= 0 ; AUX->idx--){  // COMPRESSING USING REVERSE DIRECTION
+              for( ; AUX->idx > 0 ; AUX->idx--){  // COMPRESSING USING REVERSE DIRECTION
 
                 if((sym = AUX->bases[AUX->idx]) == 4){
                   continue;
@@ -490,7 +490,7 @@ printf("y\n");
       if(PA->nRead % P->nThreads == T.id){
 
         if((sym = DNASymToNum(sym)) == 4){
-          UpdateStream(AUX, 4, 2.0);
+          //UpdateStream(AUX, 4, 2.0);
           continue; // IT IGNORES EXTRA SYMBOLS
           }
 
