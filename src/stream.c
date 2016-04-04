@@ -18,14 +18,17 @@ STREAM *CreateStream(uint64_t size){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // UPDATE AUX STREAM
 //
-void UpdateStream(STREAM *S){
-  if(++S->idx == S->size){
+void UpdateStream(STREAM *S, uint8_t sym, SPREC bits){
+  if(S->idx == S->size){
     S->size += S->init;
     S->bases = (uint8_t *) Realloc(S->bases, S->size * sizeof(uint8_t), S->init
                * sizeof(uint8_t));
     S->bits  = (SPREC   *) Realloc(S->bits,  S->size * sizeof(SPREC  ), S->init
                * sizeof(SPREC  ));
     }
+  S->bases[S->idx] = sym;
+  S->bits [S->idx] = bits;
+  S->idx++;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

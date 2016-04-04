@@ -23,6 +23,7 @@
 #include "levels.h"
 #include "common.h"
 #include "models.h"
+#include "stream.h"
 
 CModel **Models;  // MEMORY SHARED BY THREADING
 
@@ -352,11 +353,21 @@ void FalconCompressTarget(Threads T){
   }
 
 //////////////////////////////////////////////////////////////////////////////
+// - - - - - - - - - - - - - - R E S E T   M O D E L S - - - - - - - - - - - -
+void ResetModelsAndParam(CBUF *Buf, CModel **Shadow, CMWeight *CMW){
+  uint32_t n;
+  ResetCBuffer(Buf);
+  for(n = 0 ; n < P->nModels ; ++n)
+    ResetShadowModel(Shadow[n]);
+  ResetWeightModel(CMW);
+  }
+
+//////////////////////////////////////////////////////////////////////////////
 // - - - - - - - D O U B L E - S I D E   C O M P R E S S I O N - - - - - - - -
 
-void OracleCompressTarget(Threads T){
+void DoubleCompressTarget(Threads T){
   FILE        *Reader = Fopen(P->base, "r");
-  double      bits = 0;
+  double      bits = 0, instant = 0;
   uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol;
   uint32_t    n, k, idxPos, totModels, cModel;
   PARSER      *PA = CreateParser();
@@ -368,6 +379,7 @@ void OracleCompressTarget(Threads T){
   FloatPModel *PT;
   CMWeight    *CMW;
   int         action;
+  STREAM      *AUX;
 
   totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
   for(n = 0 ; n < P->nModels ; ++n) 
@@ -383,6 +395,7 @@ void OracleCompressTarget(Threads T){
   MX          = CreatePModel(ALPHABET_SIZE);
   PT          = CreateFloatPModel(ALPHABET_SIZE);
   CMW         = CreateWeightModel(totModels);
+  AUX         = CreateStream(DEF_STREAM_SIZE);
 
   initNSymbol = nSymbol = 0;
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
@@ -391,7 +404,54 @@ void OracleCompressTarget(Threads T){
       if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
         switch(action){
           case -1: // IT IS THE BEGGINING OF THE HEADER
+
+            ResetModelsAndParam(symBuf, Shadow, CMW);
+
+            bits = 0;
             if((PA->nRead-1) % P->nThreads == T.id && PA->nRead>1 && nBase>1){
+             
+              for( ; AUX->idx-- ; ){  // COMPRESSING USING REVERSE DIRECTION
+
+                if((sym = AUX->bases[AUX->idx]) == 4){
+                  AUX->idx--;
+                  continue;
+                  }
+               
+                symBuf->buf[symBuf->idx] = sym;
+  
+                memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
+                n = 0;
+                pos = &symBuf->buf[symBuf->idx-1];
+                for(cModel = 0 ; cModel < P->nModels ; ++cModel){
+                  CModel *CM = Shadow[cModel];
+                  GetPModelIdx(pos, CM);
+                  ComputePModel(Models[cModel], pModel[n], CM->pModelIdx, CM->alphaDen);
+                  ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
+                  if(CM->edits != 0){
+                    ++n;
+                    CM->SUBS.seq->buf[CM->SUBS.seq->idx] = sym;
+                    CM->SUBS.idx = GetPModelIdxCorr(CM->SUBS.seq->buf+CM->SUBS.seq->idx
+                    -1, CM, CM->SUBS.idx);
+                    ComputePModel(Models[cModel], pModel[n], CM->SUBS.idx, CM->SUBS.eDen);
+                    ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
+                    }
+                  ++n;
+                  }
+
+                ComputeMXProbs(PT, MX);
+      
+                // MINIMUM CALC
+                if((instant = PModelSymbolLog(MX, sym)) <= AUX->bits[AUX->idx])
+                  bits += instant;
+                else
+                  bits += AUX->bits[AUX->idx];
+
+                CalcDecayment(CMW, pModel, sym, P->gamma);
+                RenormalizeWeights(CMW);
+                CorrectXModels(Shadow, pModel, sym);
+                UpdateCBuffer(symBuf);
+                } 
+
               #ifdef LOCAL_SIMILARITY
               if(P->local == 1){
                 UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase, 
@@ -406,11 +466,8 @@ void OracleCompressTarget(Threads T){
             #ifdef LOCAL_SIMILARITY
             initNSymbol = nSymbol; 
             #endif  
-            // RESET MODELS 
-            ResetCBuffer(symBuf);
-            for(n = 0 ; n < P->nModels ; ++n)
-              ResetShadowModel(Shadow[n]);
-            ResetWeightModel(CMW);
+            // RESET MODELS
+            ResetModelsAndParam(symBuf, Shadow, CMW); 
             r = nBase = bits = 0;
           break;
           case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
@@ -434,6 +491,7 @@ void OracleCompressTarget(Threads T){
       if(PA->nRead % P->nThreads == T.id){
 
         if((sym = DNASymToNum(sym)) == 4){
+          UpdateStream(AUX, 4, 2.0);
           continue; // IT IGNORES EXTRA SYMBOLS
           }
 
@@ -458,7 +516,8 @@ void OracleCompressTarget(Threads T){
           }
 
         ComputeMXProbs(PT, MX);
-        bits += PModelSymbolLog(MX, sym);
+        bits += (instant = PModelSymbolLog(MX, sym));
+        UpdateStream(AUX, sym, instant);
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
@@ -479,6 +538,7 @@ void OracleCompressTarget(Threads T){
     #endif
     }
 
+  RemoveStream(AUX);
   DeleteWeightModel(CMW);
   for(n = 0 ; n < totModels ; ++n)
     RemovePModel(pModel[n]);

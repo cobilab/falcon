@@ -21,7 +21,7 @@ STREAM;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 STREAM      *CreateStream  (uint64_t);
-void        UpdateStream   (STREAM *);
+void        UpdateStream   (STREAM *, uint8_t, SPREC);
 void        ResetStream    (STREAM *);
 void        RemoveStream   (STREAM *);
 
