@@ -708,7 +708,8 @@ void *CompressThread(void *Thr){
       }
     }
   else{
-    CompressTarget(T[0]);
+    //CompressTarget(T[0]);
+    DoubleCompressTarget(T[0]);
     }
   
   pthread_exit(NULL);
