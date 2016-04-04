@@ -28,6 +28,17 @@
 CModel **Models;  // MEMORY SHARED BY THREADING
 
 //////////////////////////////////////////////////////////////////////////////
+// - - - - - - - - - - - - - - R E S E T   M O D E L S - - - - - - - - - - - -
+
+void ResetModelsAndParam(CBUF *Buf, CModel **Shadow, CMWeight *CMW){
+  uint32_t n;
+  ResetCBuffer(Buf);
+  for(n = 0 ; n < P->nModels ; ++n)
+    ResetShadowModel(Shadow[n]);
+  ResetWeightModel(CMW);
+  }
+
+//////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - L O C A L   C O M P L E X I T Y - - - - - - - - - - - -
 
 #ifdef LOCAL_SIMILARITY
@@ -124,10 +135,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
         }
 
       if(entry < topSize - 1){ // RESET MODELS & PROPERTIES
-        ResetCBuffer(symBuf);
-        for(n = 0 ; n < P->nModels ; ++n)
-          ResetShadowModel(Shadow[n]);
-        ResetWeightModel(CMW);
+        ResetModelsAndParam(symBuf, Shadow, CMW);
         nBase = bits = 0;
         }
 
@@ -352,15 +360,6 @@ void FalconCompressTarget(Threads T){
   fclose(Reader);
   }
 
-//////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - - - - - - - R E S E T   M O D E L S - - - - - - - - - - - -
-void ResetModelsAndParam(CBUF *Buf, CModel **Shadow, CMWeight *CMW){
-  uint32_t n;
-  ResetCBuffer(Buf);
-  for(n = 0 ; n < P->nModels ; ++n)
-    ResetShadowModel(Shadow[n]);
-  ResetWeightModel(CMW);
-  }
 
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - D O U B L E - S I D E   C O M P R E S S I O N - - - - - - - -
@@ -466,8 +465,7 @@ void DoubleCompressTarget(Threads T){
             #ifdef LOCAL_SIMILARITY
             initNSymbol = nSymbol; 
             #endif  
-            // RESET MODELS
-            ResetModelsAndParam(symBuf, Shadow, CMW); 
+            ResetModelsAndParam(symBuf, Shadow, CMW); // RESET MODELS
             r = nBase = bits = 0;
           break;
           case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
@@ -610,11 +608,7 @@ void CompressTarget(Threads T){
             #ifdef LOCAL_SIMILARITY
             initNSymbol = nSymbol; 
             #endif  
-            // RESET MODELS 
-            ResetCBuffer(symBuf);
-            for(n = 0 ; n < P->nModels ; ++n)
-              ResetShadowModel(Shadow[n]);
-            ResetWeightModel(CMW);
+            ResetModelsAndParam(symBuf, Shadow, CMW); // RESET MODELS
             r = nBase = bits = 0;
           break;
           case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
