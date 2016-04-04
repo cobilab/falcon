@@ -409,10 +409,9 @@ void DoubleCompressTarget(Threads T){
             bits = 0;
             if((PA->nRead-1) % P->nThreads == T.id && PA->nRead>1 && nBase>1){
              
-              for( ; AUX->idx-- ; ){  // COMPRESSING USING REVERSE DIRECTION
+              for( ; AUX->idx >= 0 ; AUX->idx--){  // COMPRESSING USING REVERSE DIRECTION
 
                 if((sym = AUX->bases[AUX->idx]) == 4){
-                  AUX->idx--;
                   continue;
                   }
                
