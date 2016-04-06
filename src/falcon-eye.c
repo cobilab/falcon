@@ -170,6 +170,18 @@ int32_t main(int argc, char *argv[]){
         exit(1);
         }
 
+      // TODO: CHECK BEST FOR EACH FNAME:
+/*      if(ParseFromOther(fname) == 1){  // IF PRESENT
+        while(fscanf(INPUT, "%"PRIu64":%"PRIu64"\t%u\n", &iPos, &ePos, &cmp) == 3)
+          ;
+        continue;
+        }
+      else{ // IF NOT PRESENT
+        if(fvalue < List){
+          continue
+        }
+*/
+
       // SKIPS: FILTERED ATTRIBUTES
       if(fsize > PEYE->upperSize ||  fsize < PEYE->lowerSize ||
         fvalue > PEYE->upperSimi || fvalue < PEYE->lowerSimi){
