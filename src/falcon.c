@@ -655,8 +655,10 @@ void CompressTarget(Threads T){
           }
 
         ComputeMXProbs(PT, MX);
-        bits += PModelSymbolLog(MX, sym);
-        ++nBase;
+        if(nBase > 20){
+          bits += PModelSymbolLog(MX, sym);
+          ++nBase;
+        }
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
         CorrectXModels(Shadow, pModel, sym);
