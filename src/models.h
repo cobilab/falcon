@@ -3,6 +3,7 @@
 
 #include "defs.h"
 #include "buffer.h"
+#include "pmodels.h"
 
 #define ARRAY_MODE            0
 #define HASH_TABLE_MODE       1
@@ -23,19 +24,6 @@ typedef U16  HCC;             // Size of context counters for hash tables
 typedef U8   ENTMAX;          // Entry size (nKeys for each hIndex)
 typedef HCC  HCCounters[4];
 
-#ifdef NEWDATASTRUCT
-typedef struct{
-  #if defined(PREC32B)
-  U32        key;             // The key stored in this entry
-  #elif defined(PREC16B)
-  U16        key;
-  #else
-  U8         key;
-  #endif
-  U8         counters;
-  }
-Entry;
-#else
 typedef struct{
   #if defined(PREC32B)
   U32        key;             // The key stored in this entry
@@ -47,7 +35,6 @@ typedef struct{
   HCC        counters;        // "Small" counters: 4 bits for each one
   }
 Entry;
-#endif
 
 typedef struct{
   ENTMAX     *index;          // Number of keys in this entry
@@ -91,24 +78,6 @@ typedef struct{
   }
 CModel;
 
-typedef struct{
-  U32        *freqs;
-  U32        sum;
-  }
-PModel;
-
-typedef struct{
-  double     *freqs;
-  }
-FloatPModel;
-
-typedef struct{
-  uint32_t   totModels;
-  double     *weight;
-  double     totalWeight;
-  }
-CMWeight;
-
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int32_t         BestId               (uint32_t *, uint32_t);
@@ -120,25 +89,14 @@ inline void     GetPModelIdx         (U8 *, CModel *);
 inline U8       GetPModelIdxIR       (U8 *, CModel *);
 inline uint64_t GetPModelIdxCorr     (U8 *, CModel *, uint64_t);
 void            CorrectCModelSUBS    (CModel *, PModel *, uint8_t);
-PModel          *CreatePModel        (U32);
-FloatPModel     *CreateFloatPModel   (U32);
-void            RemovePModel         (PModel *);
-void            RemoveFPModel        (FloatPModel *);
 void            ResetCModelIdx       (CModel *);
 void            ResetShadowModel     (CModel *);
 void            UpdateCModelCounter  (CModel *, U32, U64);
 CModel          *CreateCModel        (U32, U32, U32, U8, U32, U32, U32);
 CModel          *CreateShadowModel   (CModel *);
-inline void     ComputeMXProbs       (FloatPModel *, PModel *);
+//inline void     ComputeWeightedFreqs (double, PModel *, FloatPModel *);
 inline void     ComputePModel        (CModel *, PModel *, uint64_t, uint32_t);
-inline void     ComputeWeightedFreqs (double, PModel *, FloatPModel *);
-double          PModelSymbolLog      (PModel *, U32);
-CMWeight        *CreateWeightModel   (uint32_t);
-void            ResetWeightModel     (CMWeight *);
 void            CorrectXModels       (CModel **, PModel **, uint8_t);    
-void            RenormalizeWeights   (CMWeight *);
-void            CalcDecayment        (CMWeight *, PModel **, uint8_t, double);
-void            DeleteWeightModel    (CMWeight *);
 int             SelfSimilarity       (uint8_t *, uint64_t, uint64_t);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

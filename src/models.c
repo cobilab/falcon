@@ -63,56 +63,6 @@ void FreeShadow(CModel *M){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-CMWeight *CreateWeightModel(uint32_t size){
-  uint32_t n;
-  CMWeight *CMW    = (CMWeight *) Calloc(1, sizeof(CMWeight));
-  CMW->totModels   = size;
-  CMW->totalWeight = 0;
-  CMW->weight      = (double *) Calloc(CMW->totModels, sizeof(double));
-  for(n = 0 ; n < CMW->totModels ; ++n)
-    CMW->weight[n] = 1.0 / CMW->totModels;
-  return CMW;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-void ResetWeightModel(CMWeight *CMW){
-  uint32_t n;
-  double fraction = 1.0 / CMW->totModels;
-  CMW->totalWeight = 0;
-  for(n = 0 ; n < CMW->totModels ; ++n)
-    CMW->weight[n] = fraction;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-void RenormalizeWeights(CMWeight *CMW){
-  uint32_t n;
-  for(n = 0 ; n < CMW->totModels ; ++n) 
-    CMW->weight[n] /= CMW->totalWeight;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-void CalcDecayment(CMWeight *CMW, PModel **PM, uint8_t sym, double gamma){
-  uint32_t n;
-  CMW->totalWeight = 0;
-  for(n = 0 ; n < CMW->totModels ; ++n){
-    CMW->weight[n] = Power(CMW->weight[n], gamma) * (double) PM[n]->freqs[sym] 
-    / PM[n]->sum;
-    CMW->totalWeight += CMW->weight[n];
-    }
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-void DeleteWeightModel(CMWeight *CMW){
-  Free(CMW->weight);
-  Free(CMW);
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 static void InitArray(CModel *M){
   M->array.counters = (ACC *) Calloc(M->nPModels<<2, sizeof(ACC));
   }
@@ -140,24 +90,10 @@ static void InsertKey(HashTable *H, U32 hi, U64 idx, U8 s){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 inline void GetFreqsFromHCC(HCC c, uint32_t a, PModel *P){
-   #ifdef NEWDATASTRUCT
-   //TODO: GET COUNTERS FROM ALL IDX+SYMBOL
-   //TODO: CALCULATE FREQS
-   #else
-   P->sum  = (P->freqs[0] = a * ( c &  0x0f) + 1);
-   P->sum += (P->freqs[1] = a * ((c & (0x0f<<4 ))>>4)  + 1);
-   P->sum += (P->freqs[2] = a * ((c & (0x0f<<8 ))>>8)  + 1);
-   P->sum += (P->freqs[3] = a * ((c & (0x0f<<12))>>12) + 1);
-   #endif
-   }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-inline void ComputeMXProbs(FloatPModel *PT, PModel *MX){
-  MX->sum  = (MX->freqs[0] = 1 + (unsigned) (PT->freqs[0] * MX_PMODEL));
-  MX->sum += (MX->freqs[1] = 1 + (unsigned) (PT->freqs[1] * MX_PMODEL));
-  MX->sum += (MX->freqs[2] = 1 + (unsigned) (PT->freqs[2] * MX_PMODEL));
-  MX->sum += (MX->freqs[3] = 1 + (unsigned) (PT->freqs[3] * MX_PMODEL)); 
+  P->sum  = (P->freqs[0] = a * ( c &  0x0f) + 1);
+  P->sum += (P->freqs[1] = a * ((c & (0x0f<<4 ))>>4)  + 1);
+  P->sum += (P->freqs[2] = a * ((c & (0x0f<<8 ))>>8)  + 1);
+  P->sum += (P->freqs[3] = a * ((c & (0x0f<<12))>>12) + 1);
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -199,36 +135,6 @@ void GetHCCounters(HashTable *H, U64 key, PModel *P, uint32_t a){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PModel *CreatePModel(U32 n){
-  PModel *PM = (PModel *) Calloc(1, sizeof(PModel));
-  PM->freqs  = (U32    *) Calloc(n, sizeof(U32));
-  return PM;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-void RemovePModel(PModel *PM){
-  Free(PM->freqs);
-  Free(PM);
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-FloatPModel *CreateFloatPModel(U32 n){
-  FloatPModel *F = (FloatPModel *) Calloc(1, sizeof(FloatPModel));
-  F->freqs = (double *) Calloc(n, sizeof(double));
-  return F;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-void RemoveFPModel(FloatPModel *FM){
-  Free(FM->freqs);
-  Free(FM);
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 void UpdateCModelCounter(CModel *M, U32 sym, U64 im){
   U32 n;
   ACC *AC;
@@ -245,16 +151,6 @@ void UpdateCModelCounter(CModel *M, U32 sym, U64 im){
     U8  b = idx & 0xff;
     #endif
 
-    #ifdef NEWDATASTRUCT
-    for(n = 0 ; n < M->hTable.maxC ; ++n){
-      if(M->hTable.entries[hIndex][n].key == b){
-        if(++M->hTable.entries[hIndex][n].counters == 255){ //MAX: RENORMALIZE
-          M->hTable.entries[hIndex][n].counters = 126;
-          }
-        return;
-        }
-      }
-    #else
     for(n = 0 ; n < M->hTable.maxC ; ++n){
       if(M->hTable.entries[hIndex][n].key == b){
         sc = (M->hTable.entries[hIndex][n].counters>>(sym<<2))&0x0f;
@@ -273,7 +169,6 @@ void UpdateCModelCounter(CModel *M, U32 sym, U64 im){
         return;
         }
       }
-    #endif
 
     InsertKey(&M->hTable, hIndex, b, sym); // KEY NOT FOUND: WRITE ON OLDEST
     }
@@ -391,9 +286,6 @@ void ResetShadowModel(CModel *M){
     uint32_t n;
     for(n = 0 ; n < BGUARD ; ++n)
       M->SUBS.mask[n] = 0;
-    //TODO: MEMSET?
-    // Free(M->SUBS.mask);
-    // M->SUBS.mask = (uint8_t *) Calloc(BGUARD, sizeof(uint8_t));
     }
   }
 
@@ -513,23 +405,6 @@ inline void ComputePModel(CModel *M, PModel *P, uint64_t idx, uint32_t aDen){
     fprintf(stderr, "Error: not implemented!\n");
     exit(1);
     }
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-inline void ComputeWeightedFreqs(double w, PModel *P, FloatPModel *PT){
-  double f = w / P->sum;
-  PT->freqs[0] += (double) P->freqs[0] * f;
-  PT->freqs[1] += (double) P->freqs[1] * f;
-  PT->freqs[2] += (double) P->freqs[2] * f;
-  PT->freqs[3] += (double) P->freqs[3] * f;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-double PModelSymbolLog(PModel *P, U32 s){
-  // TODO: LOG_2 FAST ?
-  return log((double) P->sum / P->freqs[s]) / M_LN2;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

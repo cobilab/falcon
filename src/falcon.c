@@ -23,6 +23,7 @@
 #include "levels.h"
 #include "common.h"
 #include "models.h"
+#include "pmodels.h"
 #include "stream.h"
 
 CModel **Models;  // MEMORY SHARED BY THREADING

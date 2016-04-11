@@ -7,6 +7,7 @@
 #include "filters.h"
 #include "common.h"
 #include "mem.h"
+#include "pmodels.h"
 #include "models.h"
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

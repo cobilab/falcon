@@ -31,7 +31,7 @@ int32_t main(int argc, char *argv[]){
   int sym;
   double fvalue;
   uint32_t n, tmp, maxName, extraLength, cmp;
-  uint64_t maxSize = 0, fsize, iPos, ePos, nSeq;
+  uint64_t maxSize = 0, fsize, iPos, ePos, nSeq, filtered;
   Painter *Paint;
   COLORS *CLR;
   
@@ -91,6 +91,7 @@ int32_t main(int argc, char *argv[]){
   INPUT = Fopen(argv[argc-1], "r"); 
   nSeq = 0;
   maxName = 0;
+  filtered = 0;
   while((sym = fgetc(INPUT)) != EOF){
     if(sym == '$'){
       if(fscanf(INPUT, "\t%lf\t%"PRIu64"\t%s\n", &fvalue, &fsize, fname) != 3){
@@ -99,6 +100,7 @@ int32_t main(int argc, char *argv[]){
         }
       if(fsize > PEYE->upperSize ||  fsize < PEYE->lowerSize ||
         fvalue > PEYE->upperSimi || fvalue < PEYE->lowerSimi){
+        ++filtered;
         continue;
         }
 
@@ -112,6 +114,9 @@ int32_t main(int argc, char *argv[]){
       }
     }
   rewind(INPUT);
+
+  fprintf(stderr, "  [+] Filtered %"PRIu64" from %"PRIu64" entries.\n", 
+  filtered, nSeq);
 
   Paint = CreatePainter(maxSize, PEYE->width, PEYE->space, PEYE->proportion, 
   "#ffffff");
