@@ -115,7 +115,7 @@ int32_t main(int argc, char *argv[]){
     }
   rewind(INPUT);
 
-  fprintf(stderr, "  [+] Filtered %"PRIu64" from %"PRIu64" entries.\n", 
+  fprintf(stderr, "Filtered %"PRIu64" from %"PRIu64" entries.\n", 
   filtered, nSeq);
 
   Paint = CreatePainter(maxSize, PEYE->width, PEYE->space, PEYE->proportion, 
@@ -167,6 +167,7 @@ int32_t main(int argc, char *argv[]){
     +(Paint->width/2)+4, "-");
     }
 
+  fprintf(stderr, "Addressing regions individually:\n"); 
   while((sym = fgetc(INPUT)) != EOF){
 
     if(sym == '$'){
