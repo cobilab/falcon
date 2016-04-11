@@ -94,7 +94,6 @@ void            ResetShadowModel     (CModel *);
 void            UpdateCModelCounter  (CModel *, U32, U64);
 CModel          *CreateCModel        (U32, U32, U32, U8, U32, U32, U32);
 CModel          *CreateShadowModel   (CModel *);
-//inline void     ComputeWeightedFreqs (double, PModel *, FloatPModel *);
 inline void     ComputePModel        (CModel *, PModel *, uint64_t, uint32_t);
 void            CorrectXModels       (CModel **, PModel **, uint8_t);    
 int             SelfSimilarity       (uint8_t *, uint64_t, uint64_t);
