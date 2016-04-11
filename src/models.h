@@ -1,5 +1,5 @@
-#ifndef CMODEL_H_INCLUDED
-#define CMODEL_H_INCLUDED
+#ifndef MODELS_H_INCLUDED
+#define MODELS_H_INCLUDED
 
 #include "defs.h"
 #include "buffer.h"
@@ -23,6 +23,19 @@ typedef U16  HCC;             // Size of context counters for hash tables
 typedef U8   ENTMAX;          // Entry size (nKeys for each hIndex)
 typedef HCC  HCCounters[4];
 
+#ifdef NEWDATASTRUCT
+typedef struct{
+  #if defined(PREC32B)
+  U32        key;             // The key stored in this entry
+  #elif defined(PREC16B)
+  U16        key;
+  #else
+  U8         key;
+  #endif
+  U8         counters;
+  }
+Entry;
+#else
 typedef struct{
   #if defined(PREC32B)
   U32        key;             // The key stored in this entry
@@ -34,6 +47,7 @@ typedef struct{
   HCC        counters;        // "Small" counters: 4 bits for each one
   }
 Entry;
+#endif
 
 typedef struct{
   ENTMAX     *index;          // Number of keys in this entry

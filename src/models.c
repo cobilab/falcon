@@ -130,16 +130,25 @@ static void InsertKey(HashTable *H, U32 hi, U64 idx, U8 s){
   #else
   H->entries[hi][H->index[hi]].key = (U8)(idx&0xff);
   #endif  
+  #ifdef NEWDATASTRUCT
+  H->entries[hi][H->index[hi]].counters++;
+  #else
   H->entries[hi][H->index[hi]].counters = (0x01<<(s<<2));
+  #endif
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 inline void GetFreqsFromHCC(HCC c, uint32_t a, PModel *P){
+   #ifdef NEWDATASTRUCT
+   //TODO: GET COUNTERS FROM ALL IDX+SYMBOL
+   //TODO: CALCULATE FREQS
+   #else
    P->sum  = (P->freqs[0] = a * ( c &  0x0f) + 1);
    P->sum += (P->freqs[1] = a * ((c & (0x0f<<4 ))>>4)  + 1);
    P->sum += (P->freqs[2] = a * ((c & (0x0f<<8 ))>>8)  + 1);
    P->sum += (P->freqs[3] = a * ((c & (0x0f<<12))>>12) + 1);
+   #endif
    }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -236,6 +245,16 @@ void UpdateCModelCounter(CModel *M, U32 sym, U64 im){
     U8  b = idx & 0xff;
     #endif
 
+    #ifdef NEWDATASTRUCT
+    for(n = 0 ; n < M->hTable.maxC ; ++n){
+      if(M->hTable.entries[hIndex][n].key == b){
+        if(++M->hTable.entries[hIndex][n].counters == 255){ //MAX: RENORMALIZE
+          M->hTable.entries[hIndex][n].counters = 126;
+          }
+        return;
+        }
+      }
+    #else
     for(n = 0 ; n < M->hTable.maxC ; ++n){
       if(M->hTable.entries[hIndex][n].key == b){
         sc = (M->hTable.entries[hIndex][n].counters>>(sym<<2))&0x0f;
@@ -254,6 +273,8 @@ void UpdateCModelCounter(CModel *M, U32 sym, U64 im){
         return;
         }
       }
+    #endif
+
     InsertKey(&M->hTable, hIndex, b, sym); // KEY NOT FOUND: WRITE ON OLDEST
     }
   else{
