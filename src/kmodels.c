@@ -132,14 +132,13 @@ void GetKHCCounters(KHASHTABLE *H, U64 key, PModel *P, uint32_t a){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UpdateKModelCounter(KMODEL *M, U32 sym, U64 im){
+void UpdateKModelCounter(KMODEL *M, U32 sym, U64 idx){
   U32 n;
   ACC *AC;
-  U64 idx = im;
 
   if(M->mode == KHASH_TABLE_MODE){
     U16 sc;
-    U32 s, hIndex = (idx = ZHASH(idx)) % KHASH_SIZE;
+    U32 hIndex = (idx = ZHASH(idx)) % KHASH_SIZE;
     #if defined(PREC32B)
     U32 b = idx & 0xffffffff;
     #elif defined(PREC16B)
@@ -159,12 +158,11 @@ void UpdateKModelCounter(KMODEL *M, U32 sym, U64 im){
     InsertKey(&M->hTable, hIndex, b, sym); // KEY NOT FOUND: WRITE ON OLDEST
     }
   else{
-    AC = &M->array.counters[idx << 2];
-    if(++AC[sym] == M->maxCount){    
-      AC[0] >>= 1;
-      AC[1] >>= 1;
-      AC[2] >>= 1;
-      AC[3] >>= 1;
+    AC = &M->array.counters[idx];
+    if(++AC == M->maxCount){  
+      for(n = 0 ; n < 4 ; ++n){ // RENORMALIZE ALL
+        M->array.counters[idx-sym+n] >>= 1;
+        }
       }
     }
   }
