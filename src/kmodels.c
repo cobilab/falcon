@@ -64,7 +64,7 @@ void FreeKShadow(KMODEL *M){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 static void InitKArray(KMODEL *M){
-  M->array.counters = (ACC *) Calloc(M->nPModels<<2, sizeof(ACC));
+  M->array.counters = (ACC *) Calloc(M->nPModels, sizeof(ACC));
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -76,81 +76,68 @@ static void InsertKey(KHASHTABLE *H, U32 hi, U64 idx, U8 s){
 
   #if defined(PREC32B)
   H->entries[hi][H->index[hi]].key = (U32)(idx&0xffffffff);
-  #elif defined(PREC16B)
-  H->entries[hi][H->index[hi]].key = (U16)(idx&0xffff);
   #else
-  H->entries[hi][H->index[hi]].key = (U8) (idx&0xff);
+  H->entries[hi][H->index[hi]].key = (U16)(idx&0xffff);
   #endif  
   H->entries[hi][H->index[hi]].counters = 1;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-inline void GetFreqsFromKHCC(HCC c, uint32_t a, PModel *P){
-  P->sum  = (P->freqs[0] = a * ( c &  0x0f) + 1);
-  P->sum += (P->freqs[1] = a * ((c & (0x0f<<4 ))>>4)  + 1);
-  P->sum += (P->freqs[2] = a * ((c & (0x0f<<8 ))>>8)  + 1);
-  P->sum += (P->freqs[3] = a * ((c & (0x0f<<12))>>12) + 1);
+void inline GetKHCCounters(KHASHTABLE *HT, U64 idx, PModel *PM, uint32_t a){
+
+  U32 s;
+
+  PM->sum = 0;
+  for(s = 0 ; s < 4 ; ++s){ // FOR EACH SYMBOL
+    U64 key = ZHASH(idx+s);
+    U32 n, hIndex = key % KHASH_SIZE;
+    #if defined(PREC32B)
+    U32 b = key & 0xffffffff;
+    #else
+    U16 b = key & 0xffff;
+    #endif
+    
+    U32 pos = HT->index[hIndex];
+    for(n = pos+1 ; n-- ; ){ // FROM INDEX-1 TO 0
+      if(HT->entries[hIndex][n].key == b){
+        PM->sum += (PM->freqs[s] = a * HT->entries[hIndex][n].counters + 1);
+        break;
+        }
+      }
+    for(n = (HT->maxC-1) ; n > pos ; --n){ // FROM MAX_COL TO INDEX
+      if(HT->entries[hIndex][n].key == b){
+        PM->sum += (PM->freqs[s] = a * HT->entries[hIndex][n].counters + 1);
+        break;
+        }
+      }
+
+    PM->sum += (PM->freqs[s] = 1);  // DIDN'T FIND ANY, SO LETS ASSUME 1
+    }
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void GetKHCCounters(KHASHTABLE *H, U64 key, PModel *P, uint32_t a){
-  U32 n, hIndex = key % KHASH_SIZE;
-  #if defined(PREC32B)
-  U32 b = key & 0xffffffff;
-  #elif defined(PREC16B)
-  U16 b = key & 0xffff;
-  #else
-  U8  b = key & 0xff;
-  #endif
-
-  U32 pos = H->index[hIndex];
-  // FROM INDEX-1 TO 0
-  for(n = pos+1 ; n-- ; ){
-    if(H->entries[hIndex][n].key == b){
-      GetFreqsFromKHCC(H->entries[hIndex][n].counters, a, P);
-      return;
-      }
-    }
-  // FROM MAX_COLISIONS TO INDEX
-  for(n = (H->maxC-1) ; n > pos ; --n){
-    if(H->entries[hIndex][n].key == b){
-      GetFreqsFromKHCC(H->entries[hIndex][n].counters, a, P);
-      return;
-      }
-    }
-
-  // TODO: MAKE THIS ALREADY DONE!
-  P->freqs[0] = 1;
-  P->freqs[1] = 1;
-  P->freqs[2] = 1;
-  P->freqs[3] = 1;
-  P->sum      = 4; 
-  return;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-void UpdateKModelCounter(KMODEL *M, U32 sym, U64 idx){
+void UpdateKModelCounter(KMODEL *M, U32 sym, U64 original){
   U32 n;
-  ACC *AC;
 
   if(M->mode == KHASH_TABLE_MODE){
+    U64 idx = 0;
     U16 sc;
-    U32 hIndex = (idx = ZHASH(idx)) % KHASH_SIZE;
+    U32 hIndex = (idx = ZHASH(original)) % KHASH_SIZE;
     #if defined(PREC32B)
     U32 b = idx & 0xffffffff;
     #elif defined(PREC16B)
     U16 b = idx & 0xffff;
-    #else
-    U8  b = idx & 0xff;
     #endif
 
     for(n = 0 ; n < M->hTable.maxC ; ++n)
       if(M->hTable.entries[hIndex][n].key == b){
-        if((sc = M->hTable.entries[hIndex][n].counters) == 255)
+        if((sc = M->hTable.entries[hIndex][n].counters) == 255){ // OVERFLOW ?
+          // TODO: SEARCH FOR EACH ZHASH(IDX) AND UPDATE >>= 1
+          // TODO: THEN ++sc;
           return;
+          }
         ++sc;
         return;
         }
@@ -158,12 +145,9 @@ void UpdateKModelCounter(KMODEL *M, U32 sym, U64 idx){
     InsertKey(&M->hTable, hIndex, b, sym); // KEY NOT FOUND: WRITE ON OLDEST
     }
   else{
-    AC = &M->array.counters[idx];
-    if(++AC == M->maxCount){  
-      for(n = 0 ; n < 4 ; ++n){ // RENORMALIZE ALL
-        M->array.counters[idx-sym+n] >>= 1;
-        }
-      }
+    if(++M->array.counters[original] == M->maxCount)  
+      for(n = 0 ; n < 4 ; ++n) // RENORMALIZE ALL
+        M->array.counters[original-sym+n] >>= 1;
     }
   }
 
@@ -181,15 +165,15 @@ U32 eDen){
     exit(1);
     }
 
-  mult           = (U64 *) Calloc(ctx, sizeof(U64));
-  M->nPModels    = (U64) pow(ALPHABET_SIZE, ctx);
-  M->ctx         = ctx;
-  M->alphaDen    = aDen;
-  M->edits       = edits;
-  M->pModelIdx   = 0;
-  M->pModelIdxIR = M->nPModels - 1;
-  M->ir          = ir  == 0 ? 0 : 1;
-  M->ref         = ref == 0 ? 0 : 1;
+  mult          = (U64 *) Calloc(ctx, sizeof(U64));
+  M->nPModels   = (U64) pow(ALPHABET_SIZE, ctx+1);
+  M->ctx        = ctx;
+  M->alphaDen   = aDen;
+  M->edits      = edits;
+  M->idx        = 0;
+  M->idxIR      = M->nPModels - 1;
+  M->ir         = ir  == 0 ? 0 : 1;
+  M->ref        = ref == 0 ? 0 : 1;
 
   if(ctx >= KHASH_TABLE_BEGIN_CTX){
     M->mode     = KHASH_TABLE_MODE;
@@ -202,12 +186,12 @@ U32 eDen){
     InitKArray(M);
     }
 
-  for(n = 0 ; n < M->ctx ; ++n){
+  for(n = 0 ; n <= M->ctx ; ++n){
     mult[n] = prod;
     prod <<= 2;
     }
 
-  M->multiplier = mult[M->ctx-1];
+  M->multiplier = mult[M->ctx];
 
   if(edits != 0){
     M->SUBS.seq       = CreateCBuffer(BUFFER_SIZE, BGUARD);
@@ -230,8 +214,8 @@ KMODEL *CreateKShadowModel(KMODEL *XP){
   M->ctx         = XP->ctx;
   M->alphaDen    = XP->alphaDen;
   M->edits       = XP->edits;
-  M->pModelIdx   = XP->pModelIdx;
-  M->pModelIdxIR = XP->pModelIdxIR;
+  M->idx         = XP->idx;
+  M->idxIR       = XP->idxIR;
   M->ir          = XP->ir;
   M->ref         = XP->ref;
   M->mode        = XP->mode;
@@ -253,8 +237,8 @@ KMODEL *CreateKShadowModel(KMODEL *XP){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void ResetKModelIdx(KMODEL *M){
-  M->pModelIdx   = 0;
-  M->pModelIdxIR = M->nPModels - 1;
+  M->idx   = 0;
+  M->idxIR = M->nPModels - 1;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -273,7 +257,7 @@ void ResetKShadowModel(KMODEL *M){
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+/*
 int32_t BestKId(uint32_t *f, uint32_t sum){
   if(sum == 4) return -2; // ZERO COUNTERS
 
@@ -288,22 +272,25 @@ int32_t BestKId(uint32_t *f, uint32_t sum){
 
   return best;
   }
+*/
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// GET IDX AND IDX2UPDATE
+
+inline void GetKIdx(U8 *p, KMODEL *M){
+  M->idx    = (M->idx-*(p-M->ctx)*M->multiplier)<<2;
+  M->idx2Up = M->idx + *p;
+  }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// GET IDX REVERSE COMPLEMENTED
 
-inline U8 GetKPModelIdxIR(U8 *p, KMODEL *M){
-  M->pModelIdxIR = (M->pModelIdxIR>>2)+GetCompNum(*p)*M->multiplier;
+inline U8 GeKIdxIR(U8 *p, KMODEL *M){
+  M->idxIR = (M->idxIR>>2)+GetCompNum(*p)*M->multiplier;
   return GetCompNum(*(p-M->ctx));
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-inline void GetKPModelIdx(U8 *p, KMODEL *M){
-  M->pModelIdx = ((M->pModelIdx-*(p-M->ctx)*M->multiplier)<<2)+*p;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+/*
 inline uint64_t GetKPModelIdxCorr(U8 *p, KMODEL *M, uint64_t idx){
   return (((idx-*(p-M->ctx)*M->multiplier)<<2)+*p);
   }
@@ -369,12 +356,12 @@ void CorrectKXModels(KMODEL **Shadow, PModel **PM, uint8_t sym){
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+*/
 inline void ComputeKModel(KMODEL *M, PModel *P, uint64_t idx, uint32_t aDen){
   ACC *ac;
   switch(M->mode){
     case KHASH_TABLE_MODE:
-      GetKHCCounters(&M->hTable, ZHASH(idx), P, aDen);
+      GetKHCCounters(&M->hTable, idx, P, aDen);
     break;
     case KARRAY_MODE:
       ac = &M->array.counters[idx<<2];

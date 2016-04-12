@@ -69,8 +69,9 @@ typedef struct{
   U32        mode;
   KHASHTABLE hTable;
   KARRAY     array;
-  U64        pModelIdx;
-  U64        pModelIdxIR;
+  U64        idx;
+  U64        idx2Up;
+  U64        idxIR;
   U32        edits;
   KCORRECT   SUBS;
   }
