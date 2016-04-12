@@ -910,8 +910,7 @@ void LoadReferenceWKM(char *refName){
   uint64_t k, idxPos;
   PARSER   *PA = CreateParser();
   CBUF     *symBuf  = CreateCBuffer(BUFFER_SIZE, BGUARD);
-  uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t  sym, irSym = 0;
+  uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t)), sym;
   FileType(PA, Reader);
   rewind(Reader);
 
@@ -920,21 +919,16 @@ void LoadReferenceWKM(char *refName){
       if(ParseSym(PA, (sym = readBuf[idxPos])) == -1){ idx = 0; continue; }
       symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
       for(n = 0 ; n < P->nModels ; ++n){
-        CModel *CM = Models[n];
-        GetPModelIdx(symBuf->buf+symBuf->idx-1, CM);
-        if(CM->ir == 1) // INVERTED REPEATS
-          irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, CM);
-        if(++idx >= CM->ctx){
-          UpdateCModelCounter(CM, sym, CM->pModelIdx);
-          if(CM->ir == 1) // INVERTED REPEATS
-            UpdateCModelCounter(CM, irSym, CM->pModelIdxIR);
-          }
+        KMODEL *KM = KModels[n];
+        GetKIdx(symBuf->buf+symBuf->idx-1, KM);
+        if(++idx >= KM->ctx)
+          UpdateKModelCounter(KM, sym, KM->idx);
         }
       UpdateCBuffer(symBuf);
       }
  
   for(n = 0 ; n < P->nModels ; ++n)
-    ResetCModelIdx(Models[n]);
+    ResetKModelIdx(KModels[n]);
   RemoveCBuffer(symBuf);
   Free(readBuf);
   RemoveParser(PA);
@@ -949,6 +943,19 @@ void CompressAction(Threads *T, char *refName, char *baseName){
   pthread_t t[P->nThreads];
   uint32_t n;
 
+ 
+  #define KMODELSUSAGE 1
+  #ifdef KMODELSUSAGE
+  KModels = (KMODEL **) Malloc(P->nModels * sizeof(KMODEL *));
+  for(n = 0 ; n < P->nModels ; ++n)
+    KModels[n] = CreateKModel(T[0].model[n].ctx, T[0].model[n].den,
+    T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
+    T[0].model[n].eDen);
+
+  fprintf(stderr, "  [+] Loading metagenomic file (k).. ");
+  LoadReferenceWKM(refName);
+  fprintf(stderr, "Done!\n");
+  #else
   Models = (CModel **) Malloc(P->nModels * sizeof(CModel *));
   for(n = 0 ; n < P->nModels ; ++n)
     Models[n] = CreateCModel(T[0].model[n].ctx, T[0].model[n].den, 
@@ -958,6 +965,7 @@ void CompressAction(Threads *T, char *refName, char *baseName){
   fprintf(stderr, "  [+] Loading metagenomic file ..... ");
   LoadReference(refName);
   fprintf(stderr, "Done!\n");
+  #endif
 
   fprintf(stderr, "  [+] Compressing database ......... ");
   for(n = 0 ; n < P->nThreads ; ++n)

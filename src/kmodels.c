@@ -284,7 +284,7 @@ inline void GetKIdx(U8 *p, KMODEL *M){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // GET IDX REVERSE COMPLEMENTED
 
-inline U8 GeKIdxIR(U8 *p, KMODEL *M){
+inline U8 GetKIdxIR(U8 *p, KMODEL *M){
   M->idxIR = (M->idxIR>>2)+GetCompNum(*p)*M->multiplier;
   return GetCompNum(*(p-M->ctx));
   }
