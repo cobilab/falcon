@@ -24,9 +24,11 @@
 #include "common.h"
 #include "models.h"
 #include "pmodels.h"
+#include "kmodels.h"
 #include "stream.h"
 
-CModel **Models;  // MEMORY SHARED BY THREADING
+CModel **Models;   // MEMORY SHARED BY THREADING
+KMODEL **KModels;  // MEMORY SHARED BY THREADING
 
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - R E S E T   M O D E L S - - - - - - - - - - - -
@@ -551,6 +553,146 @@ void DoubleCompressTarget(Threads T){
   RemoveParser(PA);
   fclose(Reader);
   }
+
+
+//////////////////////////////////////////////////////////////////////////////
+// - - - - - - C O M P R E S S I O N   W I T H   K M O D E L S - - - - - - - -
+
+void CompressTargetWKM(Threads T){
+  FILE        *Reader = Fopen(P->base, "r");
+  double      bits = 0;
+  uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol;
+  uint32_t    n, k, idxPos, totModels, cModel;
+  PARSER      *PA = CreateParser();
+  CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
+  uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
+  uint8_t     sym, *pos, conName[MAX_NAME];
+  PModel      **pModel, *MX;
+  CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
+  FloatPModel *PT;
+  CMWeight    *CMW;
+  int         action;
+
+  totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
+  for(n = 0 ; n < P->nModels ; ++n) 
+    if(T.model[n].edits != 0)
+      totModels += 1;
+
+  Shadow      = (CModel **) Calloc(P->nModels, sizeof(CModel *));
+  for(n = 0 ; n < P->nModels ; ++n)
+    Shadow[n] = CreateShadowModel(Models[n]); 
+  pModel      = (PModel **) Calloc(totModels, sizeof(PModel *));
+  for(n = 0 ; n < totModels ; ++n)
+    pModel[n] = CreatePModel(ALPHABET_SIZE);
+  MX          = CreatePModel(ALPHABET_SIZE);
+  PT          = CreateFloatPModel(ALPHABET_SIZE);
+  CMW         = CreateWeightModel(totModels);
+
+  initNSymbol = nSymbol = 0;
+  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
+    for(idxPos = 0 ; idxPos < k ; ++idxPos){
+      ++nSymbol;
+      if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
+        switch(action){
+          case -1: // IT IS THE BEGGINING OF THE HEADER
+            if((PA->nRead-1) % P->nThreads == T.id && PA->nRead>1 && nBase>1){
+              #ifdef LOCAL_SIMILARITY
+              if(P->local == 1){
+                UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase, 
+                initNSymbol, nSymbol);
+                }
+              else
+                UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+              #else
+              UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+              #endif
+              }
+            #ifdef LOCAL_SIMILARITY
+            initNSymbol = nSymbol; 
+            #endif  
+            ResetModelsAndParam(symBuf, Shadow, CMW); // RESET MODELS
+            r = nBase = bits = 0;
+          break;
+          case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
+          case -3: // IF IS A SYMBOL OF THE HEADER
+            if(r >= MAX_NAME-1)
+              conName[r] = '\0';
+            else{
+              if(sym == ' ' || sym < 32 || sym > 126){ // PROTECT INTERVAL
+                if(r == 0) continue;
+                else       sym = '_'; // PROTECT OUT SYM WITH UNDERL
+                }
+              conName[r++] = sym;
+              }
+          break; 
+          case -99: break; // IF IS A SIMPLE FORMAT BREAK
+          default: exit(1);
+          }
+        continue; // GO TO NEXT SYMBOL
+        }
+
+      if(PA->nRead % P->nThreads == T.id){
+
+        if((sym = DNASymToNum(sym)) == 4){
+          continue; // IT IGNORES EXTRA SYMBOLS
+          }
+
+        symBuf->buf[symBuf->idx] = sym;
+        memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
+        n = 0;
+        pos = &symBuf->buf[symBuf->idx-1];
+        for(cModel = 0 ; cModel < P->nModels ; ++cModel){
+          CModel *CM = Shadow[cModel];
+          GetPModelIdx(pos, CM);
+          ComputePModel(Models[cModel], pModel[n], CM->pModelIdx, CM->alphaDen);
+          ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
+          if(CM->edits != 0){
+            ++n;
+            CM->SUBS.seq->buf[CM->SUBS.seq->idx] = sym;
+            CM->SUBS.idx = GetPModelIdxCorr(CM->SUBS.seq->buf+CM->SUBS.seq->idx
+            -1, CM, CM->SUBS.idx);
+            ComputePModel(Models[cModel], pModel[n], CM->SUBS.idx, CM->SUBS.eDen);
+            ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
+            }
+          ++n;
+          }
+
+        ComputeMXProbs(PT, MX);
+        bits += PModelSymbolLog(MX, sym);
+        ++nBase;
+        CalcDecayment(CMW, pModel, sym, P->gamma);
+        RenormalizeWeights(CMW);
+        CorrectXModels(Shadow, pModel, sym);
+        UpdateCBuffer(symBuf);
+        }
+      }
+        
+  if(PA->nRead % P->nThreads == T.id){
+    #ifdef LOCAL_SIMILARITY
+    if(P->local == 1)
+      UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase,
+      initNSymbol, nSymbol);
+    else
+      UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+    #else
+    UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
+    #endif
+    }
+
+  DeleteWeightModel(CMW);
+  for(n = 0 ; n < totModels ; ++n)
+    RemovePModel(pModel[n]);
+  Free(pModel);
+  RemovePModel(MX);
+  RemoveFPModel(PT);
+  for(n = 0 ; n < P->nModels ; ++n)
+    FreeShadow(Shadow[n]);
+  Free(Shadow);
+  Free(readBuf);
+  RemoveCBuffer(symBuf);
+  RemoveParser(PA);
+  fclose(Reader);
+  }
   
 
 //////////////////////////////////////////////////////////////////////////////
@@ -719,57 +861,49 @@ void *CompressThread(void *Thr){
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - - - R E F E R E N C E - - - - - - - - - - - - -
 
-/* FIXME: MMAP BUG FOR LARGE FILES (~300 GB)
-   XXX: IT WILL BE USED FREAD UNTIL FIXED BUG
 void LoadReference(char *refName){
   FILE     *Reader = Fopen(refName, "r");
   uint32_t n;
   uint64_t idx = 0;
+  uint64_t k, idxPos;
   PARSER   *PA = CreateParser();
-  CBUF     *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
-  uint8_t  sym, irSym, *readBuf;
+  CBUF     *symBuf  = CreateCBuffer(BUFFER_SIZE, BGUARD);
+  uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t));
+  uint8_t  sym, irSym = 0;
   FileType(PA, Reader);
-  fclose(Reader);
-  struct   stat s;
-  size_t   size, k;
-  long     fd;
+  rewind(Reader);
 
-  if((fd = open(refName, O_RDONLY)) == -1){
-    fprintf(stderr, "[x] Error: unable to open file\n");
-    exit(1);
-    }
-
-  fstat (fd, &s);
-  size = s.st_size;
-  readBuf = (uint8_t *) mmap(0, size, PROT_READ, MAP_PRIVATE|MAP_POPULATE, 
-  fd, 0);
-  madvise(readBuf, s.st_size, MADV_SEQUENTIAL);
-  for(k = 0 ; k < size ; ++k){
-    if(ParseSym(PA, (sym = *readBuf++)) == -1){ idx = 0; continue; }
-    symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
-    for(n = 0 ; n < P->nModels ; ++n){
-      CModel *CM = Models[n];
-      GetPModelIdx(symBuf->buf+symBuf->idx-1, CM);
-      if(++idx > CM->ctx){
-        UpdateCModelCounter(CM, sym, CM->pModelIdx);
-        if(CM->ir == 1){                         // INVERTED REPEATS
+  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
+    for(idxPos = 0 ; idxPos < k ; ++idxPos){
+      if(ParseSym(PA, (sym = readBuf[idxPos])) == -1){ idx = 0; continue; }
+      symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
+      for(n = 0 ; n < P->nModels ; ++n){
+        CModel *CM = Models[n];
+        GetPModelIdx(symBuf->buf+symBuf->idx-1, CM);
+        if(CM->ir == 1) // INVERTED REPEATS
           irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, CM);
-          UpdateCModelCounter(CM, irSym, CM->pModelIdxIR);
+        if(++idx >= CM->ctx){
+          UpdateCModelCounter(CM, sym, CM->pModelIdx);
+          if(CM->ir == 1) // INVERTED REPEATS
+            UpdateCModelCounter(CM, irSym, CM->pModelIdxIR);
           }
         }
+      UpdateCBuffer(symBuf);
       }
-    UpdateCBuffer(symBuf);
-    }
  
   for(n = 0 ; n < P->nModels ; ++n)
     ResetCModelIdx(Models[n]);
   RemoveCBuffer(symBuf);
+  Free(readBuf);
   RemoveParser(PA);
-  close(fd);
+  fclose(Reader);
   }
-*/
 
-void LoadReference(char *refName){
+
+//////////////////////////////////////////////////////////////////////////////
+// - - - - - - - - R E F E R E N C E   W I T H   K M O D E L S - - - - - - - -
+
+void LoadReferenceWKM(char *refName){
   FILE     *Reader = Fopen(refName, "r");
   uint32_t n;
   uint64_t idx = 0;
