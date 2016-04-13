@@ -91,7 +91,7 @@ void inline GetKHCCounters(KHASHTABLE *HT, U64 idx, PModel *PM, uint32_t a){
   PM->sum = 0;
   for(s = 0 ; s < 4 ; ++s){ // FOR EACH SYMBOL
     U64 key = ZHASH(idx+s);
-    U32 n, hIndex = key % KHASH_SIZE;
+    U32 n, hIndex = key % KHASH_SIZE, found = 0;
     #if defined(PREC32B)
     U32 b = key & 0xffffffff;
     #else
@@ -102,17 +102,20 @@ void inline GetKHCCounters(KHASHTABLE *HT, U64 idx, PModel *PM, uint32_t a){
     for(n = pos+1 ; n-- ; ){ // FROM INDEX-1 TO 0
       if(HT->entries[hIndex][n].key == b){
         PM->sum += (PM->freqs[s] = a * HT->entries[hIndex][n].counters + 1);
+        found = 1;
         break;
         }
       }
     for(n = (HT->maxC-1) ; n > pos ; --n){ // FROM MAX_COL TO INDEX
       if(HT->entries[hIndex][n].key == b){
         PM->sum += (PM->freqs[s] = a * HT->entries[hIndex][n].counters + 1);
+        found = 1;
         break;
         }
       }
 
-    PM->sum += (PM->freqs[s] = 1);  // DIDN'T FIND ANY, SO LETS ASSUME 1
+    if(found != 1)
+      PM->sum += (PM->freqs[s] = 1);  // DIDN'T FIND ANY, SO LETS ASSUME 1
     }
   }
 
@@ -371,8 +374,8 @@ inline void ComputeKPModel(KMODEL *M, PModel *P, uint64_t idx, uint32_t aDen){
       GetKHCCounters(&M->hTable, idx, P, aDen);
     break;
     case KARRAY_MODE:
-      ac = &M->array.counters[idx<<2];
-      P->freqs[0] = 1 + aDen * ac[0];
+      ac = &M->array.counters[idx];
+      P->freqs[0] = 1 + aDen * ac[0];  // FIXME: NOT WORKING CORRECTLY
       P->freqs[1] = 1 + aDen * ac[1];
       P->freqs[2] = 1 + aDen * ac[2];
       P->freqs[3] = 1 + aDen * ac[3];

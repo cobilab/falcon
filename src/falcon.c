@@ -584,7 +584,7 @@ void CompressTargetWKM(Threads T){
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t     sym, *pos, conName[MAX_NAME];
+  uint8_t     sym, conName[MAX_NAME];
   PModel      **pModel, *MX;
   KMODEL      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
   FloatPModel *PT;
@@ -658,10 +658,9 @@ void CompressTargetWKM(Threads T){
         symBuf->buf[symBuf->idx] = sym;
         memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
         n = 0;
-        pos = &symBuf->buf[symBuf->idx-1];
         for(model = 0 ; model < P->nModels ; ++model){
           KMODEL *KM = Shadow[model];
-          GetKIdxRef(pos, KM);
+          GetKIdxRef(symBuf->buf+symBuf->idx, KM);
           ComputeKPModel(KModels[model], pModel[n], KM->idx-sym, KM->alphaDen);
           ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
           /*
@@ -962,20 +961,19 @@ void LoadReferenceWKM(char *refName){
 void CompressAction(Threads *T, char *refName, char *baseName){
   pthread_t t[P->nThreads];
   uint32_t n;
-
  
-  #define KMODELSUSAGE 1
-  #ifdef KMODELSUSAGE
+//  #define KMODELSUSAGE 1
+//  #ifdef KMODELSUSAGE
   KModels = (KMODEL **) Malloc(P->nModels * sizeof(KMODEL *));
   for(n = 0 ; n < P->nModels ; ++n)
     KModels[n] = CreateKModel(T[0].model[n].ctx, T[0].model[n].den,
     T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
     T[0].model[n].eDen);
 
-  fprintf(stderr, "  [+] Loading metagenomic file (k).. ");
+  fprintf(stderr, "  [+] Loading metagenomic file ..... ");
   LoadReferenceWKM(refName);
   fprintf(stderr, "Done!\n");
-  #else
+/*  #else
   Models = (CModel **) Malloc(P->nModels * sizeof(CModel *));
   for(n = 0 ; n < P->nModels ; ++n)
     Models[n] = CreateCModel(T[0].model[n].ctx, T[0].model[n].den, 
@@ -986,7 +984,7 @@ void CompressAction(Threads *T, char *refName, char *baseName){
   LoadReference(refName);
   fprintf(stderr, "Done!\n");
   #endif
-
+*/
   fprintf(stderr, "  [+] Compressing database ......... ");
   for(n = 0 ; n < P->nThreads ; ++n)
     pthread_create(&(t[n+1]), NULL, CompressThread, (void *) &(T[n]));
