@@ -99,23 +99,24 @@ void inline GetKHCCounters(KHASHTABLE *HT, U64 idx, PModel *PM, uint32_t a){
     #endif
     
     U32 pos = HT->index[hIndex];
-    for(n = pos+1 ; n-- ; ){ // FROM INDEX-1 TO 0
+    for(n = pos+1 ; n-- ; ) // FROM INDEX-1 TO 0
       if(HT->entries[hIndex][n].key == b){
-        PM->sum += (PM->freqs[s] = a * HT->entries[hIndex][n].counters + 1);
+        PM->sum += (PM->freqs[s] = a * HT->entries[hIndex][n].counters);
         found = 1;
         break;
         }
-      }
-    for(n = (HT->maxC-1) ; n > pos ; --n){ // FROM MAX_COL TO INDEX
-      if(HT->entries[hIndex][n].key == b){
-        PM->sum += (PM->freqs[s] = a * HT->entries[hIndex][n].counters + 1);
-        found = 1;
-        break;
-        }
+
+    if(found != 1){
+      for(n = (HT->maxC-1) ; n > pos ; --n) // FROM MAX_COL TO INDEX
+        if(HT->entries[hIndex][n].key == b){
+          PM->sum += (PM->freqs[s] = a * HT->entries[hIndex][n].counters);
+          found = 1;
+          break;
+          }
       }
 
     if(found != 1)
-      PM->sum += (PM->freqs[s] = 1);  // DIDN'T FIND ANY, SO LETS ASSUME 1
+      PM->sum += (PM->freqs[s] = 0);  // DIDN'T FIND ANY, SO LETS ASSUME 1
     }
   }
 
@@ -126,7 +127,6 @@ void UpdateKModelCounter(KMODEL *M, U32 sym, U64 original){
 
   if(M->mode == KHASH_TABLE_MODE){
     U64 idx = 0;
-    U16 sc;
     U32 hIndex = (idx = ZHASH(original)) % KHASH_SIZE;
     #if defined(PREC32B)
     U32 b = idx & 0xffffffff;
@@ -136,12 +136,12 @@ void UpdateKModelCounter(KMODEL *M, U32 sym, U64 original){
 
     for(n = 0 ; n < M->hTable.maxC ; ++n)
       if(M->hTable.entries[hIndex][n].key == b){
-        if((sc = M->hTable.entries[hIndex][n].counters) == 255){ // OVERFLOW ?
+        if(M->hTable.entries[hIndex][n].counters == 255){ // OVERFLOW ?
           // TODO: SEARCH FOR EACH ZHASH(IDX) AND UPDATE >>= 1
           // TODO: THEN ++sc;
           return;
           }
-        ++sc;
+        M->hTable.entries[hIndex][n].counters += 1;
         return;
         }
 
