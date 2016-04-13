@@ -661,8 +661,8 @@ void CompressTargetWKM(Threads T){
         pos = &symBuf->buf[symBuf->idx-1];
         for(model = 0 ; model < P->nModels ; ++model){
           KMODEL *KM = Shadow[model];
-          GetKIdx(pos, KM);
-          ComputeKPModel(KModels[model], pModel[n], KM->idx, KM->alphaDen);
+          GetKIdxRef(pos, KM);
+          ComputeKPModel(KModels[model], pModel[n], KM->idx-sym, KM->alphaDen);
           ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
           /*
           if(KM->edits != 0){
@@ -927,8 +927,7 @@ void LoadReference(char *refName){
 void LoadReferenceWKM(char *refName){
   FILE     *Reader = Fopen(refName, "r");
   uint32_t n;
-  uint64_t idx = 0;
-  uint64_t k, idxPos;
+  uint64_t idx = 0, k, idxPos;
   PARSER   *PA = CreateParser();
   CBUF     *symBuf  = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t)), sym;
@@ -941,7 +940,7 @@ void LoadReferenceWKM(char *refName){
       symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
       for(n = 0 ; n < P->nModels ; ++n){
         KMODEL *KM = KModels[n];
-        GetKIdx(symBuf->buf+symBuf->idx, KM);
+        GetKIdxRef(symBuf->buf+symBuf->idx, KM);
         if(++idx >= KM->ctx)
           UpdateKModelCounter(KM, sym, KM->idx);
         }

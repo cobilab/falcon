@@ -165,8 +165,8 @@ U32 eDen){
     exit(1);
     }
 
-  mult          = (U64 *) Calloc(ctx, sizeof(U64));
-  M->nPModels   = (U64) pow(ALPHABET_SIZE, ctx+1);
+  mult          = (U64 *) Calloc(ctx+1, sizeof(U64));
+  M->nPModels   = (U64) pow(ALPHABET_SIZE, ctx);
   M->ctx        = ctx;
   M->alphaDen   = aDen;
   M->edits      = edits;
@@ -279,6 +279,14 @@ int32_t BestKId(uint32_t *f, uint32_t sum){
 inline void GetKIdx(U8 *p, KMODEL *M){
   M->idx = ((M->idx-*(p-M->ctx)*M->multiplier)<<2)+*p;
   }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// GET IDX TO REFERENCE
+
+inline void GetKIdxRef(U8 *p, KMODEL *M){
+  M->idx = ((M->idx-*(p-(M->ctx+1))*M->multiplier)<<2)+*p;
+  }
+
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // GET IDX REVERSE COMPLEMENTED

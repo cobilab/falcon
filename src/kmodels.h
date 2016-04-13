@@ -85,6 +85,7 @@ void            FailKSUBS            (KMODEL *);
 void            FreeKModel           (KMODEL *);
 void            FreeKShadow          (KMODEL *);
 inline void     GetKIdx              (U8 *, KMODEL *);
+inline void     GetKIdxRef           (U8 *, KMODEL *);
 inline U8       GetKIdxIR            (U8 *, KMODEL *);
 inline uint64_t GetKModelIdxCorr     (U8 *, KMODEL *, uint64_t);
 void            CorrectKModelSUBS    (KMODEL *, PModel *, uint8_t);
