@@ -277,8 +277,7 @@ int32_t BestKId(uint32_t *f, uint32_t sum){
 // GET IDX AND IDX2UPDATE
 
 inline void GetKIdx(U8 *p, KMODEL *M){
-  M->idx    = (M->idx-*(p-M->ctx)*M->multiplier)<<2;
-  M->idx2Up = M->idx + *p;
+  M->idx = ((M->idx-*(p-M->ctx)*M->multiplier)<<2)+*p;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -357,7 +356,7 @@ void CorrectKXModels(KMODEL **Shadow, PModel **PM, uint8_t sym){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 */
-inline void ComputeKModel(KMODEL *M, PModel *P, uint64_t idx, uint32_t aDen){
+inline void ComputeKPModel(KMODEL *M, PModel *P, uint64_t idx, uint32_t aDen){
   ACC *ac;
   switch(M->mode){
     case KHASH_TABLE_MODE:

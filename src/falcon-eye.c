@@ -167,7 +167,7 @@ int32_t main(int argc, char *argv[]){
     +(Paint->width/2)+4, "-");
     }
 
-  fprintf(stderr, "Addressing regions individually:\n"); 
+  if(nSeq > 0) fprintf(stderr, "Addressing regions individually:\n"); 
   while((sym = fgetc(INPUT)) != EOF){
 
     if(sym == '$'){

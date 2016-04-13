@@ -27,8 +27,12 @@
 #include "kmodels.h"
 #include "stream.h"
 
+//////////////////////////////////////////////////////////////////////////////
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 CModel **Models;   // MEMORY SHARED BY THREADING
 KMODEL **KModels;  // MEMORY SHARED BY THREADING
+
 
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - R E S E T   M O D E L S - - - - - - - - - - - -
@@ -40,6 +44,19 @@ void ResetModelsAndParam(CBUF *Buf, CModel **Shadow, CMWeight *CMW){
     ResetShadowModel(Shadow[n]);
   ResetWeightModel(CMW);
   }
+
+
+//////////////////////////////////////////////////////////////////////////////
+// - - - - - - - - - - - - - R E S E T   K M O D E L S - - - - - - - - - - - -
+
+void ResetKModelsAndParam(CBUF *Buf, KMODEL **Shadow, CMWeight *CMW){
+  uint32_t n;
+  ResetCBuffer(Buf);
+  for(n = 0 ; n < P->nModels ; ++n)
+    ResetKShadowModel(Shadow[n]);
+  ResetWeightModel(CMW);
+  }
+
 
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - L O C A L   C O M P L E X I T Y - - - - - - - - - - - -
@@ -262,6 +279,7 @@ void SamplingCompressTarget(Threads T){
   RemoveParser(PA);
   fclose(Reader);
   }
+
 
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - F A L C O N   C O M P R E S S I O N - - - - - - - -
@@ -562,13 +580,13 @@ void CompressTargetWKM(Threads T){
   FILE        *Reader = Fopen(P->base, "r");
   double      bits = 0;
   uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol;
-  uint32_t    n, k, idxPos, totModels, cModel;
+  uint32_t    n, k, idxPos, totModels, model;
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
   uint8_t     sym, *pos, conName[MAX_NAME];
   PModel      **pModel, *MX;
-  CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
+  KMODEL      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
   FloatPModel *PT;
   CMWeight    *CMW;
   int         action;
@@ -578,9 +596,9 @@ void CompressTargetWKM(Threads T){
     if(T.model[n].edits != 0)
       totModels += 1;
 
-  Shadow      = (CModel **) Calloc(P->nModels, sizeof(CModel *));
+  Shadow      = (KMODEL **) Calloc(P->nModels, sizeof(KMODEL *));
   for(n = 0 ; n < P->nModels ; ++n)
-    Shadow[n] = CreateShadowModel(Models[n]); 
+    Shadow[n] = CreateKShadowModel(KModels[n]); 
   pModel      = (PModel **) Calloc(totModels, sizeof(PModel *));
   for(n = 0 ; n < totModels ; ++n)
     pModel[n] = CreatePModel(ALPHABET_SIZE);
@@ -610,7 +628,7 @@ void CompressTargetWKM(Threads T){
             #ifdef LOCAL_SIMILARITY
             initNSymbol = nSymbol; 
             #endif  
-            ResetModelsAndParam(symBuf, Shadow, CMW); // RESET MODELS
+            ResetKModelsAndParam(symBuf, Shadow, CMW); // RESET MODELS
             r = nBase = bits = 0;
           break;
           case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
@@ -641,19 +659,21 @@ void CompressTargetWKM(Threads T){
         memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
         n = 0;
         pos = &symBuf->buf[symBuf->idx-1];
-        for(cModel = 0 ; cModel < P->nModels ; ++cModel){
-          CModel *CM = Shadow[cModel];
-          GetPModelIdx(pos, CM);
-          ComputePModel(Models[cModel], pModel[n], CM->pModelIdx, CM->alphaDen);
+        for(model = 0 ; model < P->nModels ; ++model){
+          KMODEL *KM = Shadow[model];
+          GetKIdx(pos, KM);
+          ComputeKPModel(KModels[model], pModel[n], KM->idx, KM->alphaDen);
           ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-          if(CM->edits != 0){
+          /*
+          if(KM->edits != 0){
             ++n;
-            CM->SUBS.seq->buf[CM->SUBS.seq->idx] = sym;
-            CM->SUBS.idx = GetPModelIdxCorr(CM->SUBS.seq->buf+CM->SUBS.seq->idx
-            -1, CM, CM->SUBS.idx);
-            ComputePModel(Models[cModel], pModel[n], CM->SUBS.idx, CM->SUBS.eDen);
+            KM->SUBS.seq->buf[KM->SUBS.seq->idx] = sym;
+            KM->SUBS.idx = GetPModelIdxCorr(KM->SUBS.seq->buf+KM->SUBS.seq->idx
+            -1, KM, KM->SUBS.idx);
+            ComputePModel(KModels[model], pModel[n], KM->SUBS.idx, KM->SUBS.eDen);
             ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
             }
+          */
           ++n;
           }
 
@@ -662,7 +682,7 @@ void CompressTargetWKM(Threads T){
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
-        CorrectXModels(Shadow, pModel, sym);
+        // CorrectXModels(Shadow, pModel, sym);
         UpdateCBuffer(symBuf);
         }
       }
@@ -686,7 +706,7 @@ void CompressTargetWKM(Threads T){
   RemovePModel(MX);
   RemoveFPModel(PT);
   for(n = 0 ; n < P->nModels ; ++n)
-    FreeShadow(Shadow[n]);
+    FreeKShadow(Shadow[n]);
   Free(Shadow);
   Free(readBuf);
   RemoveCBuffer(symBuf);
@@ -841,18 +861,19 @@ void CompressTarget(Threads T){
 void *CompressThread(void *Thr){
   Threads *T = (Threads *) Thr;
   
-  if(P->nModels == 1 && T->model[0].edits == 0){
-    if(P->sample > 1){
-      SamplingCompressTarget(T[0]);
-      }
-    else{      
-      FalconCompressTarget(T[0]);
-      }
-    }
-  else{
-    CompressTarget(T[0]);
+//  if(P->nModels == 1 && T->model[0].edits == 0){
+//    if(P->sample > 1){
+//      SamplingCompressTarget(T[0]);
+//      }
+//    else{      
+//      FalconCompressTarget(T[0]);
+//      }
+//    }
+//  else{
+    //CompressTarget(T[0]);
+    CompressTargetWKM(T[0]);
     //DoubleCompressTarget(T[0]);
-    }
+//    }
   
   pthread_exit(NULL);
   }
@@ -920,7 +941,7 @@ void LoadReferenceWKM(char *refName){
       symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
       for(n = 0 ; n < P->nModels ; ++n){
         KMODEL *KM = KModels[n];
-        GetKIdx(symBuf->buf+symBuf->idx-1, KM);
+        GetKIdx(symBuf->buf+symBuf->idx, KM);
         if(++idx >= KM->ctx)
           UpdateKModelCounter(KM, sym, KM->idx);
         }
@@ -1138,8 +1159,8 @@ int32_t main(int argc, char *argv[]){
 
   fprintf(stderr, "  [+] Freeing compression models ... ");
   for(n = 0 ; n < P->nModels ; ++n)
-    FreeCModel(Models[n]);
-  Free(Models);
+    FreeKModel(KModels[n]);
+  Free(KModels);
   fprintf(stderr, "Done!\n");
 
   StopTimeNDRM(Time, clock());
