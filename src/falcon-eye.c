@@ -115,7 +115,7 @@ int32_t main(int argc, char *argv[]){
     }
   rewind(INPUT);
 
-  fprintf(stderr, "Filtered %"PRIu64" from %"PRIu64" entries.\n", 
+  fprintf(stderr, "Skipping %"PRIu64" from %"PRIu64" entries.\n", 
   filtered, filtered+nSeq);
 
   Paint = CreatePainter(maxSize, PEYE->width, PEYE->space, PEYE->proportion, 
