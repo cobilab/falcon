@@ -70,7 +70,6 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
   PARSER      *PA = CreateParser();
   CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
   uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t     *pos;
   PModel      **pModel, *MX;
   KMODEL      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
   FloatPModel *PT;
@@ -126,14 +125,10 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
         symBuf->buf[symBuf->idx] = sym;
         memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
         n = 0;
-        //pos = &symBuf->buf[symBuf->idx-1];
         for(model = 0 ; model < P->nModels ; ++model){
           KMODEL *KM = Shadow[model];
-          //GetKIdx(pos, KM);
           GetKIdxRef(symBuf->buf+symBuf->idx, KM);
           ComputeKPModel(KModels[model], pModel[n], KM->idx-sym, KM->alphaDen);
-
-
           ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
 /*          if(KM->edits != 0){
             ++n;
@@ -1151,7 +1146,7 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "Done!\n");
 
   #ifdef LOCAL_SIMILARITY
-  if(P->local == 1 && (P->nModels > 1 || T->model[0].edits != 0)){ //TODO: RM AFTER SPECIFIC FUNCTIONS
+  if(P->local == 1){
     fprintf(stderr, "  [+] Running local similarity:\n");
     LocalComplexity(T[0], P->top, topSize, OUTLOC);
     fclose(OUTLOC);
