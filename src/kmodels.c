@@ -369,10 +369,10 @@ inline void ComputeKPModel(KMODEL *M, PModel *P, uint64_t idx, uint32_t aDen){
     break;
     case KARRAY_MODE:
       ac = &M->array.counters[idx];
-      P->freqs[0] = 1 + aDen * ac[0];
-      P->freqs[1] = 1 + aDen * ac[1];
-      P->freqs[2] = 1 + aDen * ac[2];
-      P->freqs[3] = 1 + aDen * ac[3];
+      P->freqs[0] = aDen * ac[0];
+      P->freqs[1] = aDen * ac[1];
+      P->freqs[2] = aDen * ac[2];
+      P->freqs[3] = aDen * ac[3];
       P->sum = P->freqs[0] + P->freqs[1] + P->freqs[2] + P->freqs[3];
     break;
     default:
