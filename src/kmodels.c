@@ -168,7 +168,7 @@ U32 eDen){
     exit(1);
     }
 
-  mult          = (U64 *) Calloc(ctx+1, sizeof(U64));
+  mult          = (U64 *) Calloc(ctx, sizeof(U64));
   M->nPModels   = (U64) pow(ALPHABET_SIZE, ctx);
   M->ctx        = ctx;
   M->alphaDen   = aDen;
@@ -189,12 +189,12 @@ U32 eDen){
     InitKArray(M);
     }
 
-  for(n = 0 ; n <= M->ctx ; ++n){
+  for(n = 0 ; n < M->ctx ; ++n){
     mult[n] = prod;
     prod <<= 2;
     }
 
-  M->multiplier = mult[M->ctx];
+  M->multiplier = mult[M->ctx-1];
 
   if(edits != 0){
     M->SUBS.seq       = CreateCBuffer(BUFFER_SIZE, BGUARD);
@@ -276,18 +276,12 @@ int32_t BestKId(uint32_t *f, uint32_t sum){
   return best;
   }
 */
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// GET IDX AND IDX2UPDATE
+// GET IDX
 
 inline void GetKIdx(U8 *p, KMODEL *M){
   M->idx = ((M->idx-*(p-M->ctx)*M->multiplier)<<2)+*p;
-  }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// GET IDX TO REFERENCE
-
-inline void GetKIdxRef(U8 *p, KMODEL *M){
-  M->idx = ((M->idx-*(p-(M->ctx+1))*M->multiplier)<<2)+*p;
   }
 
 
@@ -375,7 +369,7 @@ inline void ComputeKPModel(KMODEL *M, PModel *P, uint64_t idx, uint32_t aDen){
     break;
     case KARRAY_MODE:
       ac = &M->array.counters[idx];
-      P->freqs[0] = 1 + aDen * ac[0];  // FIXME: NOT WORKING CORRECTLY
+      P->freqs[0] = 1 + aDen * ac[0];
       P->freqs[1] = 1 + aDen * ac[1];
       P->freqs[2] = 1 + aDen * ac[2];
       P->freqs[3] = 1 + aDen * ac[3];

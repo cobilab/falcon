@@ -127,7 +127,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
         n = 0;
         for(model = 0 ; model < P->nModels ; ++model){
           KMODEL *KM = Shadow[model];
-          GetKIdxRef(symBuf->buf+symBuf->idx, KM);
+          GetKIdx(symBuf->buf+symBuf->idx, KM);
           ComputeKPModel(KModels[model], pModel[n], KM->idx-sym, KM->alphaDen);
           ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
 /*          if(KM->edits != 0){
@@ -659,7 +659,7 @@ void CompressTargetWKM(Threads T){
         n = 0;
         for(model = 0 ; model < P->nModels ; ++model){
           KMODEL *KM = Shadow[model];
-          GetKIdxRef(symBuf->buf+symBuf->idx, KM);
+          GetKIdx(symBuf->buf+symBuf->idx, KM);
           ComputeKPModel(KModels[model], pModel[n], KM->idx-sym, KM->alphaDen);
           ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
           /*
@@ -938,7 +938,7 @@ void LoadReferenceWKM(char *refName){
       symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
       for(n = 0 ; n < P->nModels ; ++n){
         KMODEL *KM = KModels[n];
-        GetKIdxRef(symBuf->buf+symBuf->idx, KM);
+        GetKIdx(symBuf->buf+symBuf->idx, KM);
         if(++idx >= KM->ctx)
           UpdateKModelCounter(KM, sym, KM->idx);
         }
