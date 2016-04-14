@@ -1554,8 +1554,16 @@ int32_t main(int argc, char *argv[]){
 
   fprintf(stderr, "  [+] Freeing compression models ... ");
   for(n = 0 ; n < P->nModels ; ++n)
+    #ifdef KMODELSUSAGE
     FreeKModel(KModels[n]);
+    #else
+    FreeCModel(Models[n]);
+    #endif
+  #ifdef KMODELSUSAGE
   Free(KModels);
+  #else
+  Free(Models);
+  #endif
   fprintf(stderr, "Done!\n");
 
   StopTimeNDRM(Time, clock());
