@@ -1214,9 +1214,9 @@ void *CompressThread(void *Thr){
     RightCompressTarget(T[0]);
     fprintf(stderr, "Done!\n");
 
-    FreeReference();
+//    FreeReference();
 
-    LoadReference();
+//    LoadReference();
     
     LeftCompressTarget(T[0]);
     
@@ -1362,21 +1362,48 @@ void CompressAction(Threads *T, char *refName, char *baseName){
     pthread_join(t[n+1], NULL);
   fprintf(stderr, "Done!\n");
 
-  fprintf(stderr, "  [+] Loading file in reverse ...... ");
+  fprintf(stderr, "  [+] Freeing compression models ... ");
+  for(n = 0 ; n < P->nModels ; ++n)
     #ifdef KMODELSUSAGE
-    LoadReferenceWKM(refName);
+    FreeKModel(KModels[n]);
     #else
-    LoadReference(refName);
+    FreeCModel(Models[n]);
     #endif
+  #ifdef KMODELSUSAGE
+  Free(KModels);
+  #else
+  Free(Models);
+  #endif
   fprintf(stderr, "Done!\n");
 
-  fprintf(stderr, "  [+] Running Left side .......,.... ");
+  #ifdef KMODELSUSAGE
+  KModels = (KMODEL **) Malloc(P->nModels * sizeof(KMODEL *));
+  for(n = 0 ; n < P->nModels ; ++n)
+    KModels[n] = CreateKModel(T[0].model[n].ctx, T[0].model[n].den,
+    T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
+    T[0].model[n].eDen);
+  fprintf(stderr, "  [+] Loading reverse file ......... ");
+  LoadReferenceWKM(refName);
+  //LoadRevReferenceWKM(refName);
+  fprintf(stderr, "Done!\n");
+  #else
+  Models = (CModel **) Malloc(P->nModels * sizeof(CModel *));
+  for(n = 0 ; n < P->nModels ; ++n)
+    Models[n] = CreateCModel(T[0].model[n].ctx, T[0].model[n].den,
+    T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
+    T[0].model[n].eDen);
+  fprintf(stderr, "  [+] Loading reverse file ......... ");
+  LoadReference(refName);
+  //LoadRevReference(refName);
+  fprintf(stderr, "Done!\n");
+  #endif
+
+  fprintf(stderr, "  [+] Running Left side ............ ");
   for(n = 0 ; n < P->nThreads ; ++n)
     pthread_create(&(t[n+1]), NULL, CompressThreadLeft, (void *) &(T[n]));
   for(n = 0 ; n < P->nThreads ; ++n) // DO NOT JOIN FORS!
     pthread_join(t[n+1], NULL);
   fprintf(stderr, "Done!\n");
-
   #else  
   fprintf(stderr, "  [+] Compressing database ......... ");
   for(n = 0 ; n < P->nThreads ; ++n)
