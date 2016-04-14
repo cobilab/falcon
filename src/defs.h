@@ -19,6 +19,8 @@
 //#define PREC8B  // UNCOMMENT: CONTEXTS UP TO 16 (IT WILL USE LOW MEMORY!)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+//#define KMODELSUSAGE 1
+
 typedef uint64_t ULL;
 typedef uint64_t U64;
 typedef uint32_t U32;

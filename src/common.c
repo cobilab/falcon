@@ -108,7 +108,6 @@ uint8_t QuadQuantization(double v){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 uint8_t PackByte(double v, uint8_t sym){
-  //return QuadQuantization(v) * sym + SBASE;
   switch(sym){
     case 0:
       switch(QuadQuantization(v)){
