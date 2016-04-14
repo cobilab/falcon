@@ -1328,6 +1328,76 @@ void LoadReferenceWKM(char *refName){
 
 
 //////////////////////////////////////////////////////////////////////////////
+// - - - - - R E F E R E N C E   W I T H   K M O D E L S   I N   R E V - - - -
+
+void LoadRevReferenceWKM(char *refName){
+  FILE     *Reader = Fopen(refName, "r");
+  uint32_t n;
+  uint64_t idx = 0, k, idxPos;
+  PARSER   *PA = CreateParser();
+  CBUF     *symBuf  = CreateCBuffer(BUFFER_SIZE, BGUARD);
+  uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t)), sym;
+  FileType(PA, Reader);
+  rewind(Reader);
+
+  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
+    for(idxPos = 0 ; idxPos < k ; ++idxPos){
+      if(ParseSym(PA, (sym = readBuf[idxPos])) == -1){ idx = 0; continue; }
+      symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
+      for(n = 0 ; n < P->nModels ; ++n){
+        KMODEL *KM = KModels[n];
+        GetKIdx(symBuf->buf+symBuf->idx, KM);
+        if(++idx >= KM->ctx)
+          UpdateKModelCounter(KM, sym, KM->idx);
+        }
+      UpdateCBuffer(symBuf);
+      }
+
+  for(n = 0 ; n < P->nModels ; ++n)
+    ResetKModelIdx(KModels[n]);
+  RemoveCBuffer(symBuf);
+  Free(readBuf);
+  RemoveParser(PA);
+  fclose(Reader);
+  }
+
+
+//////////////////////////////////////////////////////////////////////////////
+// - - - - - - - - - - - - R E F E R E N C E   I N   R E V - - - - - - - - - -
+
+void LoadRevReference(char *refName){
+  FILE     *Reader = Fopen(refName, "r");
+  uint32_t n;
+  uint64_t idx = 0, k, idxPos;
+  PARSER   *PA = CreateParser();
+  CBUF     *symBuf  = CreateCBuffer(BUFFER_SIZE, BGUARD);
+  uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t)), sym;
+  FileType(PA, Reader);
+  rewind(Reader);
+
+  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
+    for(idxPos = 0 ; idxPos < k ; ++idxPos){
+      if(ParseSym(PA, (sym = readBuf[idxPos])) == -1){ idx = 0; continue; }
+      symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
+      for(n = 0 ; n < P->nModels ; ++n){
+        KMODEL *KM = KModels[n];
+        GetKIdx(symBuf->buf+symBuf->idx, KM);
+        if(++idx >= KM->ctx)
+          UpdateKModelCounter(KM, sym, KM->idx);
+        }
+      UpdateCBuffer(symBuf);
+      }
+
+  for(n = 0 ; n < P->nModels ; ++n)
+    ResetKModelIdx(KModels[n]);
+  RemoveCBuffer(symBuf);
+  Free(readBuf);
+  RemoveParser(PA);
+  fclose(Reader);
+  }
+
+
+//////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - C O M P R E S S O R   M A I N - - - - - - - - - - - -
 
 void CompressAction(Threads *T, char *refName, char *baseName){
@@ -1383,8 +1453,7 @@ void CompressAction(Threads *T, char *refName, char *baseName){
       T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
       T[0].model[n].eDen);
     fprintf(stderr, "  [+] Loading reverse file ......... ");
-    LoadReferenceWKM(refName);
-    //LoadRevReferenceWKM(refName);
+    LoadRevReferenceWKM(refName);
     fprintf(stderr, "Done!\n");
     #else
     Models = (CModel **) Malloc(P->nModels * sizeof(CModel *));
@@ -1393,8 +1462,7 @@ void CompressAction(Threads *T, char *refName, char *baseName){
       T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
       T[0].model[n].eDen);
     fprintf(stderr, "  [+] Loading reverse file ......... ");
-    LoadReference(refName);
-    //LoadRevReference(refName);
+    LoadRevReference(refName);
     fprintf(stderr, "Done!\n");
     #endif
 
