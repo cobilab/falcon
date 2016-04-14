@@ -1328,7 +1328,7 @@ void LoadReferenceWKM(char *refName){
 
 
 //////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - - - - - - - C O M P R E S S O R - - - - - - - - - - - - - -
+// - - - - - - - - - - - C O M P R E S S O R   M A I N - - - - - - - - - - - -
 
 void CompressAction(Threads *T, char *refName, char *baseName){
   pthread_t t[P->nThreads];
@@ -1376,27 +1376,27 @@ void CompressAction(Threads *T, char *refName, char *baseName){
   #endif
   fprintf(stderr, "Done!\n");
 
-  #ifdef KMODELSUSAGE
-  KModels = (KMODEL **) Malloc(P->nModels * sizeof(KMODEL *));
-  for(n = 0 ; n < P->nModels ; ++n)
-    KModels[n] = CreateKModel(T[0].model[n].ctx, T[0].model[n].den,
-    T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
-    T[0].model[n].eDen);
-  fprintf(stderr, "  [+] Loading reverse file ......... ");
-  LoadReferenceWKM(refName);
-  //LoadRevReferenceWKM(refName);
-  fprintf(stderr, "Done!\n");
-  #else
-  Models = (CModel **) Malloc(P->nModels * sizeof(CModel *));
-  for(n = 0 ; n < P->nModels ; ++n)
-    Models[n] = CreateCModel(T[0].model[n].ctx, T[0].model[n].den,
-    T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
-    T[0].model[n].eDen);
-  fprintf(stderr, "  [+] Loading reverse file ......... ");
-  LoadReference(refName);
-  //LoadRevReference(refName);
-  fprintf(stderr, "Done!\n");
-  #endif
+    #ifdef KMODELSUSAGE
+    KModels = (KMODEL **) Malloc(P->nModels * sizeof(KMODEL *));
+    for(n = 0 ; n < P->nModels ; ++n)
+      KModels[n] = CreateKModel(T[0].model[n].ctx, T[0].model[n].den,
+      T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
+      T[0].model[n].eDen);
+    fprintf(stderr, "  [+] Loading reverse file ......... ");
+    LoadReferenceWKM(refName);
+    //LoadRevReferenceWKM(refName);
+    fprintf(stderr, "Done!\n");
+    #else
+    Models = (CModel **) Malloc(P->nModels * sizeof(CModel *));
+    for(n = 0 ; n < P->nModels ; ++n)
+      Models[n] = CreateCModel(T[0].model[n].ctx, T[0].model[n].den,
+      T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
+      T[0].model[n].eDen);
+    fprintf(stderr, "  [+] Loading reverse file ......... ");
+    LoadReference(refName);
+    //LoadRevReference(refName);
+    fprintf(stderr, "Done!\n");
+    #endif
 
   fprintf(stderr, "  [+] Running Left side ............ ");
   for(n = 0 ; n < P->nThreads ; ++n)
