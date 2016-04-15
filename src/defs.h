@@ -20,7 +20,7 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //#define KMODELSUSAGE 1
-#define DOUBLESIDE 1
+//#define DOUBLESIDE 1
 
 typedef uint64_t ULL;
 typedef uint64_t U64;
