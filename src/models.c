@@ -90,10 +90,10 @@ static void InsertKey(HashTable *H, U32 hi, U64 idx, U8 s){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 inline void GetFreqsFromHCC(HCC c, uint32_t a, PModel *P){
-  P->sum  = (P->freqs[0] = a * ( c &  0x0f));           // NO +1: N ARITHCODER
-  P->sum += (P->freqs[1] = a * ((c & (0x0f<<4 ))>>4));  // NO +1: N ARITHCODER
-  P->sum += (P->freqs[2] = a * ((c & (0x0f<<8 ))>>8));  // NO +1: N ARITHCODER
-  P->sum += (P->freqs[3] = a * ((c & (0x0f<<12))>>12)); // NO +1: N ARITHCODER
+  P->sum  = (P->freqs[0] = 1 + a * ( c &  0x0f));           // NO +1: N ARITHCODER
+  P->sum += (P->freqs[1] = 1 + a * ((c & (0x0f<<4 ))>>4));  // NO +1: N ARITHCODER
+  P->sum += (P->freqs[2] = 1 + a * ((c & (0x0f<<8 ))>>8));  // NO +1: N ARITHCODER
+  P->sum += (P->freqs[3] = 1 + a * ((c & (0x0f<<12))>>12)); // NO +1: N ARITHCODER
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -395,10 +395,10 @@ inline void ComputePModel(CModel *M, PModel *P, uint64_t idx, uint32_t aDen){
     break;
     case ARRAY_MODE:
       ac = &M->array.counters[idx<<2];
-      P->freqs[0] = aDen * ac[0]; // +1 IS NOT NEEDED BECAUSE THERE IS NO AC
-      P->freqs[1] = aDen * ac[1]; // +1 IS NOT NEEDED BECAUSE THERE IS NO AC
-      P->freqs[2] = aDen * ac[2]; // +1 IS NOT NEEDED BECAUSE THERE IS NO AC
-      P->freqs[3] = aDen * ac[3]; // +1 IS NOT NEEDED BECAUSE THERE IS NO AC
+      P->freqs[0] = 1 + aDen * ac[0]; // +1 IS NOT NEEDED BECAUSE THERE IS NO AC
+      P->freqs[1] = 1 + aDen * ac[1]; // +1 IS NOT NEEDED BECAUSE THERE IS NO AC
+      P->freqs[2] = 1 + aDen * ac[2]; // +1 IS NOT NEEDED BECAUSE THERE IS NO AC
+      P->freqs[3] = 1 + aDen * ac[3]; // +1 IS NOT NEEDED BECAUSE THERE IS NO AC
       P->sum = P->freqs[0] + P->freqs[1] + P->freqs[2] + P->freqs[3];
     break;
     default:
