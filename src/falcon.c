@@ -28,7 +28,7 @@
 #include "stream.h"
 
 //////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - M O D E L S - - - - - - - - - - - - - - - -
 
 CModel **Models;   // MEMORY SHARED BY THREADING
 KMODEL **KModels;  // MEMORY SHARED BY THREADING
@@ -615,7 +615,7 @@ void RightCompressTarget(Threads T){
 
 void LeftCompressTarget(Threads T){
   FILE        *Reader  = Fopen(P->base, "r");
-  FILE        *Writter = Fopen("xtmpFalconRightProf.fal", "w");
+  FILE        *Complex = Fopen("xtmpFalconRightProf.fal", "r");
   double      bits = 0, instant = 0;
   uint64_t    nBase = 0, nSymbol;
   uint32_t    n, k, idxPos, totModels, cModel;
@@ -644,6 +644,16 @@ void LeftCompressTarget(Threads T){
   PT          = CreateFloatPModel(ALPHABET_SIZE);
   CMW         = CreateWeightModel(totModels);
 
+/*
+  int64_t size = 0, i = 0
+  fseeko(IN, 0, SEEK_END);
+  size = ftello(IN);
+
+  while(i++ < size){
+    fseeko(IN, -i, SEEK_END);
+    printf("%c", fgetc(IN));
+    }
+*/
   nSymbol = 0;
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
@@ -691,7 +701,8 @@ void LeftCompressTarget(Threads T){
         ComputeMXProbs(PT, MX);
         bits += (instant = PModelSymbolLog(MX, sym));
 
-        fprintf(Writter, "%f\n", (float) instant); //TODO: OBVIOUSLY IMPROVE
+        //fprintf(Writter, "%f\n", (float) instant); //TODO: OBVIOUSLY IMPROVE
+        //Read(Complex); in reverse?
 
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
@@ -714,7 +725,7 @@ void LeftCompressTarget(Threads T){
   RemoveCBuffer(symBuf);
   RemoveParser(PA);
   fclose(Reader);
-  fclose(Writter);
+  fclose(Complex);
   }
 
 
