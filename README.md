@@ -1,6 +1,6 @@
 <br>
 <p align="center"><img src="imgs/logot.png"
-alt="FALCON" width="300" height="300" border="0" /></p>
+alt="FALCON" width="250" height="250" border="0" /></p>
 <br>
 
 <p align="justify">
