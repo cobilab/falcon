@@ -252,6 +252,22 @@ All the parameters can be better explained trough the following table:
 | -o &#60;FILE&#62;     | Output SVG image filename. |
 | [FILE]           | Profile filename given by the output of FALCON-FILTER. |
 
+## COMMON USE ##
+
+Create the following bash script:
+<pre>
+#!/bin/bash
+./FALCON -v -n 4 -t 200 -F -Z -m 20:100:1:5/10 -c 30 -y complexity.com $1 $2
+./FALCON-FILTER -v -F -t 0.5 -o positions.pos complexity.com
+./FALCON-EYE -v -F -o draw.map positions.pos
+</pre>
+Name it Run.sh, then run it using:
+<pre>
+. Run.sh Eagle.fna virus.fna
+</pre>
+Eagle.fna and virus.fna are only two examples.
+See folder examples for more.
+
 ## CITATION ##
 
 On using this software/method please cite: 
