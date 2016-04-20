@@ -141,11 +141,11 @@ All the parameters can be better explained trough the following table:
 | [FILE1]           | The metagenomic filename (direct from the NGS sequencing platform). Possible file formats: FASTQ, multi-FASTA, FASTA or sequence [ACGTN]. |
 | [FILE2]           | The database filename (e.g. virus or bacteria database). Possible file formats: FASTA, multi-FASTA or sequence [ACGTN]. There are several scripts, on directory scripts, to download several databases. |
 
-### Local detection
+### 3.1 Local detection
 
 <b>For local interactions detection and visualization</b> the package provides <b>FALCON-FILTER</b> and <b>FALCON-EYE</b>. 
 
-#### Filtering
+#### 3.1.1 Filtering
 
 To see the possible options of FALCON-FILTER type
 <pre>
@@ -194,7 +194,7 @@ All the parameters can be better explained trough the following table:
 | -o &#60;FILE&#62;     | Output filename to be, for example, computed in FALCON-EYE. It contains the local positions with the intervals describing similarity. |
 | [FILE]           | Profile filename given by the output of FALCON (option:-Z -y &#60;FILE&#62;). |
 
-#### Visualization
+#### 3.1.2 Visualization
 
 To see the possible options of FALCON-EYE type
 <pre>
