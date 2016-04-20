@@ -18,7 +18,7 @@ To measure the similarity, the system will build <b>multiple finite-context mode
 The tool is also able to <b>identify locally where, in each database sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-FILTER)</b> and <b>to visualize the results (FALCON-EYE)</b>. <b>Several running modes</b> are available for different hardware and speed specifications. <b>The system is able to automatically learn to measure relative similarity</b>, whose properties are characteristics of the <b>Artificial Intelligence</b> field.
 </p>
 
-## INSTALLATION ##
+## 1. INSTALLATION ##
 
 [![Install and Demo Video](imgs/demo.png)](https://www.youtube.com/watch?v=eLqXE2ghFNk)
 
@@ -64,7 +64,7 @@ FALCON-EYE
 </pre>
 FALCON is the main program, FALCON-FILTER is used to filter local interactions and FALCON-EYE is used to visualize the output from FALCON-FILTER program.
 
-## DEMO ##
+## 2. DEMO ##
 
 After install, search for the top 10 similar virus in Chimpanzee chromosome 7:
 <pre>
@@ -84,7 +84,7 @@ In the case of problems with perl, run the following:
 perl -MCPAN -e'install "LWP::Simple"'
 </pre>
 
-## USAGE ##
+## 3. USAGE ##
 
 To see the possible options of FALCON type
 <pre>
@@ -262,7 +262,7 @@ All the parameters can be better explained trough the following table:
 | -o &#60;FILE&#62;     | Output SVG image filename. |
 | [FILE]           | Profile filename given by the output of FALCON-FILTER. |
 
-## COMMON USE ##
+## 4. COMMON USE ##
 
 Create the following bash script:
 <pre>
@@ -278,7 +278,7 @@ Name it Run.sh, then run it using:
 Eagle.fna and virus.fna are only two examples.
 See folder examples for more.
 
-## CITATION ##
+## 5. CITATION ##
 
 On using this software/method please cite: 
 
@@ -286,11 +286,11 @@ D. Pratas, A. J. Pinho, P. J. S. G. Ferreira, J. M. O. S. Rodrigues (2015). FALC
 
 D. Pratas, R. M. Silva, A. J. Pinho, P. J. S. G. Ferreira. An alignment-free method to find and visualise rearrangements between pairs of DNA sequences. Sci. Rep. 5, 10203; doi: 10.1038/srep10203 (2015).
 
-## ISSUES ##
+## 6. ISSUES ##
 
 For any issue let us know at [issues link](https://github.com/pratas/falcon/issues).
 
-## LICENSE ##
+## 7. LICENSE ##
 
 GPL v3.
 
