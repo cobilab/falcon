@@ -18,6 +18,10 @@ To measure the similarity, the system will build <b>multiple finite-context mode
 The tool is also able to <b>identify locally where, in each database sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-FILTER)</b> and <b>to visualize the results (FALCON-EYE)</b>. <b>Several running modes</b> are available for different hardware and speed specifications. <b>The system is able to automatically learn to measure relative similarity</b>, whose properties are characteristics of the <b>Artificial Intelligence</b> field.
 </p>
 
+<p align="justify">
+An example of the FALCON-EYE, program to visualize FALCON output, can be seen in the following figure:
+</p>
+<br>
 <p align="center"><img src="imgs/ex1.png" alt="FALCON-EYE example" height="300" border="0" /></p>
 <br>
 
