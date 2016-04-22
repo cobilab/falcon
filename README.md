@@ -21,8 +21,7 @@ The tool is also able to <b>identify locally where, in each database sequence, t
 <p align="justify">
 An example of the FALCON-EYE, program to visualize FALCON output, can be seen in the following figure:
 </p>
-<br>
-<p align="center"><img src="imgs/ex1.png" alt="FALCON-EYE example" height="300" border="0" /></p>
+<p align="center"><img src="imgs/ex1.png" alt="FALCON-EYE example" height="400" border="0" /></p>
 <br>
 
 ## 1. INSTALLATION ##
