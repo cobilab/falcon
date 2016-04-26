@@ -1,15 +1,10 @@
-# This script downloads all viral genomes in RefSeq and puts them in viruses.fa
+# This script downloads all Bacterial genomes in RefSeq and puts them in bacteria.fa
 # Script is taken from: http://www.ncbi.nlm.nih.gov/books/NBK25498/#chapter3.Application_3_Retrieving_large 
 # BY INTERFACE NCBI: http://www.ncbi.nlm.nih.gov/nuccore?term=%22Bacteria%22[PORG]+AND+srcdb_refseq[PROP] , then sent to file: fasta.
 
 use LWP::Simple;
 
-
-if($#ARGV + 1 > 0) {
-    $organism = $ARGV[0];
-} else {
-    $organism = 'Bacteria';
-}
+$organism = 'bacteria';
 
 $query = $organism.'[orgn]+AND+srcdb_refseq[prop]';
 print STDERR "Searching RefSeq for $organism: $query\n";
@@ -17,10 +12,8 @@ print STDERR "Searching RefSeq for $organism: $query\n";
 $base = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
 $url = $base . "esearch.fcgi?db=nucleotide&term=$query&usehistory=y";
 
-
 #post the esearch URL
 $output = get($url);
-
 
 #parse WebEnv, QueryKey and Count (# records retrieved)
 $web = $1 if ($output =~ /<WebEnv>(\S+)<\/WebEnv>/);
@@ -34,7 +27,6 @@ if($count == 0) {
 
 #open output file for writing
 open(OUT, ">tmp.$organism.fa") || die "Can't open file!\n";
-
 
 #retrieve data in batches of 5000
 $retmax = 5000;
