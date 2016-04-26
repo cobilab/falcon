@@ -253,15 +253,14 @@ void LocalComplexityWKM(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
           GetKIdx(symBuf->buf+symBuf->idx, KM);
           ComputeKPModel(KModels[model], pModel[n], KM->idx-sym, KM->alphaDen);
           ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-/*          if(KM->edits != 0){
-            ++n;
-            KM->SUBS.seq->buf[KM->SUBS.seq->idx] = sym;
-            KM->SUBS.idx = GetPModelIdxCorr(KM->SUBS.seq->buf+KM->SUBS.seq->idx
-            -1, KM, KM->SUBS.idx);
-            ComputeKPModel(KModels[model], pModel[n], KM->SUBS.idx, KM->SUBS.eDen);
-            ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-            }
-*/
+          //if(KM->edits != 0){
+          //  ++n;
+          //  KM->SUBS.seq->buf[KM->SUBS.seq->idx] = sym;
+          //  KM->SUBS.idx = GetPModelIdxCorr(KM->SUBS.seq->buf+KM->SUBS.seq->idx
+          //  -1, KM, KM->SUBS.idx);
+          //  ComputeKPModel(KModels[model], pModel[n], KM->SUBS.idx, KM->SUBS.eDen);
+          //  ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
+          //  }
           ++n;
           }
 
@@ -272,7 +271,7 @@ void LocalComplexityWKM(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
-//        CorrectXModels(Shadow, pModel, sym);
+        // CorrectXModels(Shadow, pModel, sym);
         UpdateCBuffer(symBuf);
         }
 
@@ -701,7 +700,7 @@ void LeftCompressTarget(Threads T){
         ComputeMXProbs(PT, MX);
         bits += (instant = PModelSymbolLog(MX, sym));
 
-        //fprintf(Writter, "%f\n", (float) instant); //TODO: OBVIOUSLY IMPROVE
+        //fprintf(Writter, "%f\n", (float) instant); // OBVIOUSLY IMPROVE
         //Read(Complex); in reverse?
 
         ++nBase;
@@ -1011,16 +1010,14 @@ void CompressTargetWKM(Threads T){
           GetKIdx(symBuf->buf+symBuf->idx, KM);
           ComputeKPModel(KModels[model], pModel[n], KM->idx-sym, KM->alphaDen);
           ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-          /*
-          if(KM->edits != 0){
-            ++n;
-            KM->SUBS.seq->buf[KM->SUBS.seq->idx] = sym;
-            KM->SUBS.idx = GetPModelIdxCorr(KM->SUBS.seq->buf+KM->SUBS.seq->idx
-            -1, KM, KM->SUBS.idx);
-            ComputePModel(KModels[model], pModel[n], KM->SUBS.idx, KM->SUBS.eDen);
-            ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-            }
-          */
+          //if(KM->edits != 0){
+          //  ++n;
+          //  KM->SUBS.seq->buf[KM->SUBS.seq->idx] = sym;
+          //  KM->SUBS.idx = GetPModelIdxCorr(KM->SUBS.seq->buf+KM->SUBS.seq->idx
+          //  -1, KM, KM->SUBS.idx);
+          //  ComputePModel(KModels[model], pModel[n], KM->SUBS.idx, KM->SUBS.eDen);
+          //  ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
+          //  }
           ++n;
           }
 
@@ -1224,14 +1221,9 @@ void *CompressThread(void *Thr){
     fprintf(stderr, "  [+] Running right side ......... ");
     RightCompressTarget(T[0]);
     fprintf(stderr, "Done!\n");
-
-//    FreeReference();
-
-//    LoadReference();
-    
+    // FreeReference();
+    // LoadReference();
     LeftCompressTarget(T[0]);
-    
-
     #else
     CompressTarget(T[0]);
     #endif
