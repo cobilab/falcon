@@ -28,10 +28,6 @@ void AddSLabel(SLABELS *SL, char *str){
     SL->names[SL->idx][n] = tolower(c);  
     }
   SL->names[SL->idx][n] = '\0';
-
- // fprintf(stderr, "str=%s\n", str);
- // fprintf(stderr, "str2=%s\n", SL->names[SL->idx]);
-
   SL->idx++;
   }
 
