@@ -196,7 +196,7 @@ int32_t main(int argc, char *argv[]){
         sourceCopy[groupArray[1].rm_eo] = 0;
         if(SearchSLabels(SL, sourceCopy + groupArray[1].rm_so) == 0){
           AddSLabel(SL, sourceCopy + groupArray[1].rm_so);
-          fprintf(stderr, "NEW!!!!\n\n\n");
+          fprintf(stderr, "NEW!!!!\n\n\n"); //TODO: MAKE FILTER WHEN NOT NEW
           }
         UpdateSLabels(SL);
         }
