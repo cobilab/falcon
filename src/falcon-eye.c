@@ -12,10 +12,12 @@
 #include <unistd.h>
 #include <sys/uio.h>
 #include <sys/mman.h>
+#include <regex.h>
 #include "mem.h"
 #include "time.h"
 #include "defs.h"
 #include "param.h"
+#include "labels.h"
 #include "msg.h"
 #include "common.h"
 #include "paint.h"
@@ -167,6 +169,18 @@ int32_t main(int argc, char *argv[]){
     +(Paint->width/2)+4, "-");
     }
 
+  // BUILD UNIQUE ARRAY FOR NAMES USING REGULAR EXPRESSION:
+  //
+  // tested at: https://regex101.com/
+  char *regexString = ".*\\|.*\\|.*\\|_([a-z A-Z]*_[a-z A-Z]*)";
+  regex_t regexCompiled;
+  regmatch_t groupArray[2];
+  SLABELS *SL = CreateSLabels();
+  if(regcomp(&regexCompiled, regexString, REG_EXTENDED)){
+    fprintf(stderr, "  [x] Error: regular expression compilation!\n");
+    return 1;
+    }
+
   if(nSeq > 0) fprintf(stderr, "Addressing regions individually:\n"); 
   while((sym = fgetc(INPUT)) != EOF){
 
@@ -176,17 +190,16 @@ int32_t main(int argc, char *argv[]){
         exit(1);
         }
 
-      // TODO: CHECK BEST FOR EACH FNAME:
-/*      if(ParseFromOther(fname) == 1){  // IF PRESENT
-        while(fscanf(INPUT, "%"PRIu64":%"PRIu64"\t%u\n", &iPos, &ePos, &cmp) == 3)
-          ;
-        continue;
+      if(regexec(&regexCompiled, fname, 2, groupArray, 0) == 0){
+        char sourceCopy[strlen(fname) + 1];
+        strcpy(sourceCopy, fname);
+        sourceCopy[groupArray[1].rm_eo] = 0;
+        if(SearchSLabels(SL, sourceCopy + groupArray[1].rm_so) == 0){
+          AddSLabel(SL, sourceCopy + groupArray[1].rm_so);
+          fprintf(stderr, "NEW!!!!\n\n\n");
+          }
+        UpdateSLabels(SL);
         }
-      else{ // IF NOT PRESENT
-        if(fvalue < List){
-          continue
-        }
-*/
 
       // SKIPS: FILTERED ATTRIBUTES
       if(fsize > PEYE->upperSize ||  fsize < PEYE->lowerSize ||

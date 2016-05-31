@@ -620,6 +620,15 @@ char *RepString(const char *str, const char *old, const char *new)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+int32_t Strcasecmp(char const *a, char const *b){
+  for(;; ++a, ++b) {
+    int32_t c = tolower(*a)-tolower(*b);
+    if(c != 0 || !*a) return c;
+    }
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 uint32_t ArgsNum(uint32_t d, char *a[], uint32_t n, char *s, uint32_t l,
 uint32_t u){
   uint32_t x;

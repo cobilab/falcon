@@ -35,6 +35,7 @@ double      SearchLog        (uint32_t );
 double      Power            (double, double);
 uint32_t    FLog2            (uint64_t );
 char        *ReplaceSubStr   (char *, char *, char *);
+int32_t     Strcasecmp       (char const *, char const *);
 int         FileExists       (const char *);
 uint8_t     DNASymToNum      (uint8_t  );
 uint8_t     NumToDNASym      (uint8_t  );
