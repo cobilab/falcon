@@ -90,6 +90,19 @@ int32_t main(int argc, char *argv[]){
   CLR->hue       = PEYE->hue;
   CLR->gamma     = PEYE->gamma;
 
+  // BUILD UNIQUE ARRAY FOR NAMES USING REGULAR EXPRESSION:
+  //
+  SLABELS *SL = CreateSLabels();
+  uint64_t unique = 0;
+  // tested at: https://regex101.com/
+  char *regexString = ".*\\|.*\\|.*\\|_([a-z A-Z]*_[a-z A-Z]*)";
+  regex_t regexCompiled;
+  regmatch_t groupArray[2];
+  if(regcomp(&regexCompiled, regexString, REG_EXTENDED)){
+    fprintf(stderr, "  [x] Error: regular expression compilation!\n");
+    return 1;
+    }
+
   INPUT = Fopen(argv[argc-1], "r"); 
   nSeq = 0;
   maxName = 0;
@@ -100,6 +113,22 @@ int32_t main(int argc, char *argv[]){
         fprintf(stderr, "  [x] Error: unknown type of file!\n");
         exit(1);
         }
+
+      if(regexec(&regexCompiled, fname, 2, groupArray, 0) == 0){
+        char sourceCopy[strlen(fname) + 1];
+        strcpy(sourceCopy, fname);
+        sourceCopy[groupArray[1].rm_eo] = 0;
+        if(SearchSLabels(SL, sourceCopy + groupArray[1].rm_so) == 0){
+          ++unique;
+          AddSLabel(SL, sourceCopy + groupArray[1].rm_so);
+          UpdateSLabels(SL);
+          }
+        else{
+          ++filtered;
+          continue;
+          }
+        }
+
       if(fsize > PEYE->upperSize ||  fsize < PEYE->lowerSize ||
         fvalue > PEYE->upperSimi || fvalue < PEYE->lowerSimi){
         ++filtered;
@@ -120,6 +149,9 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "Skipping %"PRIu64" from %"PRIu64" entries.\n", 
   filtered, filtered+nSeq);
 
+  fprintf(stderr, "Number of unique entries: %"PRIu64".\n", unique); 
+  DeleteSLabels(SL);
+  SL = CreateSLabels();
   Paint = CreatePainter(maxSize, PEYE->width, PEYE->space, PEYE->proportion, 
   "#ffffff");
 
@@ -169,18 +201,6 @@ int32_t main(int argc, char *argv[]){
     +(Paint->width/2)+4, "-");
     }
 
-  // BUILD UNIQUE ARRAY FOR NAMES USING REGULAR EXPRESSION:
-  //
-  // tested at: https://regex101.com/
-  char *regexString = ".*\\|.*\\|.*\\|_([a-z A-Z]*_[a-z A-Z]*)";
-  regex_t regexCompiled;
-  regmatch_t groupArray[2];
-  SLABELS *SL = CreateSLabels();
-  if(regcomp(&regexCompiled, regexString, REG_EXTENDED)){
-    fprintf(stderr, "  [x] Error: regular expression compilation!\n");
-    return 1;
-    }
-
   if(nSeq > 0) fprintf(stderr, "Addressing regions individually:\n"); 
   while((sym = fgetc(INPUT)) != EOF){
 
@@ -196,9 +216,15 @@ int32_t main(int argc, char *argv[]){
         sourceCopy[groupArray[1].rm_eo] = 0;
         if(SearchSLabels(SL, sourceCopy + groupArray[1].rm_so) == 0){
           AddSLabel(SL, sourceCopy + groupArray[1].rm_so);
-          fprintf(stderr, "NEW!!!!\n\n\n"); //TODO: MAKE FILTER WHEN NOT NEW
+          UpdateSLabels(SL);
+          fprintf(stderr, "Found NEW:\n");
           }
-        UpdateSLabels(SL);
+        else{ // SKIP
+          while(fscanf(INPUT, "%"PRIu64":%"PRIu64"\t%u\n", &iPos, &ePos, &cmp)
+          == 3)
+            ; // DO NOTHING
+          continue;
+          }
         }
 
       // SKIPS: FILTERED ATTRIBUTES
@@ -206,7 +232,7 @@ int32_t main(int argc, char *argv[]){
         fvalue > PEYE->upperSimi || fvalue < PEYE->lowerSimi){
         while(fscanf(INPUT, "%"PRIu64":%"PRIu64"\t%u\n", &iPos, &ePos, &cmp) 
         == 3)
-          ;
+          ; // DO NOTHING
         continue;
         }
 
