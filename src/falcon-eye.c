@@ -268,7 +268,10 @@ int32_t main(int argc, char *argv[]){
 
       Paint->cy += Paint->width + Paint->space;
  
-      fprintf(stderr, "  [+] Painting %s ... ", fname);
+      if(PEYE->best == 1)
+        fprintf(stderr, "  [+] Painting %s ... ", SL->names[SL->idx-1]);
+      else
+        fprintf(stderr, "  [+] Painting %s ... ", fname);
       while(1){
         off_t beg = Ftello(INPUT);
         if(fscanf(INPUT, "%"PRIu64":%"PRIu64"\t%u\n", &iPos, &ePos, &cmp) != 3){
