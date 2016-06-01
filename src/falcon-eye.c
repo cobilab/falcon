@@ -142,10 +142,15 @@ int32_t main(int argc, char *argv[]){
 
       if(fsize > maxSize)
         maxSize = fsize;
-
-      if((tmp = strlen(fname)) > maxName)
-        maxName = tmp;
-     
+ 
+      if(PEYE->best == 1){
+        if((tmp = strlen(SL->names[SL->idx-1])) > maxName)
+          maxName = tmp;
+        }
+      else{
+        if((tmp = strlen(fname)) > maxName)
+          maxName = tmp;
+        }
       ++nSeq;
       }
     }
@@ -250,8 +255,14 @@ int32_t main(int argc, char *argv[]){
         }
 
       if(PEYE->showNames == 1){  // PRINT NAMES 90D
-        Text90d(OUTPUT, -(Paint->cy-32), Paint->cx+Paint->width-
-        (Paint->width/2.0)+10, fname);
+        if(PEYE->best == 1){
+          Text90d(OUTPUT, -(Paint->cy-32), Paint->cx+Paint->width-
+          (Paint->width/2.0)+10, SL->names[SL->idx-1]);
+          }
+        else{
+          Text90d(OUTPUT, -(Paint->cy-32), Paint->cx+Paint->width-
+          (Paint->width/2.0)+10, fname);
+          }
         }
 
       char tmpTxt[MAX_NAME], color[12];
