@@ -57,6 +57,7 @@ typedef int8_t   I8;
 #define DEFAULT_SHOWS          1
 #define DEFAULT_NAMES          1
 #define DEFAULT_RSCAL          0
+#define DEFAULT_GBEST          1
 #define DEFAULT_INDEX          2
 #define DEFAULT_THREADS        2
 #define DEFAULT_FILTERSIZE     500

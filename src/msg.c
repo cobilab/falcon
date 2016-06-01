@@ -94,6 +94,7 @@ void PrintMenuEye(void){
   "  -su <upper>              similarity upper bound,                       \n"
   "  -dl <lower>              size lower bound,                             \n"
   "  -du <upper>              size upper bound,                             \n"
+  "  -bg                      show only the best of group,                  \n"
   "  -g  <color>              color gamma,                                  \n"
   "  -e  <size>               enlarge painted regions,                      \n"
   "  -ss                      do NOT show global scale,                     \n"

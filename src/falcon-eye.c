@@ -55,6 +55,7 @@ int32_t main(int argc, char *argv[]){
   PEYE->showScale  = ArgsState  (DEFAULT_SHOWS,   p, argc, "-ss");
   PEYE->showNames  = ArgsState  (DEFAULT_NAMES,   p, argc, "-sn");
   PEYE->sameScale  = ArgsState  (DEFAULT_RSCAL,   p, argc, "-rs");
+  PEYE->best       = ArgsState  (DEFAULT_GBEST,   p, argc, "-bg");
   PEYE->start      = ArgsDouble (0.35,            p, argc, "-i");
   PEYE->rotations  = ArgsDouble (1.50,            p, argc, "-r");
   PEYE->hue        = ArgsDouble (1.92,            p, argc, "-u");
@@ -98,9 +99,11 @@ int32_t main(int argc, char *argv[]){
   char *regexString = ".*\\|.*\\|.*\\|_([a-z A-Z]*_[a-z A-Z]*)";
   regex_t regexCompiled;
   regmatch_t groupArray[2];
-  if(regcomp(&regexCompiled, regexString, REG_EXTENDED)){
-    fprintf(stderr, "  [x] Error: regular expression compilation!\n");
-    return 1;
+  if(PEYE->best == 1){
+    if(regcomp(&regexCompiled, regexString, REG_EXTENDED)){
+      fprintf(stderr, "  [x] Error: regular expression compilation!\n");
+      return 1;
+      }
     }
 
   INPUT = Fopen(argv[argc-1], "r"); 
@@ -114,18 +117,20 @@ int32_t main(int argc, char *argv[]){
         exit(1);
         }
 
-      if(regexec(&regexCompiled, fname, 2, groupArray, 0) == 0){
-        char sourceCopy[strlen(fname) + 1];
-        strcpy(sourceCopy, fname);
-        sourceCopy[groupArray[1].rm_eo] = 0;
-        if(SearchSLabels(SL, sourceCopy + groupArray[1].rm_so) == 0){
-          ++unique;
-          AddSLabel(SL, sourceCopy + groupArray[1].rm_so);
-          UpdateSLabels(SL);
-          }
-        else{
-          ++filtered;
-          continue;
+      if(PEYE->best == 1){
+        if(regexec(&regexCompiled, fname, 2, groupArray, 0) == 0){
+          char sourceCopy[strlen(fname) + 1];
+          strcpy(sourceCopy, fname);
+          sourceCopy[groupArray[1].rm_eo] = 0;
+          if(SearchSLabels(SL, sourceCopy + groupArray[1].rm_so) == 0){
+            ++unique;
+            AddSLabel(SL, sourceCopy + groupArray[1].rm_so);
+            UpdateSLabels(SL);
+            }
+          else{
+            ++filtered;
+            continue;
+            }
           }
         }
 
@@ -149,13 +154,15 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "Skipping %"PRIu64" from %"PRIu64" entries.\n", 
   filtered, filtered+nSeq);
 
-  fprintf(stderr, "Number of unique existing species: %"PRIu64".\n", unique); 
-  fprintf(stderr, "Unique species:\n");
-  for(n = 0 ; n < SL->idx ; ++n)
-    fprintf(stderr, "  [+] %s\n", SL->names[n]);  
   
-  DeleteSLabels(SL);
-  SL = CreateSLabels();
+  if(PEYE->best == 1){
+    fprintf(stderr, "Number of unique existing species: %"PRIu64".\n", unique); 
+    fprintf(stderr, "Unique species:\n");
+    for(n = 0 ; n < SL->idx ; ++n)
+      fprintf(stderr, "  [+] %s\n", SL->names[n]);  
+    DeleteSLabels(SL);
+    SL = CreateSLabels();
+    }
   Paint = CreatePainter(maxSize, PEYE->width, PEYE->space, PEYE->proportion,
   "#ffffff");
 
@@ -214,19 +221,22 @@ int32_t main(int argc, char *argv[]){
         exit(1);
         }
 
-      if(regexec(&regexCompiled, fname, 2, groupArray, 0) == 0){
-        char sourceCopy[strlen(fname) + 1];
-        strcpy(sourceCopy, fname);
-        sourceCopy[groupArray[1].rm_eo] = 0;
-        if(SearchSLabels(SL, sourceCopy + groupArray[1].rm_so) == 0){
-          AddSLabel(SL, sourceCopy + groupArray[1].rm_so);
-          UpdateSLabels(SL);
-          }
-        else{ // SKIP
-          while(fscanf(INPUT, "%"PRIu64":%"PRIu64"\t%u\n", &iPos, &ePos, &cmp)
-          == 3)
-            ; // DO NOTHING
-          continue;
+
+      if(PEYE->best == 1){
+        if(regexec(&regexCompiled, fname, 2, groupArray, 0) == 0){
+          char sourceCopy[strlen(fname) + 1];
+          strcpy(sourceCopy, fname);
+          sourceCopy[groupArray[1].rm_eo] = 0;
+          if(SearchSLabels(SL, sourceCopy + groupArray[1].rm_so) == 0){
+            AddSLabel(SL, sourceCopy + groupArray[1].rm_so);
+            UpdateSLabels(SL);
+            }
+          else{ // SKIP
+            while(fscanf(INPUT, "%"PRIu64":%"PRIu64"\t%u\n", &iPos, &ePos, &cmp)
+            == 3)
+              ; // DO NOTHING
+            continue;
+            }
           }
         }
 
@@ -299,7 +309,8 @@ int32_t main(int argc, char *argv[]){
   if(!OUTPUT) fclose(OUTPUT);
   if(!INPUT)  fclose(INPUT);
   Free(CLR);
-
+  if(PEYE->best == 1)
+    DeleteSLabels(SL);
   StopTimeNDRM(Time, clock());
   fprintf(stderr, "\n");
 

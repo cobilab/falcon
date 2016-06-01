@@ -82,6 +82,7 @@ typedef struct{
   double   threshold;
   double   proportion;
   int64_t  enlarge;
+  uint8_t  best;
   U8       showScale;
   U8       showNames;
   U8       sameScale;
