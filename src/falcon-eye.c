@@ -149,10 +149,14 @@ int32_t main(int argc, char *argv[]){
   fprintf(stderr, "Skipping %"PRIu64" from %"PRIu64" entries.\n", 
   filtered, filtered+nSeq);
 
-  fprintf(stderr, "Number of unique entries: %"PRIu64".\n", unique); 
+  fprintf(stderr, "Number of unique existing species: %"PRIu64".\n", unique); 
+  fprintf(stderr, "Unique species:\n");
+  for(n = 0 ; n < SL->idx ; ++n)
+    fprintf(stderr, "  [+] %s\n", SL->names[n]);  
+  
   DeleteSLabels(SL);
   SL = CreateSLabels();
-  Paint = CreatePainter(maxSize, PEYE->width, PEYE->space, PEYE->proportion, 
+  Paint = CreatePainter(maxSize, PEYE->width, PEYE->space, PEYE->proportion,
   "#ffffff");
 
   extraLength = 0;
@@ -217,7 +221,6 @@ int32_t main(int argc, char *argv[]){
         if(SearchSLabels(SL, sourceCopy + groupArray[1].rm_so) == 0){
           AddSLabel(SL, sourceCopy + groupArray[1].rm_so);
           UpdateSLabels(SL);
-          fprintf(stderr, "Found NEW:\n");
           }
         else{ // SKIP
           while(fscanf(INPUT, "%"PRIu64":%"PRIu64"\t%u\n", &iPos, &ePos, &cmp)
