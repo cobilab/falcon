@@ -231,6 +231,7 @@ Non-mandatory arguments:
   -su &#60upper&#62              similarity upper bound,                       
   -dl &#60lower&#62              size lower bound,                             
   -du &#60upper&#62              size upper bound,                             
+  -bg                      show only the best of group,
   -g  &#60color&#62              color gamma,                                  
   -e  &#60size&#62               enlarge painted regions,                      
   -ss                      do NOT show global scale,                     
