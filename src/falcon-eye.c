@@ -280,7 +280,8 @@ int32_t main(int argc, char *argv[]){
       Paint->cy += Paint->width + Paint->space;
  
       if(PEYE->best == 1)
-        fprintf(stderr, "  [+] Painting %s ... ", SL->names[SL->idx-1]);
+        fprintf(stderr, "  [+] Painting %s (%s) ... ", SL->names[SL->idx-1], 
+        fname);
       else
         fprintf(stderr, "  [+] Painting %s ... ", fname);
       while(1){
