@@ -46,6 +46,12 @@ int32_t main(int argc, char *argv[]){
   PEYE->windowType = ArgsNum    (1,               p, argc, "-w", 0, 3);
   PEYE->sampling   = ArgsNum    (10,              p, argc, "-x", 1, 999999);
   PEYE->threshold  = ArgsDouble (1.0,             p, argc, "-t");
+  PEYE->lowerSimi  = ArgsDouble (0.00,            p, argc, "-sl");
+  PEYE->upperSimi  = ArgsDouble (100.00,          p, argc, "-su");
+  PEYE->lowerSize  = ArgsNum64  (1,               p, argc, "-dl", 1,
+  9999999999);
+  PEYE->upperSize  = ArgsNum64  (9999999999,      p, argc, "-du", 1,
+  9999999999);
   PEYE->output     = ArgsFileGen(p, argc, "-o", "coords", ".fil");
 
   if(!PEYE->force) 
@@ -74,6 +80,11 @@ int32_t main(int argc, char *argv[]){
         fprintf(stderr, "  [x] Error: unknown type of file!\n");
         exit(1);
         }
+
+      if(fsize > PEYE->upperSize ||  fsize < PEYE->lowerSize ||
+        fvalue > PEYE->upperSimi || fvalue < PEYE->lowerSimi)
+        continue;
+
       fprintf(stderr, "  [+] Filtering & segmenting %s ... ", fname);
       fprintf(OUTPUT, "$\t%lf\t%"PRIu64"\t%s\n", fvalue, fsize, fname);
       InitEntries(FIL, fsize, INPUT);
