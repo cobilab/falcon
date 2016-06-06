@@ -111,7 +111,8 @@ int32_t main(int argc, char *argv[]){
   maxName = 0;
   filtered = 0;
   while((sym = fgetc(INPUT)) != EOF){
-    if(sym == '$'){
+
+    if(sym == '$' || sym == '#'){
       if(fscanf(INPUT, "\t%lf\t%"PRIu64"\t%s\n", &fvalue, &fsize, fname) != 3){
         fprintf(stderr, "  [x] Error: unknown type of file!\n");
         exit(1);
@@ -220,12 +221,68 @@ int32_t main(int argc, char *argv[]){
   if(nSeq > 0) fprintf(stderr, "Addressing regions individually:\n"); 
   while((sym = fgetc(INPUT)) != EOF){
 
-    if(sym == '$'){
+    if(sym == '$' || sym == '#'){
       if(fscanf(INPUT, "\t%lf\t%"PRIu64"\t%s\n", &fvalue, &fsize, fname) != 3){
         fprintf(stderr, "  [x] Error: unknown type of file!\n");
         exit(1);
         }
 
+      if(sym == '#'){
+        if(PEYE->best == 1){
+          if(regexec(&regexCompiled, fname, 2, groupArray, 0) == 0){
+            char sourceCopy[strlen(fname) + 1];
+            strcpy(sourceCopy, fname);
+            sourceCopy[groupArray[1].rm_eo] = 0;
+            if(SearchSLabels(SL, sourceCopy + groupArray[1].rm_so) == 0){
+              AddSLabel(SL, sourceCopy + groupArray[1].rm_so);
+              UpdateSLabels(SL);
+              }
+            else{ // SKIP
+              continue;
+              }
+            }
+          }
+
+        // SKIPS: FILTERED ATTRIBUTES
+        if(fsize > PEYE->upperSize ||  fsize < PEYE->lowerSize ||
+          fvalue > PEYE->upperSimi || fvalue < PEYE->lowerSimi){
+          continue;
+          }
+
+        if(PEYE->showNames == 1){  // PRINT NAMES 90D
+          if(PEYE->best == 1){
+            Text90d(OUTPUT, -(Paint->cy-32), Paint->cx+Paint->width-
+            (Paint->width/2.0)+10, SL->names[SL->idx-1]);
+            }
+          else{
+            Text90d(OUTPUT, -(Paint->cy-32), Paint->cx+Paint->width-
+            (Paint->width/2.0)+10, fname);
+            }
+          }
+
+        if(PEYE->best == 1)
+          fprintf(stderr, "  [+] Painting %s (%s) ... ", SL->names[SL->idx-1],
+          fname);
+        else
+          fprintf(stderr, "  [+] Painting %s ... ", fname);
+
+        char tmpTxt[MAX_NAME], color[12];
+        if(fvalue < 10){
+          sprintf(tmpTxt, "%.1lf", fvalue);
+          Text(OUTPUT, (Paint->cx+Paint->width/2)-12, Paint->cy-10, tmpTxt);
+          }
+        else{
+          sprintf(tmpTxt, "%u", (unsigned) fvalue);
+          Text(OUTPUT, (Paint->cx+Paint->width/2)-9, Paint->cy-10, tmpTxt);
+          }
+        RectWithBorder(OUTPUT, Paint->width, Paint->width, Paint->cx, Paint->cy,
+        HeatMapColor(BoundDouble(0.0, 1-fvalue/100.0, 1.0), color, CLR));
+
+        if(nSeq > 0)
+          Paint->cx += Paint->width + Paint->space;
+        fprintf(stderr, "Done!\n");
+        continue; // CONTINUE WITHOUT WRITTING LOCAL COMPLEXITY
+        }
 
       if(PEYE->best == 1){
         if(regexec(&regexCompiled, fname, 2, groupArray, 0) == 0){
