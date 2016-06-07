@@ -4,11 +4,14 @@
 # FOR THE PURPOSE IT IS ONLY REQUIRED TO RUN THIS SCRIPT
 #
 # INSTALL FALCON ==============================================================
+rm -fr falcon/
 git clone https://github.com/pratas/falcon.git
 cd falcon/src/
 cp Makefile.linux Makefile
 make
 cp FALCON ../../
+cp FALCON-FILTER ../../
+cp FALCON-EYE ../../
 cd ../../
 cp falcon/scripts/DownloadViruses.pl .
 rm -fr falcon/
@@ -22,5 +25,7 @@ echo "Done!";
 # GET VIRUSES =================================================================
 perl DownloadViruses.pl
 # RUN FALCON ==================================================================
-./FALCON -v -F -l 15 -n 4 -t 10 -x top.csv BE.fa viruses.fa
+./FALCON -v -n 4 -t 200 -F -Z -m 20:100:1:5/10 -c 45 -y com.x BE.fa viruses.fa
+./FALCON-FILTER -v -F -t 0.5 -o positions.pos com.x
+./FALCON-EYE -v -F -o draw.map positions.pos
 # ============================================================================= 
