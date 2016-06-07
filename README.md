@@ -176,6 +176,10 @@ Non-mandatory arguments:
   -s  &#60size&#62               filter window size,                           
   -w  &#60type&#62               filter window type,                           
   -x  &#60sampling&#62           filter window sampling,                       
+  -sl &#60lower&#62              similarity lower bound,
+  -su &#60upper&#62              similarity upper bound,
+  -dl &#60lower&#62              size lower bound,
+  -du &#60upper&#62              size upper bound,
   -t  &#60threshold&#62          threshold,                                    
   -o  &#60FILE&#62               output filename,                              
                                                                          
@@ -196,6 +200,10 @@ All the parameters can be better explained trough the following table:
 | -s &#60;size&#62;      | Filtering window size.              |
 | -w &#60;type&#62;      | Window type [0;3]. Types: 0-Hamming, 1-Hann, 2-Blackman, 3-Rectangular.              |
 | -x &#60;sampling&#62;      | Filtering window sampling (it will drop this number of bases).          |
+| -sl &#60;lower&#62;      | similarity lower bound.              |
+| -su &#60;upper&#62;      | similarity upper bound.              |
+| -dl &#60;lower&#62;      | size lower bound.              |
+| -du &#60;upper&#62;      | size upper bound.              |
 | -t &#60;threshold&#62;      | Threshold to segment regions of similarity [0;2].              |
 | -o &#60;FILE&#62;     | Output filename to be, for example, computed in FALCON-EYE. It contains the local positions with the intervals describing similarity. |
 | [FILE]           | Profile filename given by the output of FALCON (option:-Z -y &#60;FILE&#62;). |
