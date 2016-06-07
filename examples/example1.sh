@@ -7,7 +7,7 @@
 rm -fr falcon/
 git clone https://github.com/pratas/falcon.git
 cd falcon/src/
-cp Makefile.linux Makefile
+cmake .
 make
 cp FALCON ../../
 cp FALCON-FILTER ../../
