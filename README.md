@@ -1,4 +1,4 @@
-<p align="center"><img src="imgs/logot.png"
+<p align="center"><img src="imgs/logoTrans.png"
 alt="FALCON" width="264" height="264" border="0" /></p>
 <br>
 
