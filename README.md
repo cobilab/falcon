@@ -3,7 +3,7 @@ alt="FALCON" width="264" height="264" border="0" /></p>
 <br>
 
 <p align="justify">
-<b>FALCON is an alignment-free unsupervised machine learning system to detect pathogens in genomic and metagenomic samples</b>. Falcon looks for <b>similarity between any FASTA or FASTQ file</b>, independently from the size, <b>against any multi-FASTA database</b>, such as the entire viral and bacterial NCBI database (scripts are available for multiple database downloads). </p>
+<b>FALCON is a compression-based method to infer metagenomic sample composition</b>. Falcon looks for <b>similarity between any FASTA or FASTQ file</b>, independently from the size, <b>against any multi-FASTA database</b>, such as the entire viral and bacterial NCBI database (scripts are available for multiple database downloads). </p>
 
 <p align="justify">
 As a <b>personalized medicine</b> example, FALCON can <b>detect the viral and bacterial genomes having similarity with a sequenced human genome</b> (for instance by NGS). Moreover, it can <b>run in a common laptop</b>.</p>
@@ -15,7 +15,7 @@ The core of the method is based on the <b>relative algorithmic entropy</b>, a no
 To measure the similarity, the system will build <b>multiple finite-context models</b> that at the end of the reference sequence will be kept frozen. The target reads will then be measured using a mixture of the frozen models. The <b>mixture</b> estimates the probabilities assuming dependency from model performance, and thus, it will allow to adapt the usage of the models according to the nature of the target sequence. Furthermore, it uses <b>fault tolerant (substitution edits) finite-context models</b> that bridge the gap between context sizes.</p>
 
 <p align="justify">
-The tool is also able to <b>identify locally where, in each database sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-FILTER)</b> and <b>to visualize the results (FALCON-EYE)</b>. <b>Several running modes</b> are available for different hardware and speed specifications. <b>The system is able to automatically learn to measure relative similarity</b>, whose properties are characteristics of the <b>Artificial Intelligence</b> field.
+The tool is also able to <b>identify locally where, in each database sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-FILTER)</b> and <b>to visualize the results (FALCON-EYE)</b>. <b>Several running modes</b> are available for different hardware and speed specifications. <b>The system is able to automatically learn to measure relative similarity</b>.
 </p>
 
 <p align="justify">
@@ -104,7 +104,7 @@ These will print the following options:
 <pre>
 <p>
 Usage: FALCON [OPTION]... [FILE1] [FILE2]                                  
-Machine learning system to detect pathogens in metagenomic samples.
+A compression-based method to infer metagenomic sample composition.
                                                                          
 Non-mandatory arguments:                                                 
                                                                          
