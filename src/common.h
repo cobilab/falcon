@@ -62,7 +62,7 @@ char        *ArgsFiles       (char *[], uint32_t, char *);
 void        TestReadFile     (char *);
 uint8_t     CmpCheckSum      (uint32_t, uint32_t);
 void        FAccessWPerm     (char    *);
-inline void CalcProgress     (uint64_t , uint64_t);
+void        CalcProgress     (uint64_t , uint64_t);
 void        PrintArgs        (Parameters *, Threads, char *, char *, uint32_t);
 void        PrintArgsFilter  (EYEPARAM *);
 void        PrintArgsEye     (EYEPARAM *);

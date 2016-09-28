@@ -89,7 +89,7 @@ static void InsertKey(HashTable *H, U32 hi, U64 idx, U8 s){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-inline void GetFreqsFromHCC(HCC c, uint32_t a, PModel *P){
+void GetFreqsFromHCC(HCC c, uint32_t a, PModel *P){
   P->sum  = (P->freqs[0] = 1 + a * ( c &  0x0f));           // NO +1: N ARITHCODER
   P->sum += (P->freqs[1] = 1 + a * ((c & (0x0f<<4 ))>>4));  // NO +1: N ARITHCODER
   P->sum += (P->freqs[2] = 1 + a * ((c & (0x0f<<8 ))>>8));  // NO +1: N ARITHCODER
@@ -308,20 +308,20 @@ int32_t BestId(uint32_t *f, uint32_t sum){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-inline U8 GetPModelIdxIR(U8 *p, CModel *M){
+U8 GetPModelIdxIR(U8 *p, CModel *M){
   M->pModelIdxIR = (M->pModelIdxIR>>2)+GetCompNum(*p)*M->multiplier;
   return GetCompNum(*(p-M->ctx));
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-inline void GetPModelIdx(U8 *p, CModel *M){
+void GetPModelIdx(U8 *p, CModel *M){
   M->pModelIdx = ((M->pModelIdx-*(p-M->ctx)*M->multiplier)<<2)+*p;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-inline uint64_t GetPModelIdxCorr(U8 *p, CModel *M, uint64_t idx){
+uint64_t GetPModelIdxCorr(U8 *p, CModel *M, uint64_t idx){
   return (((idx-*(p-M->ctx)*M->multiplier)<<2)+*p);
   }
 
@@ -387,7 +387,7 @@ void CorrectXModels(CModel **Shadow, PModel **PM, uint8_t sym){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-inline void ComputePModel(CModel *M, PModel *P, uint64_t idx, uint32_t aDen){
+void ComputePModel(CModel *M, PModel *P, uint64_t idx, uint32_t aDen){
   ACC *ac;
   switch(M->mode){
     case HASH_TABLE_MODE:

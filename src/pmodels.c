@@ -60,7 +60,7 @@ void DeleteWeightModel(CMWeight *CMW){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-inline void ComputeMXProbs(FloatPModel *PT, PModel *MX){
+void ComputeMXProbs(FloatPModel *PT, PModel *MX){
   MX->sum  = (MX->freqs[0] = 1 + (unsigned) (PT->freqs[0] * MX_PMODEL));
   MX->sum += (MX->freqs[1] = 1 + (unsigned) (PT->freqs[1] * MX_PMODEL));
   MX->sum += (MX->freqs[2] = 1 + (unsigned) (PT->freqs[2] * MX_PMODEL));
@@ -99,7 +99,7 @@ void RemoveFPModel(FloatPModel *FM){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-inline void ComputeWeightedFreqs(double w, PModel *P, FloatPModel *PT){
+void ComputeWeightedFreqs(double w, PModel *P, FloatPModel *PT){
   double f = w / P->sum;
   PT->freqs[0] += (double) P->freqs[0] * f;
   PT->freqs[1] += (double) P->freqs[1] * f;

@@ -84,16 +84,16 @@ void            HitKSUBS             (KMODEL *);
 void            FailKSUBS            (KMODEL *);
 void            FreeKModel           (KMODEL *);
 void            FreeKShadow          (KMODEL *);
-inline void     GetKIdx              (U8 *, KMODEL *);
-inline U8       GetKIdxIR            (U8 *, KMODEL *);
-inline uint64_t GetKModelIdxCorr     (U8 *, KMODEL *, uint64_t);
+void            GetKIdx              (U8 *, KMODEL *);
+U8              GetKIdxIR            (U8 *, KMODEL *);
+uint64_t        GetKModelIdxCorr     (U8 *, KMODEL *, uint64_t);
 void            CorrectKModelSUBS    (KMODEL *, PModel *, uint8_t);
 void            ResetKModelIdx       (KMODEL *);
 void            ResetKShadowModel    (KMODEL *);
 void            UpdateKModelCounter  (KMODEL *, U32, U64);
 KMODEL          *CreateKModel        (U32, U32, U32, U8, U32, U32, U32);
 KMODEL          *CreateKShadowModel  (KMODEL *);
-inline void     ComputeKPModel       (KMODEL *, PModel *, uint64_t, uint32_t);
+void            ComputeKPModel       (KMODEL *, PModel *, uint64_t, uint32_t);
 void            CorrectKXModels      (KMODEL **, PModel **, uint8_t);    
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

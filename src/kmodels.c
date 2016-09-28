@@ -84,7 +84,7 @@ static void InsertKey(KHASHTABLE *H, U32 hi, U64 idx, U8 s){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void inline GetKHCCounters(KHASHTABLE *HT, U64 idx, PModel *PM, uint32_t a){
+void GetKHCCounters(KHASHTABLE *HT, U64 idx, PModel *PM, uint32_t a){
 
   U32 s;
 
@@ -280,7 +280,7 @@ int32_t BestKId(uint32_t *f, uint32_t sum){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // GET IDX
 
-inline void GetKIdx(U8 *p, KMODEL *M){
+void GetKIdx(U8 *p, KMODEL *M){
   M->idx = ((M->idx-*(p-M->ctx)*M->multiplier)<<2)+*p;
   }
 
@@ -288,14 +288,14 @@ inline void GetKIdx(U8 *p, KMODEL *M){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // GET IDX REVERSE COMPLEMENTED
 
-inline U8 GetKIdxIR(U8 *p, KMODEL *M){
+U8 GetKIdxIR(U8 *p, KMODEL *M){
   M->idxIR = (M->idxIR>>2)+GetCompNum(*p)*M->multiplier;
   return GetCompNum(*(p-M->ctx));
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
-inline uint64_t GetKPModelIdxCorr(U8 *p, KMODEL *M, uint64_t idx){
+uint64_t GetKPModelIdxCorr(U8 *p, KMODEL *M, uint64_t idx){
   return (((idx-*(p-M->ctx)*M->multiplier)<<2)+*p);
   }
 
@@ -361,7 +361,7 @@ void CorrectKXModels(KMODEL **Shadow, PModel **PM, uint8_t sym){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 */
-inline void ComputeKPModel(KMODEL *M, PModel *P, uint64_t idx, uint32_t aDen){
+void ComputeKPModel(KMODEL *M, PModel *P, uint64_t idx, uint32_t aDen){
   ACC *ac;
   switch(M->mode){
     case KHASH_TABLE_MODE:

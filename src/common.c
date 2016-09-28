@@ -779,7 +779,7 @@ int32_t StrToArgv(char *s, char ***v){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-inline void CalcProgress(uint64_t size, uint64_t i)
+void CalcProgress(uint64_t size, uint64_t i)
   {
   if(i % (size / 100) == 0 && size > 1000)
     fprintf(stderr, "Progress:%3d %%\r", (uint8_t) (i / (size / 100)));
