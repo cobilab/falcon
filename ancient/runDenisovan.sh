@@ -2,7 +2,7 @@
 GET_GOOSE=1;
 GET_FALCON=1;
 GET_DENISOVAN=1;
-BUILD_DB=0;
+BUILD_DB=1;
 RUN_FALCON=1;
 #==============================================================================
 # GET FALCON
@@ -72,8 +72,8 @@ fi
 #==============================================================================
 # RUN FALCON
 if [[ "$RUN_FALCON" -eq "1" ]]; then
-  (time ./FALCON -v -n 10 -t 10000 -F -Z -m 20:100:1:5/10 -c 200 -y complexity.com DENIS DB.fa ) &> REPORT-FALCON ;
-  (time ./FALCON-FILTER -v -F -sl 1 -du 20000000 -t 0.5 -o positions.pos complexity.com ) &> REPORT-FALCON-FILTER ;
-  (time ./FALCON-EYE -v -F -o draw.map positions.pos ) &> REPORT-FALCON-EYE ;
+  (time ./FALCON -v -n 8 -t 12000 -F -Z -m 20:100:1:5/10 -c 200 -y complexity.denis DENIS DB.fa ) &> REPORT-FALCON ;
+  (time ./FALCON-FILTER -v -F -sl 1 -du 20000000 -t 0.5 -o positions.denis complexity.denis ) &> REPORT-FALCON-FILTER ;
+  (time ./FALCON-EYE -v -F -o draw.map positions.denis ) &> REPORT-FALCON-EYE ;
 fi
 #==============================================================================

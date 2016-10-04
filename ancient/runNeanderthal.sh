@@ -97,15 +97,15 @@ if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
     do
     samtools view HN-C$xi.bam | awk '{OFS="\t"; print ">"$1"\n"$10}' > HN-C$xi ;
     done
-  rm -fr HNEAN;
-  cat HN-C* >> HNEAN;
+  rm -fr NEAN;
+  cat HN-C* >> NEAN;
   rm -fr HN-C*;
 fi
 #==============================================================================
 # RUN FALCON
 if [[ "$RUN_FALCON" -eq "1" ]]; then
-  (time ./FALCON -v -n 10 -t 10000 -F -Z -m 20:100:1:5/10 -c 200 -y complexity.com HNEAN DB.fa ) &> REPORT-FALCON ;
-  (time ./FALCON-FILTER -v -F -sl 1 -du 20000000 -t 0.5 -o positions.pos complexity.com ) &> REPORT-FALCON-FILTER ;
-  (time ./FALCON-EYE -v -F -o draw.map positions.pos ) &> REPORT-FALCON-EYE ;
+  (time ./FALCON -v -n 8 -t 12000 -F -Z -m 20:100:1:5/10 -c 200 -y complexity.nean NEAN DB.fa ) &> REPORT-FALCON ;
+  (time ./FALCON-FILTER -v -F -sl 1 -du 20000000 -t 0.5 -o positions.nean complexity.nean ) &> REPORT-FALCON-FILTER ;
+  (time ./FALCON-EYE -v -F -o draw.map positions.nean ) &> REPORT-FALCON-EYE ;
 fi
 #==============================================================================
