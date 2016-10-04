@@ -5,6 +5,8 @@ GET_DENISOVAN=1;
 BUILD_DB=1;
 RUN_FALCON=1;
 #==============================================================================
+# sudo apt-get install git cmake
+#==============================================================================
 # GET FALCON
 if [[ "$GET_FALCON" -eq "1" ]]; then
   rm -fr falcon FALCON FALCON-* *.pl

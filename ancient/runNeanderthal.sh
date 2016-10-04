@@ -5,7 +5,7 @@ GET_NEANDERTHAL=1;
 BUILD_DB=1;
 RUN_FALCON=1;
 #==============================================================================
-sudo apt-get install samtools
+sudo apt-get install samtools git cmake
 #==============================================================================
 # GET FALCON
 if [[ "$GET_FALCON" -eq "1" ]]; then
