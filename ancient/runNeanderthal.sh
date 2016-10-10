@@ -2,10 +2,11 @@
 GET_GOOSE=1;
 GET_FALCON=1;
 GET_NEANDERTHAL=1;
+BUILD_SAMPLE=1;
 BUILD_DB=1;
 RUN_FALCON=1;
 #==============================================================================
-sudo apt-get install samtools git cmake
+# sudo apt-get install samtools git cmake
 #==============================================================================
 # GET FALCON
 if [[ "$GET_FALCON" -eq "1" ]]; then
@@ -54,11 +55,11 @@ if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
   EVAPK="$EVANM/neandertal/altai/AltaiNeandertal/bam/unmapped_qualfail/";
   WGETO=" --trust-server-names -q ";
   echo "Downloading sequences ... (This may take a while!)";
-  for((x=1 ; x<=22 ; ++x));  # GET NEANTHERTAL GENOME IN BAM FORMAT
-    do
-    wget $WGETO $EVAPT/AltaiNea.hg19_1000g.$x.dq.bam -O HN-C$x.bam;
-    done
-  wget $WGETO $EVAPT/AltaiNea.hg19_1000g.Y.dq.bam -O HN-C24.bam;
+  #for((x=1 ; x<=22 ; ++x));  # GET NEANTHERTAL GENOME IN BAM FORMAT
+  #  do
+  #  wget $WGETO $EVAPT/AltaiNea.hg19_1000g.$x.dq.bam -O HN-C$x.bam;
+  #  done
+  #wget $WGETO $EVAPT/AltaiNea.hg19_1000g.Y.dq.bam -O HN-C24.bam;
   # UNMAPPED DATA:
   wget $WGETO $EVAPK/NIOBE_0139_A_D0B5GACXX_7_unmapped.bam -O HN-C25.bam;
   wget $WGETO $EVAPK/NIOBE_0139_A_D0B5GACXX_8_unmapped.bam -O HN-C26.bam;
@@ -92,14 +93,17 @@ if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_6_unmapped.bam -O HN-C54.bam;
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_7_unmapped.bam -O HN-C55.bam;
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_8_unmapped.bam -O HN-C56.bam;
-  # FROM SAM 2 MFASTA
-  for((xi=1 ; xi<=56 ; ++xi));
+fi
+#==============================================================================
+# BUILD SAMPLE
+if [[ "$BUILD_SAMPLE" -eq "1" ]]; then
+  rm -f NEAN;
+  for((x=25 ; x<=56 ; ++x)); # ONLY UNMAPPED DATA
     do
-    samtools view HN-C$xi.bam | awk '{OFS="\t"; print ">"$1"\n"$10}' > HN-C$xi ;
+    samtools view HN-C$x.bam | awk '{OFS="\t"; print ">"$1"\n"$10}' > HN-C$x ;
+    cat HN-C$x >> NEAN;
+    rm -f HN-C$x;
     done
-  rm -fr NEAN;
-  cat HN-C* >> NEAN;
-  rm -fr HN-C*;
 fi
 #==============================================================================
 # RUN FALCON
