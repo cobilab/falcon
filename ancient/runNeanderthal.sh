@@ -113,3 +113,15 @@ if [[ "$RUN_FALCON" -eq "1" ]]; then
   (time ./FALCON-EYE -v -F -o draw.map positions.nean ) &> REPORT-FALCON-EYE ;
 fi
 #==============================================================================
+# RUN FILTER
+if [[ "$FILTER_GIS" -eq "1" ]]; then
+  cat top.csv | awk '{ if($3 > 2) print $1"\t"$2"\t"$3"\t"$4"\n"; }' \
+  | awk '{ print $4;}' | tr '|' '\t' | awk '{ print $2;}' > GIS;
+  rm -f FXREADS;
+  cat GIS | while read line
+    do
+    ./goose-extractreadbypattern $line < DB.fa >> FXREADS;
+    done
+  
+fi
+#==============================================================================
