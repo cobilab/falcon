@@ -116,6 +116,7 @@ fi
 # RUN FILTER
 if [[ "$FILTER_GIS" -eq "1" ]]; then
   # GET GULL
+  rm -fr GULL/ GULL-map GULL-visual
   git clone https://github.com/pratas/GULL.git
   cd GULL/src/
   cmake .
