@@ -115,13 +115,31 @@ fi
 #==============================================================================
 # RUN FILTER
 if [[ "$FILTER_GIS" -eq "1" ]]; then
+  # GET GULL
+  git clone https://github.com/pratas/GULL.git
+  cd GULL/src/
+  cmake .
+  make
+  cp GULL-map ../../
+  cp GULL-visual ../../
+  cd ../../
   cat top.csv | awk '{ if($3 > 2) print $1"\t"$2"\t"$3"\t"$4"\n"; }' \
   | awk '{ print $4;}' | tr '|' '\t' | awk '{ print $2;}' > GIS;
   rm -f FXREADS;
+  idx=0;
   cat GIS | while read line
     do
-    ./goose-extractreadbypattern $line < DB.fa >> FXREADS;
+    namex=`echo $line | tr ' ' '_'`;
+    if [[ "$idx" -eq "0" ]]; 
+      then
+      names="$namex";
+      else
+      names="$names:$namex";
+      fi
+    ./goose-extractreadbypattern $line < DB.fa > $namex;
+    ((++idx));
     done
-  
+  ./GULL-map -v -m 20:100:1:5/10 -c 30 -n 8 -x MATRIX.csv $names
+  ./GULL-visual -v -x HEATMAP.svg MATRIX.csv
 fi
 #==============================================================================
