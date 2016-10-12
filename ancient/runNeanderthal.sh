@@ -131,21 +131,19 @@ fi
 if [[ "$FILTER_GIS" -eq "1" ]]; then
   cat top.csv | awk '{ if($3 > 2) print $1"\t"$2"\t"$3"\t"$4; }' \
   | awk '{ print $4;}' | tr '|' '\t' | awk '{ print $2;}' > GIS;
-  rm -f FXREADS;
   idx=0;
   cat GIS | while read line
     do
     namex=`echo $line | tr ' ' '_'`;
-    if [[ "$idx" -eq "0" ]]; 
-      then
-      all_names="$namex";
+    if [[ "$idx" -eq "0" ]]; then
+      printf "%s" "$namex" > FNAMES.fil;
       else
-      all_names="$all_names:$namex";
-      fi
+      printf ":%s" "$namex" >> FNAMES.fil;
+    fi
     ./goose-extractreadbypattern $line < DB.fa > $namex;
-    ((++idx));
+    ((idx++));
     done
-  ./GULL-map -v -m 20:100:1:5/10 -c 30 -n 8 -x MATRIX.csv $all_names
+  ./GULL-map -v -m 20:100:1:5/10 -c 30 -n 8 -x MATRIX.csv `cat FNAMES.fil`
   ./GULL-visual -v -x HEATMAP.svg MATRIX.csv
 fi
 #==============================================================================
