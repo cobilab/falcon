@@ -1,6 +1,7 @@
 #!/bin/bash
-GET_GOOSE=1;
 GET_FALCON=0;
+GET_GOOSE=0;
+GET_GULL=0;
 GET_NEANDERTHAL=0;
 BUILD_SAMPLE=0;
 BUILD_DB=0;
@@ -30,6 +31,18 @@ if [[ "$GET_GOOSE" -eq "1" ]]; then
   cd goose/src/
   make
   cp goose-* ../../
+  cd ../../
+fi
+#==============================================================================
+# GET GOOSE
+if [[ "$GET_GULL" -eq "1" ]]; then
+  rm -fr GULL/ GULL-map GULL-visual
+  git clone https://github.com/pratas/GULL.git
+  cd GULL/src/
+  cmake .
+  make
+  cp GULL-map ../../
+  cp GULL-visual ../../
   cd ../../
 fi
 #==============================================================================
@@ -116,15 +129,6 @@ fi
 #==============================================================================
 # RUN FILTER
 if [[ "$FILTER_GIS" -eq "1" ]]; then
-  # GET GULL
-  rm -fr GULL/ GULL-map GULL-visual
-  git clone https://github.com/pratas/GULL.git
-  cd GULL/src/
-  cmake .
-  make
-  cp GULL-map ../../
-  cp GULL-visual ../../
-  cd ../../
   cat top.csv | awk '{ if($3 > 2) print $1"\t"$2"\t"$3"\t"$4"\n"; }' \
   | awk '{ print $4;}' | tr '|' '\t' | awk '{ print $2;}' > GIS;
   rm -f FXREADS;
@@ -134,14 +138,14 @@ if [[ "$FILTER_GIS" -eq "1" ]]; then
     namex=`echo $line | tr ' ' '_'`;
     if [[ "$idx" -eq "0" ]]; 
       then
-      names="$namex";
+      all_names="$namex";
       else
-      names="$names:$namex";
+      all_names="$all_names:$namex";
       fi
     ./goose-extractreadbypattern $line < DB.fa > $namex;
     ((++idx));
     done
-  ./GULL-map -v -m 20:100:1:5/10 -c 30 -n 8 -x MATRIX.csv $names
+  ./GULL-map -v -m 20:100:1:5/10 -c 30 -n 8 -x MATRIX.csv $all_names
   ./GULL-visual -v -x HEATMAP.svg MATRIX.csv
 fi
 #==============================================================================
