@@ -144,6 +144,6 @@ if [[ "$FILTER_GIS" -eq "1" ]]; then
     ((idx++));
     done
   ./GULL-map -v -m 20:100:1:5/10 -c 30 -n 8 -x MATRIX.csv `cat FNAMES.fil`
-  ./GULL-visual -v -x HEATMAP.svg MATRIX.csv
+  ./GULL-visual -v -w 25 -a 8 -x HEATMAP.svg MATRIX.csv
 fi
 #==============================================================================
