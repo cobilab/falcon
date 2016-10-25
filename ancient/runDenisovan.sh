@@ -1,9 +1,12 @@
 #!/bin/bash
-GET_GOOSE=1;
 GET_FALCON=1;
-GET_DENISOVAN=1;
+GET_GOOSE=1;
+GET_GULL=1;
+GET_DENISOVA=1;
+BUILD_SAMPLE=1;
 BUILD_DB=1;
 RUN_FALCON=1;
+FILTER_GIS=1;
 #==============================================================================
 # sudo apt-get install git cmake
 #==============================================================================
@@ -31,6 +34,18 @@ if [[ "$GET_GOOSE" -eq "1" ]]; then
   cd ../../
 fi
 #==============================================================================
+# GET GOOSE
+if [[ "$GET_GULL" -eq "1" ]]; then
+  rm -fr GULL/ GULL-map GULL-visual
+  git clone https://github.com/pratas/GULL.git
+  cd GULL/src/
+  cmake .
+  make
+  cp GULL-map ../../
+  cp GULL-visual ../../
+  cd ../../
+fi
+#==============================================================================
 # BUILD DB
 if [[ "$BUILD_DB" -eq "1" ]]; then
   perl DownloadArchaea.pl
@@ -42,7 +57,7 @@ if [[ "$BUILD_DB" -eq "1" ]]; then
   cat viruses.fa bacteria.fa archaea.fa fungi.fa | tr ' ' '_' | ./goose-extractreadbypattern complete_genome | ./goose-getunique > DB.fa
 fi
 #==============================================================================
-if [[ "$GET_DENISOVAN" -eq "1" ]]; then
+if [[ "$GET_DENISOVA" -eq "1" ]]; then
   # ===========----------------------------------
   # | WARNING | THIS REQUIRES 1 TB OF FREE DISK |
   # ===========----------------------------------
@@ -74,8 +89,28 @@ fi
 #==============================================================================
 # RUN FALCON
 if [[ "$RUN_FALCON" -eq "1" ]]; then
-  (time ./FALCON -v -n 8 -t 12000 -F -Z -m 20:100:1:5/10 -c 200 -y complexity.denis DENIS DB.fa ) &> REPORT-FALCON ;
-  (time ./FALCON-FILTER -v -F -sl 1 -du 20000000 -t 0.5 -o positions.denis complexity.denis ) &> REPORT-FALCON-FILTER ;
-  (time ./FALCON-EYE -v -F -o draw.map positions.denis ) &> REPORT-FALCON-EYE ;
+  (time ./FALCON -v -n 8 -t 12000 -F -Z -m 20:100:1:5/10 -c 200 -y complexity.denis DENIS DB.fa ) &> REPORT-FALCON-DENIS ;
+  (time ./FALCON-FILTER -v -F -sl 1 -du 20000000 -t 0.5 -o positions.denis complexity.denis ) &> REPORT-FALCON-FILTER-DENIS ;
+  (time ./FALCON-EYE -v -F -o draw.map positions.denis ) &> REPORT-FALCON-EYE-DENIS ;
+fi
+#==============================================================================
+# RUN FILTER
+if [[ "$FILTER_GIS" -eq "1" ]]; then
+  cat top.csv | awk '{ if($3 > 2) print $1"\t"$2"\t"$3"\t"$4; }' \
+  | awk '{ print $4;}' | tr '|' '\t' | awk '{ print $2;}' > GIS;
+  idx=0;
+  cat GIS | while read line
+    do
+    namex=`echo $line | tr ' ' '_'`;
+    if [[ "$idx" -eq "0" ]]; then
+      printf "%s" "$namex" > FNAMES.fil;
+      else
+      printf ":%s" "$namex" >> FNAMES.fil;
+    fi
+    ./goose-extractreadbypattern $line < DB.fa > $namex;
+    ((idx++));
+    done
+  ./GULL-map -v -m 20:100:1:5/10 -c 30 -n 8 -x MATRIX.csv `cat FNAMES.fil`
+  ./GULL-visual -v -w 25 -a 8 -x HEATMAP.svg MATRIX.csv
 fi
 #==============================================================================
