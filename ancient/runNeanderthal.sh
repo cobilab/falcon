@@ -1,11 +1,11 @@
 #!/bin/bash
-GET_FALCON=0;
-GET_GOOSE=0;
-GET_GULL=0;
-GET_NEANDERTHAL=0;
-BUILD_SAMPLE=0;
-BUILD_DB=0;
-RUN_FALCON=0;
+GET_FALCON=1;
+GET_GOOSE=1;
+GET_GULL=1;
+GET_NEANDERTHAL=1;
+BUILD_SAMPLE=1;
+BUILD_DB=1;
+RUN_FALCON=1;
 FILTER_GIS=1;
 #==============================================================================
 # sudo apt-get install samtools git cmake
