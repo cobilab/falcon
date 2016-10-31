@@ -90,8 +90,8 @@ fi
 # RUN FALCON
 if [[ "$RUN_FALCON" -eq "1" ]]; then
   (time ./FALCON -v -n 8 -t 12000 -F -Z -m 20:100:1:5/10 -c 200 -y complexity.denis DENIS DB.fa ) &> REPORT-FALCON-DENIS ;
-  (time ./FALCON-FILTER -v -F -sl 1 -du 20000000 -t 0.5 -o positions.denis complexity.denis ) &> REPORT-FALCON-FILTER-DENIS ;
-  (time ./FALCON-EYE -v -F -o draw.map positions.denis ) &> REPORT-FALCON-EYE-DENIS ;
+  (time ./FALCON-FILTER -v -F -sl 0.001 -du 20000000 -t 0.5 -o positions.denis complexity.denis ) &> REPORT-FALCON-FILTER-DENIS ;
+  (time ./FALCON-EYE -v -e 500 -s 4 -F -o draw.map positions.denis ) &> REPORT-FALCON-EYE-DENIS ;
 fi
 #==============================================================================
 # RUN FILTER
