@@ -167,7 +167,7 @@ set terminal pdfcairo enhanced color font 'Verdana,14'
 set output "per.pdf"
 set auto
 set size ratio 0.75
-set key outside 
+set key outside right center
 set yrange [0:100] 
 h(x)=(-x*log(x)-(1-x)*log(1-x))/log(2)
 set grid
