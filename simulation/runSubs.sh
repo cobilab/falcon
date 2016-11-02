@@ -160,22 +160,26 @@ fi
 # PLOT ========================================================================
 if [[ "$PLOT" -eq "1" ]]; then
 gnuplot << EOF
-set terminal pdfcairo enhanced color
+set terminal pdfcairo enhanced color font 'Verdana,14'
 set output "mut.pdf"
 set auto
-set key right top box
+set size ratio 0.75
+set key outside 
 set yrange [0:100] 
 h(x)=(-x*log(x)-(1-x)*log(1-x))/log(2)
 set grid
 set ylabel "Relative similarity (%)"
 set xlabel "Substitution rate (%)"
-plot [0:100] "TOP-SUBS-FILT" u 1:2 w lines title "FALCON", \
- "TOP-GREEN" u 1:2 w lines title "GREEN", \
- "TOP-MUMMER" u 1:2 w lines title "MUMmer", \
- "TOP-MUMMER20" u 1:2 w lines title "MUMmer -c 20", \
- ((1-(h(x/100)/2+x/100*log(3)/(2*log(2))))*100) w lines title "theoretical"
+set style line 1 lt 2 lc rgb "#CA000D" lw 3
+set style line 2 lt 2 lc rgb "#018D0F" lw 3
+set style line 3 lt 2 lc rgb "#000DC0" lw 3
+set style line 4 lt 2 lc rgb "#FF811F" lw 3
+set style line 5 lt 2 lc rgb "black" lw 3
+plot [0:40] "TOP-SUBS-FILT" u 1:2 w lines ls 1 title "FALCON", \
+ "TOP-GREEN" u 1:2 w lines ls 2 title "GREEN", \
+ "TOP-MUMMER" u 1:2 w lines ls 3 title "MUMmer", \
+ "TOP-MUMMER20" u 1:2 w lines ls 4 title "MUMmer -c 20", \
+ ((1-(h(x/100)/2+x/100*log(3)/(2*log(2))))*100) w lines ls 5 title "Theoretical"
 EOF
 fi
 #==============================================================================
-#cp mut.pdf ../../imgs/
-#cd ..
