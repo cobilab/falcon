@@ -175,10 +175,10 @@ set style line 2 lt 2 lc rgb "#018D0F" lw 3
 set style line 3 lt 2 lc rgb "#000DC0" lw 3
 set style line 4 lt 2 lc rgb "#FF811F" lw 3
 set style line 5 lt 2 lc rgb "black" lw 3
-plot [0:40] "TOP-SUBS-FILT" u 1:2 w lines ls 1 title "FALCON", \
- "TOP-GREEN" u 1:2 w lines ls 2 title "GREEN", \
- "TOP-MUMMER" u 1:2 w lines ls 3 title "MUMmer", \
+plot [0:40] "TOP-MUMMER" u 1:2 w lines ls 3 title "MUMmer", \
  "TOP-MUMMER20" u 1:2 w lines ls 4 title "MUMmer -c 20", \
+ "TOP-GREEN" u 1:2 w lines ls 2 title "GREEN", \
+ "TOP-SUBS-FILT" u 1:2 w lines ls 1 title "FALCON", \
  ((1-(h(x/100)/2+x/100*log(3)/(2*log(2))))*100) w lines ls 5 title "Theoretical"
 EOF
 fi
