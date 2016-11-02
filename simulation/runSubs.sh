@@ -115,7 +115,7 @@ fi
 if [[ "$GREEN" -eq "1" ]]; then
 rm -f TOP-GREEN;
 cat SAMPLE.fa | grep -v ">" | tr -d -c "ACGTN" > SAMPLE.seq;
-GSIZE=`./goose-info SAMPLE.seq  | grep "Number of" | awk '{ print $4;}'`;
+GSIZE=`./goose-info < SAMPLE.seq  | grep "Number of" | awk '{ print $4;}'`;
 for((x=0 ; x<$MLIMIT ; ++x));
   do
   printf "%u\t" "$x" >> TOP-GREEN;
