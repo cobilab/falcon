@@ -96,7 +96,7 @@ fi
 #==============================================================================
 # RUN FILTER
 if [[ "$FILTER_GIS" -eq "1" ]]; then
-  cat top.csv | awk '{ if($3 > 2) print $1"\t"$2"\t"$3"\t"$4; }' \
+  cat top.csv | awk '{ if($3 > 0.001) print $1"\t"$2"\t"$3"\t"$4; }' \
   | awk '{ print $4;}' | tr '|' '\t' | awk '{ print $2;}' > GIS;
   idx=0;
   cat GIS | while read line
