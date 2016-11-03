@@ -170,7 +170,7 @@ set size ratio 0.75
 set key outside right center
 set yrange [0:100] 
 h(x)=(-x*log(x)-(1-x)*log(1-x))/log(2)
-set grid
+unset grid
 set ylabel "Relative similarity (%)"
 set xlabel "Substitution rate (%)"
 set style line 1 lt 2 lc rgb "#CA000D" lw 3
