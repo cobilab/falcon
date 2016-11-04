@@ -41,5 +41,7 @@ zcat $INITALS-X$CHR > $INITALS$CHR;
 echo "$INITALS CX filtered";
 
 rm *CHM-* -f
+cat CHM* > CHM
+
 echo "Done!"
 #=============================================================================
