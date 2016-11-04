@@ -3,7 +3,7 @@
 INITALS="GRC";
 MAX=22;
 WGETOP=" --trust-server-names -q ";
-ONWAY="ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/Assembled_chromosomes/seq/hs_ref_GRCh38.p2_chr"
+ONWAY="ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/Assembled_chromosomes/seq/hs_ref_GRCh38.p7_chr"
 #-----------------------------------------------------------------------------
 function downloadEach
   {
@@ -48,17 +48,17 @@ zcat $INITALS-X$CHR > $INITALS$CHR;
 echo "$INITALS CY filtered";
 
 CHR=25;
-downloadEach "$WGETOP" "ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/Assembled_chromosomes/seq/hs_ref_GRCh38.p2_unlocalized.fa.gz" "$CHR" "$INITALS";
+downloadEach "$WGETOP" "ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/Assembled_chromosomes/seq/hs_ref_GRCh38.p7_unlocalized.fa.gz" "$CHR" "$INITALS";
 zcat $INITALS-X$CHR > $INITALS$CHR;
 echo "$INITALS UNLOCALIZED filtered";
 
 CHR=26;
-downloadEach "$WGETOP" "ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/Assembled_chromosomes/seq/hs_ref_GRCh38.p2_unplaced.fa.gz" "$CHR" "$INITALS";
+downloadEach "$WGETOP" "ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/Assembled_chromosomes/seq/hs_ref_GRCh38.p7_unplaced.fa.gz" "$CHR" "$INITALS";
 zcat $INITALS-X$CHR > $INITALS$CHR;
 echo "$INITALS UNPLACED filtered";
 
 CHR=27
-downloadEach "$WGETOP" "ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/Assembled_chromosomes/seq/hs_ref_GRCh38.p2_chrMT.fa.gz" "$CHR" "$INITALS";
+downloadEach "$WGETOP" "ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/Assembled_chromosomes/seq/hs_ref_GRCh38.p7_chrMT.fa.gz" "$CHR" "$INITALS";
 zcat $INITALS-X$CHR > $INITALS$CHR;
 echo "$INITALS MITOCONDRIAL filtered";
 
