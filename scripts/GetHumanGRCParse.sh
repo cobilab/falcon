@@ -63,5 +63,6 @@ zcat $INITALS-X$CHR > $INITALS$CHR;
 echo "$INITALS MITOCONDRIAL filtered";
 
 rm *GRC-* -f
+cat GRC* > GRC
 echo "Done!"
 #=============================================================================
