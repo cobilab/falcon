@@ -57,7 +57,7 @@ if [[ "$BUILD_DB" -eq "1" ]]; then
   cat viruses.fa bacteria.fa archaea.fa fungi.fa | tr ' ' '_' | ./goose-extractreadbypattern complete_genome | ./goose-getunique > DB.fa
 fi
 #==============================================================================
-if [[ "$GET_GRC" -eq "1" ]]; then
+if [[ "$GET_CHIMP" -eq "1" ]]; then
   # FALCON INSTALL DEPENDENCY
   . GetChimpParse.sh
 fi
