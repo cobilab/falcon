@@ -1,4 +1,5 @@
 #!/bin/bash
+GET_SAMTOOLS=1;
 GET_FALCON=1;
 GET_GOOSE=1;
 GET_GULL=1;
@@ -8,7 +9,19 @@ BUILD_DB=1;
 RUN_FALCON=1;
 FILTER_GIS=1;
 #==============================================================================
-# sudo apt-get install samtools git cmake
+# sudo apt-get install git cmake
+#==============================================================================
+# GET SAMTOOLS 1.3.1
+if [[ "$GET_SAMTOOLS" -eq "1" ]]; then
+  wget https://github.com/samtools/samtools/releases/download/1.3.1/samtools-1.3.1.tar.bz2
+  tar -xvf samtools-1.3.1.tar.bz2
+  cd samtools-1.3.1/
+  ./configure --without-curses
+  make
+  cp samtools ../
+  cd ..
+  rm -fr samtools-1.3.1.*
+fi
 #==============================================================================
 # GET FALCON
 if [[ "$GET_FALCON" -eq "1" ]]; then
@@ -114,8 +127,9 @@ if [[ "$BUILD_SAMPLE" -eq "1" ]]; then
   rm -f NEAN;
   for((x=25 ; x<=56 ; ++x)); # ONLY UNMAPPED DATA
     do
-    samtools view HN-C$x.bam | awk '{OFS="\t"; print ">"$1"\n"$10}' > HN-C$x ;
-    cat HN-C$x >> NEAN;
+    #samtools view HN-C$x.bam | awk '{OFS="\t"; print ">"$1"\n"$10}' > HN-C$x ;
+    ./samtools bam2fq HN-C$x.bam | ./goose-fastq2mfasta >> NEAN;
+    #cat HN-C$x >> NEAN;
     rm -f HN-C$x;
     done
 fi
