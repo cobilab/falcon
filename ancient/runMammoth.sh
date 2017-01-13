@@ -33,7 +33,7 @@ if [[ "$GET_GOOSE" -eq "1" ]]; then
   cd ../../
 fi
 #==============================================================================
-# GET GOOSE
+# GET GULL
 if [[ "$GET_GULL" -eq "1" ]]; then
   rm -fr GULL/ GULL-map GULL-visual
   git clone https://github.com/pratas/GULL.git
