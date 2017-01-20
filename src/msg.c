@@ -68,7 +68,7 @@ void PrintMenuFilter(void){
   "  -su <upper>              similarity upper bound,                       \n"
   "  -dl <lower>              size lower bound,                             \n"
   "  -du <upper>              size upper bound,                             \n"
-  "  -t  <threshold>          threshold,                                    \n"
+  "  -t  <threshold>          threshold [0;2.0],                            \n"
   "  -o  <FILE>               output filename,                              \n"
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
