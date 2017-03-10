@@ -12,7 +12,7 @@ PLOT=1;
 #==============================================================================
 FQLINE=100;
 FQNREADS_MIN=200;
-FQNREADS_MAX=4000;
+FQNREADS_MAX=1000;
 FQNREADS_STEP=200;
 PMIN=30;   #PERMUTATION MINIMUM
 PMAX=250;  #PERMUTATION MAXIMUM
@@ -83,7 +83,7 @@ fi
 # RUN  ========================================================================
 if [[ "$RUN" -eq "1" ]]; then
 rm -f TIME_FALCON TIME_GREEN TIME_MUMMER TIME_MUMMER20;
-for((y=$FQNREADS_MIN ; y<=$FQNREADS_MAX ; y+=$FQNREADS_STEP));
+for(( y=$FQNREADS_MIN ; y<=$FQNREADS_MAX ; y+=$FQNREADS_STEP ));
   do
   rm -f SAMPLE* DB-mfa;
   ./XS -v -ls $FQLINE -n $y -f $DISTRIBUTION -s 0 SAMPLE.fq
@@ -171,11 +171,11 @@ set key outside right center
 unset grid
 set ylabel "Time (s)"
 set xlabel "Number of reads"
-set style line 1 lt 2 lc rgb "#CA000D" lw 3
-set style line 2 lt 2 lc rgb "#018D0F" lw 3
-set style line 3 lt 2 lc rgb "#000DC0" lw 3
-set style line 4 lt 2 lc rgb "#FF811F" lw 3
-set style line 5 lt 2 lc rgb "black" lw 3
+set style line 1 lt 2 lc rgb "#CA000D" lw 5
+set style line 2 lt 2 lc rgb "#018D0F" lw 5
+set style line 3 lt 2 lc rgb "#000DC0" lw 5
+set style line 4 lt 2 lc rgb "#FF811F" lw 5
+set style line 5 lt 2 lc rgb "black" lw 5
 plot [$FQNREADS_MIN:$FQNREADS_MAX] "TIME_MUMMER" u 1:2 w lines ls 3 title "MUMmer", \
  "TIME_MUMMER20" u 1:2 w lines ls 4 title "MUMmer -c 20", \
  "TIME_GREEN" u 1:2 w lines ls 2 title "GREEN", \

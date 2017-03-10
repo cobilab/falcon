@@ -173,11 +173,11 @@ h(x)=(-x*log(x)-(1-x)*log(1-x))/log(2)
 unset grid
 set ylabel "Relative similarity (%)"
 set xlabel "Substitution rate (%)"
-set style line 1 lt 2 lc rgb "#CA000D" lw 3
-set style line 2 lt 2 lc rgb "#018D0F" lw 3
-set style line 3 lt 2 lc rgb "#000DC0" lw 3
-set style line 4 lt 2 lc rgb "#FF811F" lw 3
-set style line 5 lt 2 lc rgb "black" lw 3
+set style line 1 lt 2 lc rgb "#CA000D" lw 5
+set style line 2 lt 2 lc rgb "#018D0F" lw 5
+set style line 3 lt 2 lc rgb "#000DC0" lw 5
+set style line 4 lt 2 lc rgb "#FF811F" lw 5
+set style line 5 lt 2 lc rgb "black" lw 5
 plot [0:40] "TOP-MUMMER" u 1:2 w lines ls 3 title "MUMmer", \
  "TOP-MUMMER20" u 1:2 w lines ls 4 title "MUMmer -c 20", \
  "TOP-GREEN" u 1:2 w lines ls 2 title "GREEN", \
