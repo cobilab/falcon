@@ -37,7 +37,7 @@ cd ttmp/
 ###############################################################################
 if [[ "$INSTALL" -eq "1" ]]; then
 # CLEAN & INSTALL =============================================================
-rm -fr goose-* FALCON XS goose/ falcon/ xs/ geco/ SAMPLE* DB-mfa;
+rm -fr goose-* FALCON XS goose/ falcon/ xs/ geco/;
 # GET GOOSE FRAMEWORK =========================================================
 git clone https://github.com/pratas/goose.git
 cd goose/src/
@@ -85,11 +85,13 @@ if [[ "$RUN" -eq "1" ]]; then
 rm -f TIME_FALCON TIME_GREEN TIME_MUMMER TIME_MUMMER20;
 for((y=$FQNREADS_MIN ; y<=$FQNREADS_MAX ; y+=$FQNREADS_STEP));
   do
+  rm -f SAMPLE* DB-mfa;
   ./XS -v -ls $FQLINE -n $y -f $DISTRIBUTION -s 0 SAMPLE.fq
   # MUTATE ====================================================================
   ./goose-fastq2fasta < SAMPLE.fq > SAMPLE.fa
   ./goose-fasta2seq   < SAMPLE.fa > SAMPLE
   ./goose-seq2fasta -n "Permutation0" < SAMPLE > SAMPLE0.fa
+  rm -f DB.mfa;
   for((x=$PMIN ; x<=$PMAX ; x+=$JUMP));
     do
     echo "Permutation rate: $x";
