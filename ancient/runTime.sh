@@ -16,8 +16,6 @@ if [[ "$GET_BOWTIE" -eq "1" ]]; then
   git clone https://github.com/BenLangmead/bowtie.git
   cd bowtie/
   make
-  cp bowtie ../bowtiex
-  cp bowtie-build ../bowtiex-build
   cd ..
 fi
 #==============================================================================
@@ -48,8 +46,8 @@ fi
 # RUN BOWTIE
 #
 if [[ "$RUN_BOWTIE" -eq "1" ]]; then
-  (time ./bowtiex-build ECOLI.fa index-ECOLI ) > REPORT_BOWTIE_1;
-  (time ./bowtiex -a -v 3 --sam index-ECOLI $READS_FILE > OUT_ALIGNED.sam ) &> REPORT_BOWTIE_2;
+  (time ./bowtie/bowtie-build ECOLI.fa index-ECOLI ) > REPORT_BOWTIE_1;
+  (time ./bowtie/bowtie -a -v 3 --sam index-ECOLI $READS_FILE > OUT_ALIGNED.sam ) &> REPORT_BOWTIE_2;
 fi
 #
 #==============================================================================
