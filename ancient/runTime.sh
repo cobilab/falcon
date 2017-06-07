@@ -1,8 +1,10 @@
 #!/bin/bash
 #
-READS_FILE="/home/pratas/DATABASE/NEANDERTHAL/FASTQ/NEAN.fq";
 GET_FALCON=1;
+GET_SAMTOOLS=1;
+GET_GOOSE=1;
 GET_BOWTIE=1;
+GET_NEANDERTHAL=1;
 GET_ECOLI=1
 RUN_FALCON=1;
 RUN_BOWTIE=1;
@@ -34,6 +36,87 @@ if [[ "$GET_FALCON" -eq "1" ]]; then
   cp falcon/scripts/*.pl .
 fi
 #==============================================================================
+# GET GOOSE
+if [[ "$GET_GOOSE" -eq "1" ]]; then
+  rm -fr goose/ goose-*
+  git clone https://github.com/pratas/goose.git
+  cd goose/src/
+  make
+  cp goose-* ../../
+  cd ../../
+fi
+#==============================================================================
+# GET SAMTOOLS 1.3.1
+if [[ "$GET_SAMTOOLS" -eq "1" ]]; then
+  wget https://github.com/samtools/samtools/releases/download/1.3.1/samtools-1.3.1.tar.bz2
+  tar -xvf samtools-1.3.1.tar.bz2
+  cd samtools-1.3.1/
+  ./configure --without-curses
+  make
+  cp samtools ../
+  cd ..
+  rm -fr samtools-1.3.1.*
+fi
+#==============================================================================
+# GET NEANDERTHAL
+if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
+  # ===========---------------------------------------------
+  # | WARNING | THIS REQUIRES AT LEAST 300 GB OF FREE DISK |
+  # ===========---------------------------------------------
+  #
+  # DEPENDECY: SAMTOOLS;
+  #
+  EVANM="http://cdna.eva.mpg.de";
+  EVAPT="$EVANM/neandertal/altai/AltaiNeandertal/bam";
+  EVAPK="$EVANM/neandertal/altai/AltaiNeandertal/bam/unmapped_qualfail/";
+  WGETO=" --trust-server-names -q ";
+  echo "Downloading sequences ... (This may take a while!)";
+  #for((x=1 ; x<=22 ; ++x));  # GET NEANTHERTAL GENOME IN BAM FORMAT
+  #  do
+  #  wget $WGETO $EVAPT/AltaiNea.hg19_1000g.$x.dq.bam -O HN-C$x.bam;
+  #  done
+  #wget $WGETO $EVAPT/AltaiNea.hg19_1000g.Y.dq.bam -O HN-C24.bam;
+  # UNMAPPED DATA:
+  wget $WGETO $EVAPK/NIOBE_0139_A_D0B5GACXX_7_unmapped.bam -O HN-C25.bam;
+  wget $WGETO $EVAPK/NIOBE_0139_A_D0B5GACXX_8_unmapped.bam -O HN-C26.bam;
+  wget $WGETO $EVAPK/SN928_0068_BB022WACXX_1_unmapped.bam -O HN-C27.bam;
+  wget $WGETO $EVAPK/SN928_0068_BB022WACXX_2_unmapped.bam -O HN-C28.bam;
+  wget $WGETO $EVAPK/SN928_0068_BB022WACXX_3_unmapped.bam -O HN-C29.bam;
+  wget $WGETO $EVAPK/SN928_0068_BB022WACXX_4_unmapped.bam -O HN-C30.bam;
+  wget $WGETO $EVAPK/SN928_0068_BB022WACXX_5_unmapped.bam -O HN-C31.bam;
+  wget $WGETO $EVAPK/SN928_0068_BB022WACXX_6_unmapped.bam -O HN-C32.bam;
+  wget $WGETO $EVAPK/SN928_0068_BB022WACXX_7_unmapped.bam -O HN-C33.bam;
+  wget $WGETO $EVAPK/SN928_0068_BB022WACXX_8_unmapped.bam -O HN-C34.bam;
+  wget $WGETO $EVAPK/SN928_0073_BD0J78ACXX_1_unmapped.bam -O HN-C35.bam;
+  wget $WGETO $EVAPK/SN928_0073_BD0J78ACXX_2_unmapped.bam -O HN-C36.bam;
+  wget $WGETO $EVAPK/SN928_0073_BD0J78ACXX_3_unmapped.bam -O HN-C37.bam;
+  wget $WGETO $EVAPK/SN928_0073_BD0J78ACXX_4_unmapped.bam -O HN-C38.bam;
+  wget $WGETO $EVAPK/SN928_0073_BD0J78ACXX_5_unmapped.bam -O HN-C39.bam;
+  wget $WGETO $EVAPK/SN928_0073_BD0J78ACXX_6_unmapped.bam -O HN-C40.bam;
+  wget $WGETO $EVAPK/SN928_0073_BD0J78ACXX_7_unmapped.bam -O HN-C41.bam;
+  wget $WGETO $EVAPK/SN928_0073_BD0J78ACXX_8_unmapped.bam -O HN-C42.bam;
+  wget $WGETO $EVAPK/SN7001204_0130_AC0M6HACXX_PEdi_SS_L9302_L9303_1_1_unmapped.bam -O HN-C43.bam;
+  wget $WGETO $EVAPK/SN7001204_0130_AC0M6HACXX_PEdi_SS_L9302_L9303_1_2_unmapped.bam -O HN-C44.bam;
+  wget $WGETO $EVAPK/SN7001204_0130_AC0M6HACXX_PEdi_SS_L9302_L9303_1_3_unmapped.bam -O HN-C45.bam;
+  wget $WGETO $EVAPK/SN7001204_0130_AC0M6HACXX_PEdi_SS_L9302_L9303_1_5_unmapped.bam -O HN-C46.bam;
+  wget $WGETO $EVAPK/SN7001204_0130_AC0M6HACXX_PEdi_SS_L9302_L9303_1_6_unmapped.bam -O HN-C47.bam;
+  wget $WGETO $EVAPK/SN7001204_0130_AC0M6HACXX_PEdi_SS_L9302_L9303_1_7_unmapped.bam -O HN-C48.bam;
+  wget $WGETO $EVAPK/SN7001204_0130_AC0M6HACXX_PEdi_SS_L9302_L9303_1_8_unmapped.bam -O HN-C49.bam;
+  wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_1_unmapped.bam -O HN-C50.bam;
+  wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_2_unmapped.bam -O HN-C51.bam;
+  wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_3_unmapped.bam -O HN-C52.bam;
+  wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_5_unmapped.bam -O HN-C53.bam;
+  wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_6_unmapped.bam -O HN-C54.bam;
+  wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_7_unmapped.bam -O HN-C55.bam;
+  wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_8_unmapped.bam -O HN-C56.bam;
+  rm -f NEAN;
+  for((x=25 ; x<=56 ; ++x)); # ONLY UNMAPPED DATA
+    do
+    ./samtools bam2fq HN-C$x.bam | ./goose-fastq2mfasta >> NEAN.fq
+    rm -f HN-C$x;
+    done
+fi
+#==============================================================================
 # DOWNLOAD ECOLI
 #
 if [[ "$GET_ECOLI" -eq "1" ]]; then
@@ -47,14 +130,14 @@ fi
 #
 if [[ "$RUN_BOWTIE" -eq "1" ]]; then
   (time ./bowtie/bowtie-build ECOLI.fa index-ECOLI ) &> REPORT_BOWTIE_1;
-  (time ./bowtie/bowtie -a -v 3 --sam index-ECOLI $READS_FILE > OUT_ALIGNED.sam ) &> REPORT_BOWTIE_2;
+  (time ./bowtie/bowtie -a -v 3 --sam index-ECOLI NEAN.fq > OUT_ALIGNED.sam ) &> REPORT_BOWTIE_2;
 fi
 #
 #==============================================================================
 # RUN FALCON
 #
 if [[ "$RUN_FALCON" -eq "1" ]]; then
-  (time ./FALCON -v -n 8 -t 1000 -F -m 20:100:1:5/10 -c 200 $READS_FILE ECOLI.fa ) &> REPORT_FALCON;
+  (time ./FALCON -v -n 8 -t 1000 -F -m 20:100:1:5/10 -c 200 NEAN.fq ECOLI.fa ) &> REPORT_FALCON;
 fi
 #==============================================================================
 
