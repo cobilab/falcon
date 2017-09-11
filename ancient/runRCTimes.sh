@@ -125,13 +125,13 @@ if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_6_unmapped.bam -O HN-C54.bam;
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_7_unmapped.bam -O HN-C55.bam;
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_8_unmapped.bam -O HN-C56.bam;
-  rm -f NEAN.fq;
+  rm -f NEAN-UM.fq;
   for((x=25 ; x<=56 ; ++x)); # ONLY UNMAPPED DATA
     do
     ./samtools bam2fq HN-C$x.bam \
     | ./goose-FastqMinimumLocalQualityScoreForward -k 5 -w 15 -m 33 \
     | ./goose-FastqMinimumReadSize 35 \
-    | ./goose-fastq2mfasta >> NEAN.fq
+    | ./goose-fastq2mfasta >> NEAN-UM.fq
     rm -f HN-C$x;
     done
 fi
@@ -149,34 +149,34 @@ fi
 #
 if [[ "$RUN_BOWTIE" -eq "1" ]]; then
   (time ./bowtie/bowtie-build ECOLI.fa index-ECOLI ) &> REPORT_BOWTIE_1;
-  (time ./bowtie/bowtie -a --sam index-ECOLI NEAN.fq > OUT_ALIGNED_BOWTIE.sam ) &> REPORT_BOWTIE_2;
+  (time ./bowtie/bowtie -a --sam index-ECOLI NEAN-UM.fq > OUT_ALIGNED_BOWTIE.sam ) &> REPORT_BOWTIE_2;
 fi
 #==============================================================================
 # RUN BOWTIE V3
 #
 if [[ "$RUN_BOWTIE_ANCIENT" -eq "1" ]]; then
   (time ./bowtie/bowtie-build ECOLI.fa index-ECOLI ) &> REPORT_BOWTIE_ANCIENT_1;
-  (time ./bowtie/bowtie -a -v 3 --sam index-ECOLI NEAN.fq > OUT_ALIGNED_BOWTIE_ANCIENT.sam ) &> REPORT_BOWTIE_ANCIENT_2;
+  (time ./bowtie/bowtie -a -v 3 --sam index-ECOLI NEAN-UM.fq > OUT_ALIGNED_BOWTIE_ANCIENT.sam ) &> REPORT_BOWTIE_ANCIENT_2;
 fi
 #==============================================================================
 # RUN BWA
 #
 if [[ "$RUN_BWA" -eq "1" ]]; then
   (time ./bwa/bwa index ECOLI.fa ) &> REPORT_BWA_1;
-  (time ./bwa/bwa mem ECOLI.fa NEAN.fq | gzip -3 > OUT_ALIGNED_BWA.sam.gz ) &> REPORT_BWA_2;
+  (time ./bwa/bwa mem ECOLI.fa NEAN-UM.fq | gzip -3 > OUT_ALIGNED_BWA.sam.gz ) &> REPORT_BWA_2;
 fi
 #==============================================================================
 # RUN BWA ANCIENT
 #
 if [[ "$RUN_BWA_ANCIENT" -eq "1" ]]; then
   (time ./bwa/bwa index ECOLI.fa ) &> REPORT_BWA_ANCIENT_1;
-  (time ./bwa/bwa mem -L 16500 -N 0.01 -O 2 ECOLI.fa NEAN.fq | gzip -3 > OUT_ALIGNED_BWA_ANCIENT.sam.gz ) &> REPORT_BWA_ANCIENT_2;
+  (time ./bwa/bwa mem -L 16500 -N 0.01 -O 2 ECOLI.fa NEAN-UM.fq | gzip -3 > OUT_ALIGNED_BWA_ANCIENT.sam.gz ) &> REPORT_BWA_ANCIENT_2;
 fi
 #==============================================================================
 # RUN FALCON
 #
 if [[ "$RUN_FALCON" -eq "1" ]]; then
-  (time ./FALCON -v -n 8 -t 500 -F -m 13:20:0/0 -m 20:100:1:5/10 -c 150 NEAN.fq ECOLI.fa ) &> REPORT_FALCON;
+  (time ./FALCON -v -n 8 -t 500 -F -m 13:20:0/0 -m 20:200:1:5/20 -c 200 NEAN-UM.fq ECOLI.fa ) &> REPORT_FALCON;
 fi
 #==============================================================================
 
