@@ -4,10 +4,13 @@ GET_FALCON=1;
 GET_SAMTOOLS=1;
 GET_GOOSE=1;
 GET_BOWTIE=1;
+GET_BWA=1;
 GET_NEANDERTHAL=1;
 GET_ECOLI=1
-RUN_FALCON=1;
 RUN_BOWTIE=1;
+RUN_BOWTIEV3=1;
+RUN_BWA=1;
+RUN_FALCON=1;
 #
 #==============================================================================
 # GET BOWTIE
@@ -17,6 +20,16 @@ if [[ "$GET_BOWTIE" -eq "1" ]]; then
   rm -fr bowtie/
   git clone https://github.com/BenLangmead/bowtie.git
   cd bowtie/
+  make
+  cd ..
+fi
+#==============================================================================
+# GET BWA
+#
+if [[ "$GET_BWA" -eq "1" ]]; then
+  rm -fr bwa/
+  git clone https://github.com/lh3/bwa.git
+  cd bwa/
   make
   cd ..
 fi
@@ -71,12 +84,14 @@ if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
   EVAPK="$EVANM/neandertal/altai/AltaiNeandertal/bam/unmapped_qualfail/";
   WGETO=" --trust-server-names -q ";
   echo "Downloading sequences ... (This may take a while!)";
+
   #for((x=1 ; x<=22 ; ++x));  # GET NEANTHERTAL GENOME IN BAM FORMAT
   #  do
   #  wget $WGETO $EVAPT/AltaiNea.hg19_1000g.$x.dq.bam -O HN-C$x.bam;
   #  done
   #wget $WGETO $EVAPT/AltaiNea.hg19_1000g.Y.dq.bam -O HN-C24.bam;
-  # UNMAPPED DATA:
+
+  # ONLY UNMAPPED DATA:
   wget $WGETO $EVAPK/NIOBE_0139_A_D0B5GACXX_7_unmapped.bam -O HN-C25.bam;
   wget $WGETO $EVAPK/NIOBE_0139_A_D0B5GACXX_8_unmapped.bam -O HN-C26.bam;
   wget $WGETO $EVAPK/SN928_0068_BB022WACXX_1_unmapped.bam -O HN-C27.bam;
@@ -109,10 +124,13 @@ if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_6_unmapped.bam -O HN-C54.bam;
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_7_unmapped.bam -O HN-C55.bam;
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_8_unmapped.bam -O HN-C56.bam;
-  rm -f NEAN;
+  rm -f NEAN.fq;
   for((x=25 ; x<=56 ; ++x)); # ONLY UNMAPPED DATA
     do
-    ./samtools bam2fq HN-C$x.bam | ./goose-fastq2mfasta >> NEAN.fq
+    ./samtools bam2fq HN-C$x.bam \
+    | ./goose-FastqMinimumLocalQualityScoreForward -k 5 -w 15 -m 33 \
+    | ./goose-FastqMinimumReadSize 35 \
+    | ./goose-fastq2mfasta >> NEAN.fq
     rm -f HN-C$x;
     done
 fi
@@ -130,7 +148,21 @@ fi
 #
 if [[ "$RUN_BOWTIE" -eq "1" ]]; then
   (time ./bowtie/bowtie-build ECOLI.fa index-ECOLI ) &> REPORT_BOWTIE_1;
-  (time ./bowtie/bowtie -a -v 3 --sam index-ECOLI NEAN.fq > OUT_ALIGNED.sam ) &> REPORT_BOWTIE_2;
+  (time ./bowtie/bowtie -a --sam index-ECOLI NEAN.fq > OUT_ALIGNED.sam ) &> REPORT_BOWTIE_2;
+fi
+#==============================================================================
+# RUN BOWTIE V3
+#
+if [[ "$RUN_BOWTIEV3" -eq "1" ]]; then
+  (time ./bowtie/bowtie-build ECOLI.fa index-ECOLI ) &> REPORT_BOWTIE_V3_1;
+  (time ./bowtie/bowtie -a -v 3 --sam index-ECOLI NEAN.fq > OUT_ALIGNED.sam ) &> REPORT_BOWTIE_V3_2;
+fi
+#==============================================================================
+# RUN BWA
+#
+if [[ "$RUN_BWA" -eq "1" ]]; then
+  (time ./bwa index ECOLI.fa ) &> REPORT_BWA_1;
+  (time ./bwa mem ECOLI.fa NEAN.fq | gzip -3 > OUT_ALIGNED_BWA.sam.gz ) &> REPORT_BWA_2;
 fi
 #
 #==============================================================================
