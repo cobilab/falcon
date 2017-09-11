@@ -169,7 +169,7 @@ fi
 # RUN FALCON
 #
 if [[ "$RUN_FALCON" -eq "1" ]]; then
-  (time ./FALCON -v -n 8 -t 1000 -F -m 20:100:1:5/10 -c 200 NEAN.fq ECOLI.fa ) &> REPORT_FALCON;
+  (time ./FALCON -v -n 8 -t 500 -F -m 13:20:0/0 -m 20:100:1:5/10 -c 150 NEAN.fq ECOLI.fa ) &> REPORT_FALCON;
 fi
 #==============================================================================
 
