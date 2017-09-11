@@ -8,8 +8,9 @@ GET_BWA=1;
 GET_NEANDERTHAL=1;
 GET_ECOLI=1
 RUN_BOWTIE=1;
-RUN_BOWTIEV3=1;
+RUN_BOWTIE_ANCIENT=1;
 RUN_BWA=1;
+RUN_BWA_ANCIENT=1;
 RUN_FALCON=1;
 #
 #==============================================================================
@@ -148,23 +149,29 @@ fi
 #
 if [[ "$RUN_BOWTIE" -eq "1" ]]; then
   (time ./bowtie/bowtie-build ECOLI.fa index-ECOLI ) &> REPORT_BOWTIE_1;
-  (time ./bowtie/bowtie -a --sam index-ECOLI NEAN.fq > OUT_ALIGNED.sam ) &> REPORT_BOWTIE_2;
+  (time ./bowtie/bowtie -a --sam index-ECOLI NEAN.fq > OUT_ALIGNED_BOWTIE.sam ) &> REPORT_BOWTIE_2;
 fi
 #==============================================================================
 # RUN BOWTIE V3
 #
-if [[ "$RUN_BOWTIEV3" -eq "1" ]]; then
-  (time ./bowtie/bowtie-build ECOLI.fa index-ECOLI ) &> REPORT_BOWTIE_V3_1;
-  (time ./bowtie/bowtie -a -v 3 --sam index-ECOLI NEAN.fq > OUT_ALIGNED.sam ) &> REPORT_BOWTIE_V3_2;
+if [[ "$RUN_BOWTIE_ANCIENT" -eq "1" ]]; then
+  (time ./bowtie/bowtie-build ECOLI.fa index-ECOLI ) &> REPORT_BOWTIE_ANCIENT_1;
+  (time ./bowtie/bowtie -a -v 3 --sam index-ECOLI NEAN.fq > OUT_ALIGNED_BOWTIE_ANCIENT.sam ) &> REPORT_BOWTIE_ANCIENT_2;
 fi
 #==============================================================================
 # RUN BWA
 #
 if [[ "$RUN_BWA" -eq "1" ]]; then
-  (time ./bwa index ECOLI.fa ) &> REPORT_BWA_1;
-  (time ./bwa mem ECOLI.fa NEAN.fq | gzip -3 > OUT_ALIGNED_BWA.sam.gz ) &> REPORT_BWA_2;
+  (time ./bwa/bwa index ECOLI.fa ) &> REPORT_BWA_1;
+  (time ./bwa/bwa mem ECOLI.fa NEAN.fq | gzip -3 > OUT_ALIGNED_BWA.sam.gz ) &> REPORT_BWA_2;
 fi
+#==============================================================================
+# RUN BWA ANCIENT
 #
+if [[ "$RUN_BWA_ANCIENT" -eq "1" ]]; then
+  (time ./bwa/bwa index ECOLI.fa ) &> REPORT_BWA_ANCIENT_1;
+  (time ./bwa/bwa mem -L 16500 -N 0.01 -O 2 ECOLI.fa NEAN.fq | gzip -3 > OUT_ALIGNED_BWA_ANCIENT.sam.gz ) &> REPORT_BWA_ANCIENT_2;
+fi
 #==============================================================================
 # RUN FALCON
 #
