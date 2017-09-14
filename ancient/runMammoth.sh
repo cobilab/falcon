@@ -59,14 +59,17 @@ fi
 if [[ "$GET_MAMMOTH" -eq "1" ]]; then
   echo "Downloading sequences ... (This may take a while!)";
   # ftp://ftp.cbcb.umd.edu/pub/data/mammoth/README.txt
+  rm -f MAM c_2_sequence12.txt;
   wget ftp://ftp.cbcb.umd.edu/pub/data/mammoth/c_2_sequence12.txt.gz
   gunzip c_2_sequence12.txt.gz
-  mv c_2_sequence12.txt MAM
+  cat c_2_sequence12.txt \
+  | ./goose-FastqMinimumLocalQualityScoreForward -k 5 -w 15 -m 33 \
+  | ./goose-FastqMinimumReadSize 35 >> MAM
 fi
 #==============================================================================
 # RUN FALCON
 if [[ "$RUN_FALCON" -eq "1" ]]; then
-  (time ./FALCON -v -n 8 -t 12000 -F -Z -m 20:100:1:5/10 -c 200 -y complexity.mam MAM DB.fa ) &> REPORT-FALCON-MAM ;
+  (time ./FALCON -v -n 8 -t 1000 -F -Z -m 13:1:0:0/0 -m 20:100:1:5/10 -c 150 -y complexity.mam MAM DB.fa ) &> REPORT-FALCON-MAM ;
   (time ./FALCON-FILTER -v -F -sl 0.001 -du 20000000 -t 0.5 -o positions.mam complexity.mam ) &> REPORT-FALCON-FILTER-MAM ;
   (time ./FALCON-EYE -v -e 500 -s 4 -F -o draw.map positions.mam ) &> REPORT-FALCON-EYE-MAM ;
 fi
