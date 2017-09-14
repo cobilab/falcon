@@ -8,8 +8,8 @@
 #define ARRAY_MODE            0
 #define HASH_TABLE_MODE       1
 #define HASH_TABLE_BEGIN_CTX  15
-//#define HASH_SIZE             33554471
-#define HASH_SIZE             67108879
+#define HASH_SIZE             33554471
+//#define HASH_SIZE             67108879 # c=200 -> ~50 GB of RAM
 #define MAX_COLLISIONS        10
 
 #if defined(PREC32B)
