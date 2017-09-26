@@ -62,6 +62,7 @@ fi
 #==============================================================================
 # GET SAMTOOLS 1.3.1
 if [[ "$GET_SAMTOOLS" -eq "1" ]]; then
+  # sudo apt-get install zlib1g-dev
   wget https://github.com/samtools/samtools/releases/download/1.3.1/samtools-1.3.1.tar.bz2
   tar -xvf samtools-1.3.1.tar.bz2
   cd samtools-1.3.1/
