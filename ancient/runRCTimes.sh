@@ -18,7 +18,7 @@ RUN_FALCON=1;
 # GET BOWTIE
 #
 if [[ "$GET_BOWTIE" -eq "1" ]]; then
-  #sudo apt-get install libtbb-dev
+  sudo apt-get install libtbb-dev
   rm -fr bowtie/
   git clone https://github.com/BenLangmead/bowtie.git
   cd bowtie/
@@ -132,30 +132,31 @@ fi
 # FILTER NEANDERTHAL
 if [[ "$FILTER_NEANDERTHAL" -eq "1" ]]; then
   rm -f NEAN-UM.fq;
-  for((x=25 ; x<=56 ; ++x)); # ONLY UNMAPPED DATA
+  for((x=1 ; x<=56 ; ++x)); # ONLY UNMAPPED DATA
     do
     #
-    ./samtools bam2fq HN-C$x.bam > HN-C$x.fastq;
-    #
+    ./samtools bam2fq HN-C$x.bam \
+    | ./goose-FastqSplit HN-C$x.FW.fastq HN-C$x.RV.fastq
     # paired-end reads: '/1' or '/2' is added to the end of read names
+    # and then reads are splitted according to direction
     #
     # FORWARD: (TRIMM BY QUALITY-SCORE | FILTER VERY SHORT READS)
     #
-    cat HN-C$x.fastq | grep '^@.*/1$' -A 3 --no-group-separator \
+    cat HN-C$x.FW.fastq \
     | ./goose-FastqMinimumLocalQualityScoreForward -k 5 -w 15 -m 33 \
     | ./goose-FastqMinimumReadSize 35 > HN-C$x.r1.filt.fastq;
     #
     # REVERSE: (TRIMM BY QUALITY-SCORE | FILTER VERY SHORT READS)
     #
-    cat HN-C$x.fastq | grep '^@.*/2$' -A 3 --no-group-separator \
+    cat HN-C$x.RV.fastq \
     | ./goose-FastqMinimumLocalQualityScoreReverse -k 5 -w 15 -m 33 \
     | ./goose-FastqMinimumReadSize 35 > HN-C$x.r2.filt.fastq;
     #
     # MERGE:
     #
-    rm -f HN-C$x.fastq;
-    cat HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq > HN-C$x.filt.fastq   
-    rm -f HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq;
+    #rm -f HN-C$x.fastq;
+    cat HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq > HN-C$x.filt.fastq
+    #rm -f HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq;
     #
     # CONCATENATE:
     #
