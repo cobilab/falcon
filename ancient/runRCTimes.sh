@@ -6,6 +6,7 @@ GET_GOOSE=1;
 GET_BOWTIE=1;
 GET_BWA=1;
 GET_NEANDERTHAL=1;
+FILTER_NEANDERTHAL=1;
 GET_ECOLI=1
 RUN_BOWTIE=1;
 RUN_BOWTIE_ANCIENT=1;
@@ -76,7 +77,7 @@ fi
 # GET NEANDERTHAL
 if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
   # ===========---------------------------------------------
-  # | WARNING | THIS REQUIRES AT LEAST 300 GB OF FREE DISK |
+  # | WARNING |  THIS REQUIRES AT LEAST 1 TB OF FREE DISK  |
   # ===========---------------------------------------------
   #
   # DEPENDECY: SAMTOOLS;
@@ -87,11 +88,11 @@ if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
   WGETO=" --trust-server-names -q ";
   echo "Downloading sequences ... (This may take a while!)";
 
-  #for((x=1 ; x<=22 ; ++x));  # GET NEANTHERTAL GENOME IN BAM FORMAT
-  #  do
-  #  wget $WGETO $EVAPT/AltaiNea.hg19_1000g.$x.dq.bam -O HN-C$x.bam;
-  #  done
-  #wget $WGETO $EVAPT/AltaiNea.hg19_1000g.Y.dq.bam -O HN-C24.bam;
+  for((x=1 ; x<=22 ; ++x));  # GET NEANTHERTAL GENOME IN BAM FORMAT
+    do
+    wget $WGETO $EVAPT/AltaiNea.hg19_1000g.$x.dq.bam -O HN-C$x.bam;
+    done
+  wget $WGETO $EVAPT/AltaiNea.hg19_1000g.Y.dq.bam -O HN-C24.bam;
 
   # ONLY UNMAPPED DATA:
   wget $WGETO $EVAPK/NIOBE_0139_A_D0B5GACXX_7_unmapped.bam -O HN-C25.bam;
@@ -126,14 +127,39 @@ if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_6_unmapped.bam -O HN-C54.bam;
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_7_unmapped.bam -O HN-C55.bam;
   wget $WGETO $EVAPK/SN7001204_0131_BC0M3YACXX_PEdi_SS_L9302_L9303_2_8_unmapped.bam -O HN-C56.bam;
+fi
+#==============================================================================
+# FILTER NEANDERTHAL
+if [[ "$FILTER_NEANDERTHAL" -eq "1" ]]; then
   rm -f NEAN-UM.fq;
   for((x=25 ; x<=56 ; ++x)); # ONLY UNMAPPED DATA
     do
-    ./samtools bam2fq HN-C$x.bam \
+    #
+    ./samtools bam2fq HN-C$x.bam > HN-C$x.fastq;
+    #
+    # paired-end reads: '/1' or '/2' is added to the end of read names
+    #
+    # FORWARD: (TRIMM BY QUALITY-SCORE | FILTER VERY SHORT READS)
+    #
+    cat HN-C$x.fastq | grep '^@.*/1$' -A 3 --no-group-separator \
     | ./goose-FastqMinimumLocalQualityScoreForward -k 5 -w 15 -m 33 \
-    | ./goose-FastqMinimumReadSize 35 \
-    | ./goose-fastq2mfasta >> NEAN-UM.fq
-    rm -f HN-C$x;
+    | ./goose-FastqMinimumReadSize 35 > HN-C$x.r1.filt.fastq;
+    #
+    # REVERSE: (TRIMM BY QUALITY-SCORE | FILTER VERY SHORT READS)
+    #
+    cat HN-C$x.fastq | grep '^@.*/2$' -A 3 --no-group-separator \
+    | ./goose-FastqMinimumLocalQualityScoreReverse -k 5 -w 15 -m 33 \
+    | ./goose-FastqMinimumReadSize 35 > HN-C$x.r2.filt.fastq;
+    #
+    # MERGE:
+    #
+    rm -f HN-C$x.fastq;
+    cat HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq > HN-C$x.filt.fastq   
+    rm -f HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq;
+    #
+    # CONCATENATE:
+    #
+    cat HN-C$x.filt.fastq >> NEAN-UM.fq;
     done
 fi
 #==============================================================================
@@ -157,7 +183,7 @@ fi
 #
 if [[ "$RUN_BOWTIE_ANCIENT" -eq "1" ]]; then
   (time ./bowtie/bowtie-build ECOLI.fa index-ECOLI ) &> REPORT_BOWTIE_ANCIENT_1;
-  (time ./bowtie/bowtie -a -v 3 --sam index-ECOLI NEAN-UM.fq > OUT_ALIGNED_BOWTIE_ANCIENT.sam ) &> REPORT_BOWTIE_ANCIENT_2;
+  (time ./bowtie/bowtie -a -v 2 --sam index-ECOLI NEAN-UM.fq > OUT_ALIGNED_BOWTIE_ANCIENT.sam ) &> REPORT_BOWTIE_ANCIENT_2;
 fi
 #==============================================================================
 # RUN BWA
@@ -177,7 +203,7 @@ fi
 # RUN FALCON
 #
 if [[ "$RUN_FALCON" -eq "1" ]]; then
-  (time ./FALCON -v -n 8 -t 500 -F -m 13:20:0/0 -m 20:200:1:5/20 -c 200 NEAN-UM.fq ECOLI.fa ) &> REPORT_FALCON;
+  (time ./FALCON -v -n 8 -t 400 -F -m 13:20:0/0 -m 20:200:1:5/20 -c 200 NEAN-UM.fq ECOLI.fa ) &> REPORT_FALCON;
 fi
 #==============================================================================
 
