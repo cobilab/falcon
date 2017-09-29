@@ -18,7 +18,7 @@ RUN_FALCON=1;
 # GET BOWTIE
 #
 if [[ "$GET_BOWTIE" -eq "1" ]]; then
-  sudo apt-get install libtbb-dev
+  #sudo apt-get install libtbb-dev
   rm -fr bowtie/
   git clone https://github.com/BenLangmead/bowtie.git
   cd bowtie/
@@ -136,7 +136,7 @@ if [[ "$FILTER_NEANDERTHAL" -eq "1" ]]; then
     do
     #
     ./samtools bam2fq HN-C$x.bam \
-    | ./goose-FastqSplit HN-C$x.FW.fastq HN-C$x.RV.fastq
+    | ./goose-FastqSplit HN-C$x.FW.fastq HN-C$x.RV.fastq;
     # paired-end reads: '/1' or '/2' is added to the end of read names
     # and then reads are splitted according to direction
     #
@@ -154,9 +154,8 @@ if [[ "$FILTER_NEANDERTHAL" -eq "1" ]]; then
     #
     # MERGE:
     #
-    #rm -f HN-C$x.fastq;
     cat HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq > HN-C$x.filt.fastq
-    #rm -f HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq;
+    rm -f HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq;
     #
     # CONCATENATE:
     #
