@@ -155,11 +155,15 @@ if [[ "$FILTER_NEANDERTHAL" -eq "1" ]]; then
     # MERGE:
     #
     cat HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq > HN-C$x.filt.fastq
-    rm -f HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq;
+    #
+    rm -f HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq
+    rm -f HN-C$x.FW.fastq HN-C$x.RV.fastq
     #
     # CONCATENATE:
     #
     cat HN-C$x.filt.fastq >> NEAN-UM.fq;
+    rm -f HN-C$x.filt.fastq
+    #
     done
 fi
 #==============================================================================
@@ -203,7 +207,7 @@ fi
 # RUN FALCON
 #
 if [[ "$RUN_FALCON" -eq "1" ]]; then
-  (time ./FALCON -v -n 8 -t 400 -F -m 13:20:0/0 -m 20:200:1:5/20 -c 200 NEAN-UM.fq ECOLI.fa ) &> REPORT_FALCON;
+  (time ./FALCON -v -n 8 -t 400 -F -m 13:20:0:0/0 -m 20:200:1:5/20 -c 200 NEAN-UM.fq ECOLI.fa ) &> REPORT_FALCON;
 fi
 #==============================================================================
 
