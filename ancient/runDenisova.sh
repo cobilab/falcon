@@ -116,12 +116,14 @@ if [[ "$GET_DENISOVA" -eq "1" ]]; then
   wget $WGETO $EVAPT/SL3004_SR.txt.gz -O DX13_SR.gz
   wget $WGETO $EVAPT/SL3004_r1.txt.gz -O DX13_r1.gz
   wget $WGETO $EVAPT/SL3004_r2.txt.gz -O DX13_r2.gz
+  rm -f DENIS;
   for((x=1 ; x<=13 ; ++x));
     do
-    gunzip DX$x.gz
+    zcat DX$x.gz >> DENIS;
+    
+
+    rm -f DX$x.gz;
     done
-  rm -f DENIS;
-  cat DX* >> DENIS;
   rm -f DX*;
 fi
 #==============================================================================
