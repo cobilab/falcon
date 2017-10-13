@@ -162,6 +162,7 @@ fi
 #==============================================================================
 # RUN FALCON
 if [[ "$RUN_FALCON" -eq "1" ]]; then
+  #(time ./FALCON -v -n 8 -t 2000 -F -Z -m 13:20:0:0/0 -m 20:200:1:5/20 -c 200 -y complexity.nean NEAN-UM.fq DB.fa ) &> REPORT-FALCON ;
   (time ./FALCON -v -n 8 -t 2000 -F -Z -m 20:100:1:5/10 -c 200 -y complexity.nean NEAN-UM.fq DB.fa ) &> REPORT-FALCON ;
   (time ./FALCON-FILTER -v -F -sl 0.001 -du 20000000 -t 0.5 -o positions.nean complexity.nean ) &> REPORT-FALCON-FILTER ;
   (time ./FALCON-EYE -v -F  -e 500 -s 4 -sl 4.15 -o draw.map positions.nean ) &> REPORT-FALCON-EYE ;
