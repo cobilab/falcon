@@ -82,11 +82,11 @@ if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
   EVAPK="$EVANM/neandertal/altai/AltaiNeandertal/bam/unmapped_qualfail/";
   WGETO=" --trust-server-names -q ";
   echo "Downloading sequences ... (This may take a while!)";
-  #for((x=1 ; x<=22 ; ++x));  # GET NEANTHERTAL GENOME IN BAM FORMAT
-  #  do
-  #  wget $WGETO $EVAPT/AltaiNea.hg19_1000g.$x.dq.bam -O HN-C$x.bam;
-  #  done
-  #wget $WGETO $EVAPT/AltaiNea.hg19_1000g.Y.dq.bam -O HN-C24.bam;
+  for((x=1 ; x<=22 ; ++x));  # GET NEANTHERTAL GENOME IN BAM FORMAT
+    do
+    wget $WGETO $EVAPT/AltaiNea.hg19_1000g.$x.dq.bam -O HN-C$x.bam;
+    done
+  wget $WGETO $EVAPT/AltaiNea.hg19_1000g.Y.dq.bam -O HN-C24.bam;
   # UNMAPPED DATA:
   wget $WGETO $EVAPK/NIOBE_0139_A_D0B5GACXX_7_unmapped.bam -O HN-C25.bam;
   wget $WGETO $EVAPK/NIOBE_0139_A_D0B5GACXX_8_unmapped.bam -O HN-C26.bam;
@@ -125,9 +125,38 @@ fi
 # FILTER NEANDERTHAL
 if [[ "$FILTER_NEANDERTHAL" -eq "1" ]]; then
   rm -f NEAN-UM.fq;
-  for((x=25 ; x<=56 ; ++x)); # ONLY UNMAPPED DATA
+  for((x=1 ; x<=56 ; ++x)); # ONLY UNMAPPED DATA
     do
-    ./samtools bam2fq HN-C$x.bam >> NEAN-UM.fq
+    #
+    ./samtools bam2fq HN-C$x.bam \
+    | ./goose-FastqSplit HN-C$x.FW.fastq HN-C$x.RV.fastq;
+    # paired-end reads: '/1' or '/2' is added to the end of read names
+    # and then reads are splitted according to direction
+    #
+    # FORWARD: (TRIMM BY QUALITY-SCORE | FILTER VERY SHORT READS)
+    #
+    cat HN-C$x.FW.fastq \
+    | ./goose-FastqMinimumLocalQualityScoreForward -k 5 -w 15 -m 33 \
+    | ./goose-FastqMinimumReadSize 35 > HN-C$x.r1.filt.fastq;
+    #
+    # REVERSE: (TRIMM BY QUALITY-SCORE | FILTER VERY SHORT READS)
+    #
+    cat HN-C$x.RV.fastq \
+    | ./goose-FastqMinimumLocalQualityScoreReverse -k 5 -w 15 -m 33 \
+    | ./goose-FastqMinimumReadSize 35 > HN-C$x.r2.filt.fastq;
+    #
+    # MERGE:
+    #
+    cat HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq > HN-C$x.filt.fastq
+    #
+    rm -f HN-C$x.r1.filt.fastq HN-C$x.r2.filt.fastq
+    rm -f HN-C$x.FW.fastq HN-C$x.RV.fastq
+    #
+    # CONCATENATE:
+    #
+    cat HN-C$x.filt.fastq >> NEAN-UM.fq;
+    rm -f HN-C$x.filt.fastq
+    #
     done
 fi
 #==============================================================================
