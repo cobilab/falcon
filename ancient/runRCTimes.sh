@@ -208,13 +208,14 @@ fi
 # RUN FALCON
 #
 if [[ "$RUN_FALCON" -eq "1" ]]; then
-  (time ./FALCON -v -n 8 -t 400 -F -m 13:20:0:0/0 -m 20:200:1:5/20 -c 200 NEAN-UM.fq ECOLI.fa ) &> REPORT_FALCON;
+  #(time ./FALCON -v -n 8 -t 400 -F -m 13:20:0:0/0 -m 20:200:1:5/20 -c 200 NEAN-UM.fq ECOLI.fa ) &> REPORT_FALCON;
+  (time ./FALCON -v -n 8 -t 400 -F -m 20:200:1:5/20 -c 200 NEAN-UM.fq ECOLI.fa ) &> REPORT_FALCON;
 fi
 #==============================================================================
 # RUN FALCON ALL DATABASE
 #
 if [[ "$RUN_FALCON_ALL" -eq "1" ]]; then
-  (time ./FALCON -v -n 8 -t 400 -F -m 13:20:0:0/0 -m 20:200:1:5/20 -c 200 NEAN-UM.fq DB.fa ) &> REPORT_FALCON_ALL;
+  #(time ./FALCON -v -n 8 -t 400 -F -m 13:20:0:0/0 -m 20:200:1:5/20 -c 200 NEAN-UM.fq DB.fa ) &> REPORT_FALCON_ALL;
+  (time ./FALCON -v -n 8 -t 400 -F -m 20:200:1:5/20 -c 200 NEAN-UM.fq DB.fa ) &> REPORT_FALCON_ALL;
 fi
 #==============================================================================
-
