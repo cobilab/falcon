@@ -13,6 +13,7 @@ RUN_BOWTIE_ANCIENT=1;
 RUN_BWA=1;
 RUN_BWA_ANCIENT=1;
 RUN_FALCON=1;
+RUN_FALCON_ALL=1;
 #
 #==============================================================================
 # GET BOWTIE
@@ -208,6 +209,12 @@ fi
 #
 if [[ "$RUN_FALCON" -eq "1" ]]; then
   (time ./FALCON -v -n 8 -t 400 -F -m 13:20:0:0/0 -m 20:200:1:5/20 -c 200 NEAN-UM.fq ECOLI.fa ) &> REPORT_FALCON;
+fi
+#==============================================================================
+# RUN FALCON ALL DATABASE
+#
+if [[ "$RUN_FALCON_ALL" -eq "1" ]]; then
+  (time ./FALCON -v -n 8 -t 400 -F -m 13:20:0:0/0 -m 20:200:1:5/20 -c 200 NEAN-UM.fq DB.fa ) &> REPORT_FALCON_ALL;
 fi
 #==============================================================================
 
