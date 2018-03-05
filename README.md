@@ -297,9 +297,8 @@ See folder examples for more.
 
 On using this software/method please cite: 
 
-D. Pratas, A. J. Pinho, P. J. S. G. Ferreira, J. M. O. S. Rodrigues (2015). FALCON: a machine learning system to detect pathogens in genomic and metagenomic samples. Zenodo. 10.5281/zenodo.35745.
-
-D. Pratas, R. M. Silva, A. J. Pinho, P. J. S. G. Ferreira. An alignment-free method to find and visualise rearrangements between pairs of DNA sequences. Sci. Rep. 5, 10203; doi: 10.1038/srep10203 (2015).
+D. Pratas, A. J. Pinho, R. M. Silva, J. M. O. S. Rodrigues, M. Hosseini, T. Caetano, P. J. S. G. Ferreira "FALCON: a method to infer metagenomic composition of ancient DNA", bioRxiv preprint, 2018
+doi: https://doi.org/10.1101/267179 
 
 ## 6. ISSUES ##
 
