@@ -53,7 +53,7 @@ typedef int8_t   I8;
 #define DEFAULT_VERBOSE        0
 #define DEFAULT_FORCE          0
 #define DEFAULT_LOCAL          0
-#define DEFAULT_LEVEL          15
+#define DEFAULT_LEVEL          45
 #define DEFAULT_SHOWS          1
 #define DEFAULT_NAMES          1
 #define DEFAULT_RSCAL          0
@@ -65,7 +65,7 @@ typedef int8_t   I8;
 #define DEFAULT_SAMPLE         1
 #define MIN_SAP                1
 #define MAX_SAP                99999999
-#define MAX_LEV                44
+#define MAX_LEV                45
 #define MIN_LEV                1
 #define DEF_TOP                20
 #define MIN_TOP                1
