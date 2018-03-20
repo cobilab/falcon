@@ -26,6 +26,15 @@ An example of the FALCON-EYE, program to visualize FALCON output, can be seen in
 
 ## 1. INSTALLATION ##
 
+### A. First option: with [Conda](https://conda.io/miniconda)
+
+```
+conda install -c maxibor falcon
+```
+
+### B. Second option: manual installation  
+
+
 [![Install and Demo Video](imgs/demo.png)](https://www.youtube.com/watch?v=eLqXE2ghFNk)
 
 Cmake is needed for installation (http://www.cmake.org/) for systems not using Linux. You can download it directly from http://www.cmake.org/cmake/resources/software.html or use an appropriate packet manager. In the following instructions we show the procedure to install FALCON:
@@ -64,7 +73,7 @@ cd ../../
 </pre>
 This will create three binary files:
 <pre>
-FALCON 
+FALCON
 FALCON-FILTER
 FALCON-EYE
 </pre>
@@ -105,9 +114,9 @@ These will print the following options:
 <p>
 Usage: FALCON [OPTION]... [FILE1] [FILE2]                                  
 A compression-based method to infer metagenomic sample composition.
-                                                                         
+
 Non-mandatory arguments:                                                 
-                                                                         
+
   -h                       give this help,                               
   -F                       force mode (overwrites top file),
   -V                       display version number,                       
@@ -120,12 +129,12 @@ Non-mandatory arguments:
   -n &#60nThreads&#62            number of threads (default: 2),                            
   -x &#60FILE&#62                similarity top filename,                      
   -y &#60FILE&#62                local similarities filename,
-                                                                         
+
 Mandatory arguments:                                                     
-                                                                         
+
   [FILE1]                  metagenomic filename (FASTA or FASTQ),              
   [FILE2]                  database filename (FASTA or Multi-FASTA).             
-                                                                         
+
 Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
 </pre>
 All the parameters can be better explained trough the following table:
@@ -149,7 +158,7 @@ All the parameters can be better explained trough the following table:
 
 ### 3.1 Local detection
 
-<b>For local interactions detection and visualization</b> the package provides <b>FALCON-FILTER</b> and <b>FALCON-EYE</b>. 
+<b>For local interactions detection and visualization</b> the package provides <b>FALCON-FILTER</b> and <b>FALCON-EYE</b>.
 
 #### 3.1.1 Filtering
 
@@ -166,9 +175,9 @@ These will print the following options:
 <p>
 Usage: FALCON-FILTER [OPTION]... [FILE]                                  
 Filter and segment FALCON output.                                        
-                                                                         
+
 Non-mandatory arguments:                                                 
-                                                                         
+
   -h                       give this help,                               
   -F                       force mode (overwrites top file),             
   -V                       display version number,                       
@@ -182,11 +191,11 @@ Non-mandatory arguments:
   -du &#60upper&#62              size upper bound,
   -t  &#60threshold&#62          threshold,                                    
   -o  &#60FILE&#62               output filename,                              
-                                                                         
+
 Mandatory arguments:                                                     
-                                                                         
+
   [FILE]                   profile filename (from FALCON),               
-                                                                         
+
 Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
 </pre>
 All the parameters can be better explained trough the following table:
@@ -223,9 +232,9 @@ These will print the following options:
 <p>
 Usage: FALCON-EYE [OPTION]... [FILE]                                     
 Visualize FALCON-FILTER output.                                                 
-                                                                         
+
 Non-mandatory arguments:                                                 
-                                                                         
+
   -h                       give this help,                               
   -F                       force mode (overwrites top file),             
   -V                       display version number,                       
@@ -245,10 +254,10 @@ Non-mandatory arguments:
   -ss                      do NOT show global scale,                     
   -sn                      do NOT show names,                            
   -o  &#60FILE&#62               output image filename,                        
-                                                                         
+
 Mandatory arguments:                                                     
-                                                                         
-  [FILE]                   profile filename (from FALCON-FILTER), 
+
+  [FILE]                   profile filename (from FALCON-FILTER),
 
 Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
 </pre>
@@ -295,7 +304,7 @@ See folder examples for more.
 
 ## 5. CITATION ##
 
-On using this software/method please cite: 
+On using this software/method please cite:
 
 D. Pratas, A. J. Pinho, R. M. Silva, J. M. O. S. Rodrigues, M. Hosseini, T. Caetano, P. J. S. G. Ferreira "FALCON-meta: a method to infer metagenomic composition of ancient DNA", bioRxiv preprint, 2018.
 doi: https://doi.org/10.1101/267179 
