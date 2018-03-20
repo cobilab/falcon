@@ -307,7 +307,8 @@ See folder examples for more.
 On using this software/method please cite:
 
 D. Pratas, A. J. Pinho, R. M. Silva, J. M. O. S. Rodrigues, M. Hosseini, T. Caetano, P. J. S. G. Ferreira "FALCON-meta: a method to infer metagenomic composition of ancient DNA", bioRxiv preprint, 2018.
-doi: https://doi.org/10.1101/267179 
+
+Doi: https://doi.org/10.1101/267179 
 
 <a href="https://www.biorxiv.org/content/early/2018/03/05/267179">Paper preprint</a>
 
