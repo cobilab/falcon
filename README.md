@@ -22,10 +22,9 @@ The tool is also able to <b>identify locally where, in each database sequence, t
 An example of the FALCON-EYE, program to visualize FALCON output, can be seen in the following figure:
 </p>
 <p align="center"><img src="imgs/ex1.png" alt="FALCON-EYE example" height="400" border="0" /></p>
-<br>
 
 <p align="justify">
-An example of a viral referenece database (FASTA) can be downloaded from <a href="http://sweet.ua.pt/pratas/datasets/VDB.fa.gz">here</a>. With these example, you only need to uncompress it, namely through: gunzip VDB.fa.gz.
+An example of a viral reference database (FASTA) can be downloaded from <a href="http://sweet.ua.pt/pratas/datasets/VDB.fa.gz">here</a>. With this example, you only need to uncompress it, namely through: gunzip VDB.fa.gz, and use it in FALCON along with the FASTQ reads.
 </p>
 <br>
 
