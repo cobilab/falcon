@@ -91,7 +91,7 @@ After install, search for the top 10 similar virus in Chimpanzee chromosome 7:
 cp falcon/scripts/DownloadViruses.pl .
 perl DownloadViruses.pl
 wget  --trust-server-names -q \
-ftp://ftp.ncbi.nlm.nih.gov/genomes/Pan_troglodytes/CHR_18/ptr_ref_Pan_troglodytes-2.1.4_chr18.fa.gz \
+ftp://ftp.ncbi.nlm.nih.gov/genomes/Pan_troglodytes/CHR_18/ptr_ref_Clint_PTRv2_chr18.fa.gz \
 -O PT18.fa.gz
 gunzip PT18.fa.gz
 ./FALCON -v -n 4 -c 20 -t 10 -l 15 PT18.fa viruses.fa
