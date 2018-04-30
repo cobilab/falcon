@@ -1,0 +1,4 @@
+language: c
+
+script: cmake src && make
+
