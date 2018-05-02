@@ -2,6 +2,8 @@
 alt="FALCON" width="264" height="264" border="0" /></p>
 <br>
 
+[![Build Status](https://travis-ci.org/pratas/falcon.svg?branch=master)](https://travis-ci.org/pratas/falcon)
+
 <p align="justify">
 <b>FALCON is a compression-based method to infer metagenomic sample composition</b>. Falcon looks for <b>similarity between any FASTA or FASTQ file</b>, independently from the size, <b>against any multi-FASTA database</b>, such as the entire viral and bacterial NCBI database (scripts are available for multiple database downloads). </p>
 
