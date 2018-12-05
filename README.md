@@ -1,10 +1,10 @@
-<p align="center"><img src="imgs/logoTrans.png"
-alt="FALCON" width="264" height="264" border="0" /></p>
-<br>
-
 [![Build Status](https://travis-ci.org/pratas/falcon.svg?branch=master)](https://travis-ci.org/pratas/falcon)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/873d4398da914abab8ae5c2a124e3d94)](https://www.codacy.com/app/pratas/falcon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pratas/falcon&amp;utm_campaign=Badge_Grade)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
+
+<p align="center"><img src="imgs/logoTrans.png"
+alt="FALCON" width="264" height="264" border="0" /></p>
+<br>
 
 <p align="justify">
 <b>FALCON is a compression-based method to infer metagenomic sample composition</b>. Falcon looks for <b>similarity between any FASTA or FASTQ file</b>, independently from the size, <b>against any multi-FASTA database</b>, such as the entire viral and bacterial NCBI database (scripts are available for multiple database downloads). </p>
