@@ -326,7 +326,7 @@ void ShiftBuffer(uint8_t *buf, int size, uint8_t new){
 char *ReplaceSubStr(char *str, char *a, char *b){
   char *buf = (char *) Calloc(MAX_STR, sizeof(char));
   char *p;
-  if(strnlen(str, MAX_STR) => MAX_STR){
+  if(strnlen(str, MAX_STR) >= MAX_STR){
     fprintf(stderr, "[x] Error: string too long!\n");
     exit(1);
     }
