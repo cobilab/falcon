@@ -2,6 +2,7 @@
 alt="FALCON" width="264" height="264" border="0" /></p>
 <br>
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4869ff4e13c74421a938900352a515c1)](https://app.codacy.com/app/pratas/falcon?utm_source=github.com&utm_medium=referral&utm_content=pratas/falcon&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/pratas/falcon.svg?branch=master)](https://travis-ci.org/pratas/falcon)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 
