@@ -378,8 +378,8 @@ int32_t main(int argc, char *argv[]){
 
   PrintFinal(OUTPUT);
   
-  if(!OUTPUT) fclose(OUTPUT);
-  if(!INPUT)  fclose(INPUT);
+  fclose(OUTPUT);
+  fclose(INPUT);
   Free(CLR);
   if(PEYE->best == 1)
     DeleteSLabels(SL);

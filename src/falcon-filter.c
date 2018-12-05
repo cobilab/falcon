@@ -95,8 +95,8 @@ int32_t main(int argc, char *argv[]){
     }
   DeleteFilter(FIL);
   
-  if(!OUTPUT) fclose(OUTPUT);
-  if(!INPUT)  fclose(INPUT);
+  fclose(OUTPUT);
+  fclose(INPUT);
 
   StopTimeNDRM(Time, clock());
   fprintf(stderr, "\n");

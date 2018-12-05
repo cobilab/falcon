@@ -758,8 +758,7 @@ void FAccessWPerm(char *fn)
 
 void TestReadFile(char *fn)
   {
-  FILE *f = NULL;
-  f = Fopen(fn, "r");
+  FILE *f = Fopen(fn, "r");
   fclose(f);
   }
 
