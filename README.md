@@ -4,7 +4,6 @@
 
 <p align="center"><img src="imgs/logoTrans.png"
 alt="FALCON" width="264" height="264" border="0" /></p>
-<br>
 
 <p align="justify">
 <b>FALCON is a compression-based method to infer metagenomic sample composition</b>. Falcon looks for <b>similarity between any FASTA or FASTQ file</b>, independently from the size, <b>against any multi-FASTA database</b>, such as the entire viral and bacterial NCBI database (scripts are available for multiple database downloads). </p>
