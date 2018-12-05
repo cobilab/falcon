@@ -24,10 +24,6 @@ JUMP=5;    #JUMP BETWEEN LOOPS
 DISTRIBUTION="0.3,0.2,0.2,0.3,0.000";
 EXTRAMUT=" ";
 #EXTRAMUT=" -ir 0.01 -dr 0.01 ";
-#FPARAM=" -m 20:500:1:10/20 -m 14:100:1:0/0 -m 12:1:0:0/0 -m 4:1:0:0/0 \
-#-c 20 -g 0.95 ";
-#GPARAM=" -rm 20:500:1:10/20 -rm 14:100:1:0/0 -rm 12:1:0:0/0 -rm 4:1:0:0/0 \
-#-c 15 -g 0.95 ";
 FPARAM=" -m 20:1000:0:5/50 -c 20 -g 0.95 ";
 GPARAM=" -rm 20:1000:1:5/50 -c 20 -g 0.95 ";
 GREENPARAM=" -i -f 10 -k 15 ";
@@ -111,7 +107,7 @@ fi
 if [[ "$FALCON" -eq "1" ]]; then
 ./FALCON -v -F $FPARAM -n 4 -t $PMAX -x TOP-SUBS SAMPLE.fq DB.mfa
 #./FALCON -v -F $FPARAM -n 4 -t $PMAX -x TOP-SUBS SAMPLE0.fa DB.mfa
-cat TOP-SUBS | awk '{ print $4"\t"$3;}' | sed 's/\Permutation//g' | sort -n \
+awk '{ print $4"\t"$3;}' TOP-SUBS | sed 's/\Permutation//g' | sort -n \
 | awk '{ print $1"\t"$2;}' > TOP-SUBS-FILT;
 fi
 ###############################################################################
@@ -123,9 +119,9 @@ GSIZE=`./goose-info < SAMPLE.seq  | grep "Number of" | awk '{ print $4;}'`;
 for((x=$PMIN ; x<=$PMAX ; x+=$JUMP));
   do
   printf "%u\t" "$x" >> TOP-GREEN;
-  cat SAMPLE$x.fa | grep -v ">" | tr -d -c "ACGTN" > SAMPLEX.seq;
+  grep -v ">" SAMPLE$x.fa | tr -d -c "ACGTN" > SAMPLEX.seq;
   ./GReEnC -v $GREENPARAM SAMPLE.seq SAMPLEX.seq > TMPX;
-  GVALUE=`cat TMPX | grep "number of bytes" | awk '{ print $5;}'`;
+  GVALUE=`grep "number of bytes" TMPX | awk '{ print $5;}'`;
   GRES=`echo "scale=6;100-((8*($GVALUE)/(2*$GSIZE))*100)" | bc -l`;
   echo $GRES >> TOP-GREEN;
   done

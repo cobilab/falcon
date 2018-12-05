@@ -300,15 +300,18 @@ uint32_t FLog2(uint64_t i)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //        Pow function from http://martin.ankerl.com/2007/10/04/
 //        optimized-pow-approximation-for-java-and-c-c/
-
-double Power(double a, double b)
+double Power (double base, double exponent)
   {
-  int tmp = (*(1 + (int *)&a));
-  int tmp2 = (int)(b * (tmp - 1072632447) + 1072632447);
-  double p = 0.0;
-  *(1 + (int * )&p) = tmp2;
-  return p;
+  union
+    {
+    double d;
+    int x[2];
+    } u = { base };
+  u.x[1] = (int) (exponent * (u.x[1] - 1072632447) + 1072632447);
+  u.x[0] = 0;
+  return u.d;
   }
+
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -323,7 +326,7 @@ void ShiftBuffer(uint8_t *buf, int size, uint8_t new){
 char *ReplaceSubStr(char *str, char *a, char *b){
   char *buf = (char *) Calloc(MAX_STR, sizeof(char));
   char *p;
-  if(strlen(str) > MAX_STR){
+  if(strnlen(str, MAX_STR) => MAX_STR){
     fprintf(stderr, "[x] Error: string too long!\n");
     exit(1);
     }
@@ -556,7 +559,7 @@ uint8_t *ReverseStr(uint8_t *str, uint32_t end)
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+/*
 void SortString(char str[])
   {
   char     tmp;
@@ -571,7 +574,7 @@ void SortString(char str[])
         str[j] = tmp;
         }
   }
-
+*/
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 char *CloneString(char *str)
@@ -820,7 +823,7 @@ void PrintArgs(Parameters *P, Threads T, char *ref, char *tar, uint32_t top){
   fprintf(stderr, "Number of threads .................. %u\n", P->nThreads);
   fprintf(stderr, "Top size ........................... %u\n", top);
   for(n = 0 ; n < P->nModels ; ++n){
-    fprintf(stderr, "Reference model %d:\n", n+1);
+    fprintf(stderr, "Reference model %u:\n", n+1);
     fprintf(stderr, "  [+] Context order ................ %u\n", 
     T.model[n].ctx);
     fprintf(stderr, "  [+] Alpha denominator ............ %u\n", 

@@ -47,7 +47,8 @@ void PrintMenu(void){
   "  [FILE2]                  database filename (FASTA or Multi-FASTA).     \n"
   "                                                                         \n"
   "Report issues to <{pratas,ap,pjf,jmr}@ua.pt>.                            \n",
-  MIN_LEV, MAX_LEV, DEFAULT_SAMPLE, DEF_TOP, DEFAULT_THREADS);
+  (uint32_t) MIN_LEV, (uint32_t) MAX_LEV, (uint32_t) DEFAULT_SAMPLE, (uint32_t) 
+  DEF_TOP, (uint32_t) DEFAULT_THREADS);
   }
 
 void PrintMenuFilter(void){
@@ -103,7 +104,6 @@ void PrintMenuEye(void){
   "  -e  <size>               enlarge painted regions,                      \n"
   "  -ss                      do NOT show global scale,                     \n"
   "  -sn                      do NOT show names,                            \n"
-//  "  -rs                      use relative scale,                           \n"
   "  -o  <FILE>               output image filename,                        \n"
   "                                                                         \n"
   "Mandatory arguments:                                                     \n"
@@ -123,7 +123,7 @@ void PrintVersion(void){
   "                     A compression-based method to                       \n"
   "                 infer metagenomic sample composition.                   \n"
   "                                                                         \n"
-  "              Copyright (C) 2014-2017 University of Aveiro.              \n"
+  "              Copyright (C) 2014-2019 University of Aveiro.              \n"
   "                                                                         \n"
   "                  This is a Free software, under GPLv3.                  \n"
   "                                                                         \n"

@@ -118,51 +118,30 @@ or
 ./FALCON -h
 </pre>
 These will print the following options:
-<pre>
-<p>
-Usage: FALCON [OPTION]... [FILE1] [FILE2]                                  
-A compression-based method to infer metagenomic sample composition.
-
+```
+Usage: FALCON [OPTION]... [FILE1] [FILE2]                                
+A compression-based method to infer metagenomic sample composition.      
+                                                                         
 Non-mandatory arguments:                                                 
-
+                                                                         
   -h                       give this help,                               
-  -F                       force mode (overwrites top file),
+  -F                       force mode (overwrites top file),             
   -V                       display version number,                       
   -v                       verbose mode (more information),              
-  -Z                       database local similarity,
-  -s                       show compression levels,                       
-  -l &#60level&#62               compression level [1;44],                     
-  -p &#60sample&#62              subsampling (default: 1),                     
-  -t &#60top&#62                 top of similarity (default: 20),                            
-  -n &#60nThreads&#62            number of threads (default: 2),                            
-  -x &#60FILE&#62                similarity top filename,                      
-  -y &#60FILE&#62                local similarities filename,
-
+  -Z                       database local similarity,                    
+  -s                       show compression levels,                      
+  -l <level>               compression level [1;46],                    
+  -p <sample>              subsampling (default: 1),                    
+  -t <top>                 top of similarity (default: 20),              
+  -n <nThreads>            number of threads (default: 2),              
+  -x <FILE>                similarity top filename,                      
+  -y <FILE>                local similarities filename,                  
+                                                                         
 Mandatory arguments:                                                     
-
-  [FILE1]                  metagenomic filename (FASTA or FASTQ),              
-  [FILE2]                  database filename (FASTA or Multi-FASTA).             
-
-Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
-</pre>
-All the parameters can be better explained trough the following table:
-
-| Parameters          | Meaning                                                     |
-|---------------------|:------------------------------------------------------------|
-| -h                  | It will print the parameters menu (help menu)                                        |
-| -F                  | It will use the force mode, namely overwriting the output top file.                                        |
-| -V                  | It will print the FALCON version number, license type and authors.    |
-| -v                  | It will print progress information.    |
-| -Z                  | It measures the local complexity to localize specific events. |
-| -s                  | It will show pre-defined running levels/modes.    |
-| -l &#60;level&#62;    | It will use the selected running levels/modes.    |
-| -p &#60;sample&#62;   | If FALCON is using a single model it will sample (or use) only this periodic value of bases.    |
-| -t &#60;top&#62;      | It will create a top with this size.              |
-| -n &#60;nThreads&#62; | It will use multiple-threading. The time to accomplish the task will be much lower, without use more RAM memory.                   |
-| -x &#60;FILE&#62;     | Output top filename. |
-| -y &#60;FILE&#62;     | Output local similarities filename (profile). Only when -Z option is used. |
-| [FILE1]           | The metagenomic filename (direct from the NGS sequencing platform). Possible file formats: FASTQ, multi-FASTA, FASTA or sequence [ACGTN]. |
-| [FILE2]           | The database filename (e.g. virus or bacteria database). Possible file formats: FASTA, multi-FASTA or sequence [ACGTN]. There are several scripts, on directory scripts, to download several databases. |
+                                                                         
+  [FILE1]                  metagenomic filename (FASTA or FASTQ),        
+  [FILE2]                  database filename (FASTA or Multi-FASTA).     
+```
 
 ### 3.1 Local detection
 
@@ -179,51 +158,31 @@ or
 ./FALCON-FILTER -h
 </pre>
 These will print the following options:
-<pre>
-<p>
+
+```
 Usage: FALCON-FILTER [OPTION]... [FILE]                                  
 Filter and segment FALCON output.                                        
-
+                                                                         
 Non-mandatory arguments:                                                 
-
+                                                                         
   -h                       give this help,                               
   -F                       force mode (overwrites top file),             
   -V                       display version number,                       
   -v                       verbose mode (more information),              
-  -s  &#60size&#62               filter window size,                           
-  -w  &#60type&#62               filter window type,                           
-  -x  &#60sampling&#62           filter window sampling,                       
-  -sl &#60lower&#62              similarity lower bound,
-  -su &#60upper&#62              similarity upper bound,
-  -dl &#60lower&#62              size lower bound,
-  -du &#60upper&#62              size upper bound,
-  -t  &#60threshold&#62          threshold,                                    
-  -o  &#60FILE&#62               output filename,                              
-
+  -s  <size>               filter window size,                           
+  -w  <type>               filter window type,                           
+  -x  <sampling>           filter window sampling,                       
+  -sl <lower>              similarity lower bound,                       
+  -su <upper>              similarity upper bound,                       
+  -dl <lower>              size lower bound,                             
+  -du <upper>              size upper bound,                             
+  -t  <threshold>          threshold [0;2.0],                            
+  -o  <FILE>               output filename,                              
+                                                                         
 Mandatory arguments:                                                     
-
-  [FILE]                   profile filename (from FALCON),               
-
-Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
-</pre>
-All the parameters can be better explained trough the following table:
-
-| Parameters          | Meaning                                                     |
-|---------------------|:------------------------------------------------------------|
-| -h                  | It will print the parameters menu (help menu)                                        |
-| -F                  | It will use the force mode, namely overwriting the output top file.                                        |
-| -V                  | It will print the FALCON version number, license type and authors.    |
-| -v                  | It will print progress information.    |
-| -s &#60;size&#62;      | Filtering window size.              |
-| -w &#60;type&#62;      | Window type [0;3]. Types: 0-Hamming, 1-Hann, 2-Blackman, 3-Rectangular.              |
-| -x &#60;sampling&#62;      | Filtering window sampling (it will drop this number of bases).          |
-| -sl &#60;lower&#62;      | similarity lower bound.              |
-| -su &#60;upper&#62;      | similarity upper bound.              |
-| -dl &#60;lower&#62;      | size lower bound.              |
-| -du &#60;upper&#62;      | size upper bound.              |
-| -t &#60;threshold&#62;      | Threshold to segment regions of similarity [0;2].              |
-| -o &#60;FILE&#62;     | Output filename to be, for example, computed in FALCON-EYE. It contains the local positions with the intervals describing similarity. |
-| [FILE]           | Profile filename given by the output of FALCON (option:-Z -y &#60;FILE&#62;). |
+                                                                         
+  [FILE]                   profile filename (from FALCON).
+```
 
 #### 3.1.2 Visualization
 
@@ -236,63 +195,37 @@ or
 ./FALCON-EYE -h
 </pre>
 These will print the following options:
-<pre>
-<p>
+
+```
 Usage: FALCON-EYE [OPTION]... [FILE]                                     
-Visualize FALCON-FILTER output.                                                 
-
+Visualize FALCON-FILTER output.                                          
+                                                                         
 Non-mandatory arguments:                                                 
-
+                                                                         
   -h                       give this help,                               
   -F                       force mode (overwrites top file),             
   -V                       display version number,                       
   -v                       verbose mode (more information),              
-  -w  &#60width&#62              square width (for each value),                
-  -s  &#60ispace&#62             square inter-space (between each value),      
-  -i  &#60indexs&#62             color index start,                            
-  -r  &#60indexr&#62             color index rotations,                        
-  -u  &#60hue&#62                color hue,                                    
-  -sl &#60lower&#62              similarity lower bound,                       
-  -su &#60upper&#62              similarity upper bound,                       
-  -dl &#60lower&#62              size lower bound,                             
-  -du &#60upper&#62              size upper bound,                             
-  -bg                      show only the best of group,
-  -g  &#60color&#62              color gamma,                                  
-  -e  &#60size&#62               enlarge painted regions,                      
+  -w  <width>              square width (for each value),                
+  -s  <ispace>             square inter-space (between each value),      
+  -i  <indexs>             color index start,                            
+  -r  <indexr>             color index rotations,                        
+  -u  <hue>                color hue,                                    
+  -sl <lower>              similarity lower bound,                       
+  -su <upper>              similarity upper bound,                       
+  -dl <lower>              size lower bound,                             
+  -du <upper>              size upper bound,                             
+  -bg                      show only the best of group,                  
+  -g  <color>              color gamma,                                  
+  -e  <size>               enlarge painted regions,                      
   -ss                      do NOT show global scale,                     
   -sn                      do NOT show names,                            
-  -o  &#60FILE&#62               output image filename,                        
-
+  -o  <FILE>               output image filename,                        
+                                                                         
 Mandatory arguments:                                                     
-
-  [FILE]                   profile filename (from FALCON-FILTER),
-
-Report issues to &#60{pratas,ap,pjf,jmr}@ua.pt&#62.
-</pre>
-
-All the parameters can be better explained trough the following table:
-
-| Parameters          | Meaning                                                     |
-|---------------------|:------------------------------------------------------------|
-| -h                  | It will print the parameters menu (help menu)                                        |
-| -F                  | It will use the force mode, namely overwriting the output top file.                                        |
-| -V                  | It will print the FALCON version number, license type and authors.    |
-| -v                  | It will print progress information.    |
-| -w &#60;width&#62;      | square width.              |
-| -s &#60;iSpace&#62;      | space between squares.              |
-| -i &#60;indexs&#62;      | color index start.              |
-| -r &#60;indexr&#62;      | color index rotations.              |
-| -u &#60;hue&#62;      | color hue.              |
-| -g &#60;color&#62;      | color gamma.              |
-| -sl &#60;lower&#62;      | similarity lower bound.              |
-| -su &#60;upper&#62;      | similarity upper bound.              |
-| -dl &#60;lower&#62;      | size lower bound.              |
-| -du &#60;upper&#62;      | size upper bound.              |
-| -e &#60;size&#62;      | enlarge painter local regions.              |
-| -ss                    | Does not show global scale.              |
-| -sn                    | Does not show names.             |
-| -o &#60;FILE&#62;     | Output SVG image filename. |
-| [FILE]           | Profile filename given by the output of FALCON-FILTER. |
+                                                                         
+  [FILE]                   profile filename (from FALCON-FILTER).
+```
 
 ## 4. COMMON USE ##
 

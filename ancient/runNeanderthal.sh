@@ -65,7 +65,7 @@ if [[ "$BUILD_DB" -eq "1" ]]; then
   perl DownloadBacteria.pl
   perl DownloadFungi.pl
   perl DownloadViruses.pl
-  cat bacteria.fa | grep -v -e "ERROR" -e "eFetchResult" -e "DOCTYPE" -e "xml version" -e "Unable to obtain" | grep -v -x ">" > bacteria.fna
+  grep -v -e "ERROR" -e "eFetchResult" -e "DOCTYPE" -e "xml version" -e "Unable to obtain" bacteria.fa | grep -v -x ">" > bacteria.fna
   mv bacteria.fna bacteria.fa
   cat viruses.fa bacteria.fa archaea.fa fungi.fa | tr ' ' '_' | ./goose-extractreadbypattern complete_genome | ./goose-getunique > DB.fa
 fi
@@ -78,7 +78,7 @@ if [[ "$GET_NEANDERTHAL" -eq "1" ]]; then
   # DEPENDECY: SAMTOOLS;
   #
   EVANM="http://cdna.eva.mpg.de";
-  EVAPT="$EVANM/neandertal/altai/AltaiNeandertal/bam";
+  #EVAPT="$EVANM/neandertal/altai/AltaiNeandertal/bam";
   EVAPK="$EVANM/neandertal/altai/AltaiNeandertal/bam/unmapped_qualfail/";
   WGETO=" --trust-server-names -q ";
   echo "Downloading sequences ... (This may take a while!)";
@@ -141,7 +141,7 @@ fi
 #==============================================================================
 # RUN FILTER
 if [[ "$FILTER_GIS" -eq "1" ]]; then
-  cat top.csv | awk '{ if($3 > 0.001) print $1"\t"$2"\t"$3"\t"$4; }' \
+  awk '{ if($3 > 0.001) print $1"\t"$2"\t"$3"\t"$4; }' top.csv  \
   | awk '{ print $4;}' | tr '|' '\t' | awk '{ print $2;}' > GIS;
   idx=0;
   cat GIS | while read line
