@@ -89,7 +89,6 @@ FALCON is the main program, FALCON-FILTER is used to filter local interactions a
 
 After install, search for the top 10 similar virus in Chimpanzee chromosome 7:
 <pre>
-
 cp falcon/scripts/DownloadViruses.pl .
 perl DownloadViruses.pl
 wget  --trust-server-names -q \
