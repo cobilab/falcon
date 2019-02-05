@@ -247,9 +247,11 @@ See folder examples for more.
 On using this software/method please cite:
 
 Pratas, D., Hosseini, M., Grilo, G., Pinho, A., Silva, R., Caetano, T., ... & Pereira, F. (2018). Metagenomic Composition Analysis of an Ancient Sequenced Polar Bear Jawbone from Svalbard. Genes, 9(9), 445.
+
 <a href="https://www.mdpi.com/2073-4425/9/9/445">Paper</a>
 
 D. Pratas, A. J. Pinho, R. M. Silva, J. M. O. S. Rodrigues, M. Hosseini, T. Caetano, P. J. S. G. Ferreira "FALCON-meta: a method to infer metagenomic composition of ancient DNA", bioRxiv preprint, 2018.
+
 Doi: https://doi.org/10.1101/267179 
 <a href="https://www.biorxiv.org/content/early/2018/03/05/267179">Paper preprint</a>
 
