@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/pratas/falcon.svg?branch=master)](https://travis-ci.org/pratas/falcon)
-<!--[![Codacy Badge](https://api.codacy.com/project/badge/Grade/873d4398da914abab8ae5c2a124e3d94)](https://www.codacy.com/app/pratas/falcon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pratas/falcon&amp;utm_campaign=Badge_Grade)-->
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
+<!--[![Codacy Badge](https://api.codacy.com/project/badge/Grade/873d4398da914abab8ae5c2a124e3d94)](https://www.codacy.com/app/pratas/falcon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pratas/falcon&amp;utm_campaign=Badge_Grade)-->
 
 <p align="center"><img src="imgs/logoTrans.png"
 alt="FALCON" width="204" height="204" border="0" /></p>
