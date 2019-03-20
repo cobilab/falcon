@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <sys/uio.h>
 #include <sys/mman.h>
+
 #include "mem.h"
 #include "time.h"
 #include "defs.h"
@@ -172,127 +173,6 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
   RemoveFPModel(PT);
   for(n = 0 ; n < P->nModels ; ++n)
     FreeShadow(Shadow[n]);
-  Free(Shadow);
-  Free(readBuf);
-  RemoveCBuffer(symBuf);
-  RemoveParser(PA);
-  fclose(Reader);
-  }
-#endif
-
-
-//////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - - L O C A L   C O M P L E X I T Y   W   K M - - - - - - - -
-
-#ifdef LOCAL_SIMILARITY
-void LocalComplexityWKM(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
-  FILE        *Reader = Fopen(P->base, "r");
-  double      bits = 0, instant = 0;
-  uint64_t    nBase = 0, entry;
-  uint32_t    n, totModels, model;
-  PARSER      *PA = CreateParser();
-  CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
-  uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  PModel      **pModel, *MX;
-  KMODEL      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
-  FloatPModel *PT;
-  CMWeight    *CMW;
-  int         sym;
-
-  totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
-  for(n = 0 ; n < P->nModels ; ++n) 
-    if(T.model[n].edits != 0)
-      totModels += 1;
-
-  Shadow      = (KMODEL **) Calloc(P->nModels, sizeof(KMODEL *));
-  for(n = 0 ; n < P->nModels ; ++n)
-    Shadow[n] = CreateKShadowModel(KModels[n]); 
-  pModel      = (PModel **) Calloc(totModels, sizeof(PModel *));
-  for(n = 0 ; n < totModels ; ++n)
-    pModel[n] = CreatePModel(ALPHABET_SIZE);
-  MX          = CreatePModel(ALPHABET_SIZE);
-  PT          = CreateFloatPModel(ALPHABET_SIZE);
-  CMW         = CreateWeightModel(totModels);
-
-  for(entry = 0 ; entry < topSize ; ++entry){
-    if(Top->V[entry].size > 1){ 
-      fprintf(stderr, "      [+] Running profile: %-5"PRIu64" ... ", entry + 1);
-
-      // PRINT HEADER COMPLEXITY VALUE
-      fprintf(OUT, "#\t%.5lf\t%"PRIu64"\t%s\n", (1.0-Top->V[entry].value)*100.0, 
-      Top->V[entry].size, Top->V[entry].name);
-
-      // MOVE POINTER FORWARD
-      Fseeko(Reader, (off_t) Top->V[entry].iPos-1, SEEK_SET); 
-
-      while((sym = fgetc(Reader)) != EOF){
-
-        if(sym == '>'){ // FOUND HEADER & SKIP 
-          while((sym = fgetc(Reader)) != '\n' && sym != EOF)
-            ; // DO NOTHING
-
-          if(sym == EOF) 
-            break;     // END OF FILE: QUIT
-          }
-
-        if(nBase >= Top->V[entry].size) // IT PROCESSED ALL READ BASES: QUIT!
-          break;
-
-        if(sym == '\n') continue;  // SKIP '\n' IN FASTA
-
-        if((sym = DNASymToNum(sym)) == 4){
-          fprintf(OUT, "%c", PackByte(2.0, sym)); // PRINT COMPLEXITY & SYM IN1
-          continue; // IT IGNORES EXTRA SYMBOLS
-          }
-
-        symBuf->buf[symBuf->idx] = sym;
-        memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
-        n = 0;
-        for(model = 0 ; model < P->nModels ; ++model){
-          KMODEL *KM = Shadow[model];
-          GetKIdx(symBuf->buf+symBuf->idx, KM);
-          ComputeKPModel(KModels[model], pModel[n], KM->idx-sym, KM->alphaDen);
-          ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-          //if(KM->edits != 0){
-          //  ++n;
-          //  KM->SUBS.seq->buf[KM->SUBS.seq->idx] = sym;
-          //  KM->SUBS.idx = GetPModelIdxCorr(KM->SUBS.seq->buf+KM->SUBS.seq->idx
-          //  -1, KM, KM->SUBS.idx);
-          //  ComputeKPModel(KModels[model], pModel[n], KM->SUBS.idx, KM->SUBS.eDen);
-          //  ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-          //  }
-          ++n;
-          }
-
-        ComputeMXProbs(PT, MX);
-        instant = PModelSymbolLog(MX, sym);
-        bits += instant;
-        fprintf(OUT, "%c", PackByte(instant, sym)); // PRINT COMPLEX & SYM IN1
-        ++nBase;
-        CalcDecayment(CMW, pModel, sym, P->gamma);
-        RenormalizeWeights(CMW);
-        // CorrectXModels(Shadow, pModel, sym);
-        UpdateCBuffer(symBuf);
-        }
-
-      if(entry < topSize - 1){ // RESET MODELS & PROPERTIES
-        ResetKModelsAndParam(symBuf, Shadow, CMW);
-        nBase = bits = 0;
-        }
-
-      fprintf(OUT, "\n");
-      fprintf(stderr, "Done!\n");
-      }
-    } 
-
-  DeleteWeightModel(CMW);
-  for(n = 0 ; n < totModels ; ++n)
-    RemovePModel(pModel[n]);
-  Free(pModel);
-  RemovePModel(MX);
-  RemoveFPModel(PT);
-  for(n = 0 ; n < P->nModels ; ++n)
-    FreeKShadow(Shadow[n]);
   Free(Shadow);
   Free(readBuf);
   RemoveCBuffer(symBuf);
@@ -496,423 +376,6 @@ void FalconCompressTarget(Threads T){
 
   RemovePModel(pModel);
   FreeShadow(Shadow);
-  Free(readBuf);
-  RemoveCBuffer(symBuf);
-  RemoveParser(PA);
-  fclose(Reader);
-  }
-
-//////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - R I G H T - S I D E   C O M P R E S S I O N - - - - - - - -
-
-void RightCompressTarget(Threads T){
-  FILE        *Reader  = Fopen(P->base, "r");
-  FILE        *Writter = Fopen("xtmpFalconRightProf.fal", "w");
-  double      bits = 0, instant = 0;
-  uint64_t    nBase = 0, nSymbol;
-  uint32_t    n, k, idxPos, totModels, cModel;
-  PARSER      *PA = CreateParser();
-  CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
-  uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t     sym, *pos;
-  PModel      **pModel, *MX;
-  CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
-  FloatPModel *PT;
-  CMWeight    *CMW;
-  int         action;
-  
-  totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
-  for(n = 0 ; n < P->nModels ; ++n) 
-    if(T.model[n].edits != 0)
-      totModels += 1;
-
-  Shadow      = (CModel **) Calloc(P->nModels, sizeof(CModel *));
-  for(n = 0 ; n < P->nModels ; ++n)
-    Shadow[n] = CreateShadowModel(Models[n]); 
-  pModel      = (PModel **) Calloc(totModels, sizeof(PModel *));
-  for(n = 0 ; n < totModels ; ++n)
-    pModel[n] = CreatePModel(ALPHABET_SIZE);
-  MX          = CreatePModel(ALPHABET_SIZE);
-  PT          = CreateFloatPModel(ALPHABET_SIZE);
-  CMW         = CreateWeightModel(totModels);
-
-  nSymbol = 0;
-  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
-    for(idxPos = 0 ; idxPos < k ; ++idxPos){
-      ++nSymbol;
-      if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
-        switch(action){
-          case -1: // IT IS THE BEGGINING OF THE HEADER
-            ResetModelsAndParam(symBuf, Shadow, CMW); // RESET MODELS
-            nBase = bits = 0;
-          break;
-          case -2:  break; // IT IS THE '\n' HEADER END
-          case -3:  break; // IF IS A SYMBOL OF THE HEADER
-          case -99: break; // IF IS A SIMPLE FORMAT BREAK
-          default: exit(1);
-          }
-        continue; // GO TO NEXT SYMBOL
-        }
-
-      if(PA->nRead % P->nThreads == T.id){
-
-        if((sym = DNASymToNum(sym)) == 4){
-          continue; // IT IGNORES EXTRA SYMBOLS
-          }
-
-        symBuf->buf[symBuf->idx] = sym;
-        memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
-        n = 0;
-        pos = &symBuf->buf[symBuf->idx-1];
-        for(cModel = 0 ; cModel < P->nModels ; ++cModel){
-          CModel *CM = Shadow[cModel];
-          GetPModelIdx(pos, CM);
-          ComputePModel(Models[cModel], pModel[n], CM->pModelIdx, CM->alphaDen);
-          ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-          if(CM->edits != 0){
-            ++n;
-            CM->SUBS.seq->buf[CM->SUBS.seq->idx] = sym;
-            CM->SUBS.idx = GetPModelIdxCorr(CM->SUBS.seq->buf+CM->SUBS.seq->idx
-            -1, CM, CM->SUBS.idx);
-            ComputePModel(Models[cModel], pModel[n], CM->SUBS.idx, CM->SUBS.eDen);
-            ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-            }
-          ++n;
-          }
-
-        ComputeMXProbs(PT, MX);
-        bits += (instant = PModelSymbolLog(MX, sym));
-
-        fprintf(Writter, "%f\n", (float) instant); //TODO: OBVIOUSLY IMPROVE
-
-        ++nBase;
-        CalcDecayment(CMW, pModel, sym, P->gamma);
-        RenormalizeWeights(CMW);
-        CorrectXModels(Shadow, pModel, sym);
-        UpdateCBuffer(symBuf);
-        }
-      }
-
-  DeleteWeightModel(CMW);
-  for(n = 0 ; n < totModels ; ++n)
-    RemovePModel(pModel[n]);
-  Free(pModel);
-  RemovePModel(MX);
-  RemoveFPModel(PT);
-  for(n = 0 ; n < P->nModels ; ++n)
-    FreeShadow(Shadow[n]);
-  Free(Shadow);
-  Free(readBuf);
-  RemoveCBuffer(symBuf);
-  RemoveParser(PA);
-  fclose(Reader);
-  fclose(Writter);
-  }
-
-//////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - L E F T - S I D E     C O M P R E S S I O N - - - - - - - -
-
-void LeftCompressTarget(Threads T){
-  FILE        *Reader  = Fopen(P->base, "r");
-  FILE        *Complex = Fopen("xtmpFalconRightProf.fal", "r");
-  double      bits = 0, instant = 0;
-  uint64_t    nBase = 0, nSymbol;
-  uint32_t    n, k, idxPos, totModels, cModel;
-  PARSER      *PA = CreateParser();
-  CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
-  uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t     sym, *pos;
-  PModel      **pModel, *MX;
-  CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
-  FloatPModel *PT;
-  CMWeight    *CMW;
-  int         action;
-  
-  totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
-  for(n = 0 ; n < P->nModels ; ++n) 
-    if(T.model[n].edits != 0)
-      totModels += 1;
-
-  Shadow      = (CModel **) Calloc(P->nModels, sizeof(CModel *));
-  for(n = 0 ; n < P->nModels ; ++n)
-    Shadow[n] = CreateShadowModel(Models[n]); 
-  pModel      = (PModel **) Calloc(totModels, sizeof(PModel *));
-  for(n = 0 ; n < totModels ; ++n)
-    pModel[n] = CreatePModel(ALPHABET_SIZE);
-  MX          = CreatePModel(ALPHABET_SIZE);
-  PT          = CreateFloatPModel(ALPHABET_SIZE);
-  CMW         = CreateWeightModel(totModels);
-
-/*
-  int64_t size = 0, i = 0
-  fseeko(IN, 0, SEEK_END);
-  size = ftello(IN);
-
-  while(i++ < size){
-    fseeko(IN, -i, SEEK_END);
-    printf("%c", fgetc(IN));
-    }
-*/
-  nSymbol = 0;
-  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
-    for(idxPos = 0 ; idxPos < k ; ++idxPos){
-      ++nSymbol;
-      if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
-        switch(action){
-          case -1: // IT IS THE BEGGINING OF THE HEADER
-            ResetModelsAndParam(symBuf, Shadow, CMW); // RESET MODELS
-            nBase = bits = 0;
-          break;
-          case -2:  break; // IT IS THE '\n' HEADER END
-          case -3:  break; // IF IS A SYMBOL OF THE HEADER
-          case -99: break; // IF IS A SIMPLE FORMAT BREAK
-          default: exit(1);
-          }
-        continue; // GO TO NEXT SYMBOL
-        }
-
-      if(PA->nRead % P->nThreads == T.id){
-
-        if((sym = DNASymToNum(sym)) == 4){
-          continue; // IT IGNORES EXTRA SYMBOLS
-          }
-
-        symBuf->buf[symBuf->idx] = sym;
-        memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
-        n = 0;
-        pos = &symBuf->buf[symBuf->idx-1];
-        for(cModel = 0 ; cModel < P->nModels ; ++cModel){
-          CModel *CM = Shadow[cModel];
-          GetPModelIdx(pos, CM);
-          ComputePModel(Models[cModel], pModel[n], CM->pModelIdx, CM->alphaDen);
-          ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-          if(CM->edits != 0){
-            ++n;
-            CM->SUBS.seq->buf[CM->SUBS.seq->idx] = sym;
-            CM->SUBS.idx = GetPModelIdxCorr(CM->SUBS.seq->buf+CM->SUBS.seq->idx
-            -1, CM, CM->SUBS.idx);
-            ComputePModel(Models[cModel], pModel[n], CM->SUBS.idx, CM->SUBS.eDen);
-            ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-            }
-          ++n;
-          }
-
-        ComputeMXProbs(PT, MX);
-        bits += (instant = PModelSymbolLog(MX, sym));
-
-        //fprintf(Writter, "%f\n", (float) instant); // OBVIOUSLY IMPROVE
-        //Read(Complex); in reverse?
-
-        ++nBase;
-        CalcDecayment(CMW, pModel, sym, P->gamma);
-        RenormalizeWeights(CMW);
-        CorrectXModels(Shadow, pModel, sym);
-        UpdateCBuffer(symBuf);
-        }
-      }
-
-  DeleteWeightModel(CMW);
-  for(n = 0 ; n < totModels ; ++n)
-    RemovePModel(pModel[n]);
-  Free(pModel);
-  RemovePModel(MX);
-  RemoveFPModel(PT);
-  for(n = 0 ; n < P->nModels ; ++n)
-    FreeShadow(Shadow[n]);
-  Free(Shadow);
-  Free(readBuf);
-  RemoveCBuffer(symBuf);
-  RemoveParser(PA);
-  fclose(Reader);
-  fclose(Complex);
-  }
-
-
-
-//////////////////////////////////////////////////////////////////////////////
-// - - - - - - - D O U B L E - S I D E   C O M P R E S S I O N - - - - - - - -
-
-void DoubleCompressTarget(Threads T){
-  FILE        *Reader = Fopen(P->base, "r");
-  double      bits = 0, instant = 0;
-  uint64_t    nBase = 0, r = 0, nSymbol, initNSymbol;
-  uint32_t    n, k, idxPos, totModels, cModel;
-  PARSER      *PA = CreateParser();
-  CBUF        *symBuf = CreateCBuffer(BUFFER_SIZE, BGUARD);
-  uint8_t     *readBuf = (uint8_t *) Calloc(BUFFER_SIZE, sizeof(uint8_t));
-  uint8_t     sym, *pos, conName[MAX_NAME];
-  PModel      **pModel, *MX;
-  CModel      **Shadow; // SHADOWS FOR SUPPORTING MODELS WITH THREADING
-  FloatPModel *PT;
-  CMWeight    *CMW;
-  int         action;
-  STREAM      *AUX;
-
-  totModels = P->nModels; // EXTRA MODELS DERIVED FROM EDITS
-  for(n = 0 ; n < P->nModels ; ++n) 
-    if(T.model[n].edits != 0)
-      totModels += 1;
-
-  Shadow      = (CModel **) Calloc(P->nModels, sizeof(CModel *));
-  for(n = 0 ; n < P->nModels ; ++n)
-    Shadow[n] = CreateShadowModel(Models[n]); 
-  pModel      = (PModel **) Calloc(totModels, sizeof(PModel *));
-  for(n = 0 ; n < totModels ; ++n)
-    pModel[n] = CreatePModel(ALPHABET_SIZE);
-  MX          = CreatePModel(ALPHABET_SIZE);
-  PT          = CreateFloatPModel(ALPHABET_SIZE);
-  CMW         = CreateWeightModel(totModels);
-  AUX         = CreateStream(DEF_STREAM_SIZE);
-
-  initNSymbol = nSymbol = 0;
-  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
-    for(idxPos = 0 ; idxPos < k ; ++idxPos){
-      ++nSymbol;
-      if((action = ParseMF(PA, (sym = readBuf[idxPos]))) < 0){
-        switch(action){
-          case -1: // IT IS THE BEGGINING OF THE HEADER
-
-            ResetModelsAndParam(symBuf, Shadow, CMW);
-
-            bits = 0;
-            if((PA->nRead-1) % P->nThreads == T.id && PA->nRead>1 && nBase>1){
-             
-              for( ; AUX->idx > 0 ; AUX->idx--){  // COMPRESSING USING REVERSE DIRECTION
-
-                if((sym = AUX->bases[AUX->idx]) == 4){
-                  continue;
-                  }
-               
-                symBuf->buf[symBuf->idx] = sym;
-  
-                memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
-                n = 0;
-                pos = &symBuf->buf[symBuf->idx-1];
-                for(cModel = 0 ; cModel < P->nModels ; ++cModel){
-                  CModel *CM = Shadow[cModel];
-                  GetPModelIdx(pos, CM);
-                  ComputePModel(Models[cModel], pModel[n], CM->pModelIdx, CM->alphaDen);
-                  ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-                  if(CM->edits != 0){
-                    ++n;
-                    CM->SUBS.seq->buf[CM->SUBS.seq->idx] = sym;
-                    CM->SUBS.idx = GetPModelIdxCorr(CM->SUBS.seq->buf+CM->SUBS.seq->idx
-                    -1, CM, CM->SUBS.idx);
-                    ComputePModel(Models[cModel], pModel[n], CM->SUBS.idx, CM->SUBS.eDen);
-                    ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-                    }
-                  ++n;
-                  }
-
-                ComputeMXProbs(PT, MX);
-      
-                // MINIMUM CALC
-                if((instant = PModelSymbolLog(MX, sym)) <= AUX->bits[AUX->idx])
-                  bits += instant;
-                else
-                  bits += AUX->bits[AUX->idx];
-
-                CalcDecayment(CMW, pModel, sym, P->gamma);
-                RenormalizeWeights(CMW);
-                CorrectXModels(Shadow, pModel, sym);
-                UpdateCBuffer(symBuf);
-                } 
-
-              #ifdef LOCAL_SIMILARITY
-              if(P->local == 1){
-                UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase, 
-                initNSymbol, nSymbol);
-                }
-              else
-                UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
-              #else
-              UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
-              #endif
-              }
-            #ifdef LOCAL_SIMILARITY
-            initNSymbol = nSymbol; 
-            #endif  
-            ResetModelsAndParam(symBuf, Shadow, CMW); // RESET MODELS
-            r = nBase = bits = 0;
-          break;
-          case -2: conName[r] = '\0'; break; // IT IS THE '\n' HEADER END
-          case -3: // IF IS A SYMBOL OF THE HEADER
-            if(r >= MAX_NAME-1)
-              conName[r] = '\0';
-            else{
-              if(sym == ' ' || sym < 32 || sym > 126){ // PROTECT INTERVAL
-                if(r == 0) continue;
-                else       sym = '_'; // PROTECT OUT SYM WITH UNDERL
-                }
-              conName[r++] = sym;
-              }
-          break; 
-          case -99: break; // IF IS A SIMPLE FORMAT BREAK
-          default: exit(1);
-          }
-        continue; // GO TO NEXT SYMBOL
-        }
-
-      if(PA->nRead % P->nThreads == T.id){
-
-        if((sym = DNASymToNum(sym)) == 4){
-          //UpdateStream(AUX, 4, 2.0);
-          continue; // IT IGNORES EXTRA SYMBOLS
-          }
-
-        symBuf->buf[symBuf->idx] = sym;
-        memset((void *)PT->freqs, 0, ALPHABET_SIZE * sizeof(double));
-        n = 0;
-        pos = &symBuf->buf[symBuf->idx-1];
-        for(cModel = 0 ; cModel < P->nModels ; ++cModel){
-          CModel *CM = Shadow[cModel];
-          GetPModelIdx(pos, CM);
-          ComputePModel(Models[cModel], pModel[n], CM->pModelIdx, CM->alphaDen);
-          ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-          if(CM->edits != 0){
-            ++n;
-            CM->SUBS.seq->buf[CM->SUBS.seq->idx] = sym;
-            CM->SUBS.idx = GetPModelIdxCorr(CM->SUBS.seq->buf+CM->SUBS.seq->idx
-            -1, CM, CM->SUBS.idx);
-            ComputePModel(Models[cModel], pModel[n], CM->SUBS.idx, CM->SUBS.eDen);
-            ComputeWeightedFreqs(CMW->weight[n], pModel[n], PT);
-            }
-          ++n;
-          }
-
-        ComputeMXProbs(PT, MX);
-        bits += (instant = PModelSymbolLog(MX, sym));
-        UpdateStream(AUX, sym, instant);
-        ++nBase;
-        CalcDecayment(CMW, pModel, sym, P->gamma);
-        RenormalizeWeights(CMW);
-        CorrectXModels(Shadow, pModel, sym);
-        UpdateCBuffer(symBuf);
-        }
-      }
-        
-  if(PA->nRead % P->nThreads == T.id){
-    #ifdef LOCAL_SIMILARITY
-    if(P->local == 1)
-      UpdateTopWP(BPBB(bits, nBase), conName, T.top, nBase,
-      initNSymbol, nSymbol);
-    else
-      UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
-    #else
-    UpdateTop(BPBB(bits, nBase), conName, T.top, nBase);
-    #endif
-    }
-
-  RemoveStream(AUX);
-  DeleteWeightModel(CMW);
-  for(n = 0 ; n < totModels ; ++n)
-    RemovePModel(pModel[n]);
-  Free(pModel);
-  RemovePModel(MX);
-  RemoveFPModel(PT);
-  for(n = 0 ; n < P->nModels ; ++n)
-    FreeShadow(Shadow[n]);
-  Free(Shadow);
   Free(readBuf);
   RemoveCBuffer(symBuf);
   RemoveParser(PA);
@@ -1217,38 +680,9 @@ void *CompressThread(void *Thr){
   #ifdef KMODELSUSAGE
   CompressTargetWKM(T[0]);
   #else
-    #ifdef DOUBLESIDE
-    fprintf(stderr, "  [+] Running right side ......... ");
-    RightCompressTarget(T[0]);
-    fprintf(stderr, "Done!\n");
-    // FreeReference();
-    // LoadReference();
-    LeftCompressTarget(T[0]);
-    #else
-    CompressTarget(T[0]);
-    #endif
+  CompressTarget(T[0]);
   #endif
 
-  pthread_exit(NULL);
-  }
-
-
-//////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - - - - - R   T H R E A D I N G - - - - - - - - - - - - - - -
-
-void *CompressThreadRight(void *Thr){
-  Threads *T = (Threads *) Thr;
-  RightCompressTarget(T[0]);
-  pthread_exit(NULL);
-  }
-
-
-//////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - - - - - L   T H R E A D I N G - - - - - - - - - - - - - - -
-
-void *CompressThreadLeft(void *Thr){
-  Threads *T = (Threads *) Thr;
-  LeftCompressTarget(T[0]);
   pthread_exit(NULL);
   }
 
@@ -1270,19 +704,27 @@ void LoadReference(char *refName){
 
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
-      if(ParseSym(PA, (sym = readBuf[idxPos])) == -1){ idx = 0; continue; }
+
+      if(ParseSym(PA, (sym = readBuf[idxPos])) == -1){ 
+        idx = 0; 
+	continue; 
+        }
+
       symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
+
       for(n = 0 ; n < P->nModels ; ++n){
         CModel *CM = Models[n];
         GetPModelIdx(symBuf->buf+symBuf->idx-1, CM);
         if(CM->ir == 1) // INVERTED REPEATS
           irSym = GetPModelIdxIR(symBuf->buf+symBuf->idx, CM);
-        if(++idx >= CM->ctx){
+        if(idx >= CM->ctx){
           UpdateCModelCounter(CM, sym, CM->pModelIdx);
           if(CM->ir == 1) // INVERTED REPEATS
             UpdateCModelCounter(CM, irSym, CM->pModelIdxIR);
           }
         }
+
+      ++idx;
       UpdateCBuffer(symBuf);
       }
  
@@ -1310,87 +752,25 @@ void LoadReferenceWKM(char *refName){
 
   while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
     for(idxPos = 0 ; idxPos < k ; ++idxPos){
-      if(ParseSym(PA, (sym = readBuf[idxPos])) == -1){ idx = 0; continue; }
+ 
+      if(ParseSym(PA, (sym = readBuf[idxPos])) == -1){ 
+        idx = 0; 
+	continue; 
+        }
+
       symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
+
       for(n = 0 ; n < P->nModels ; ++n){
         KMODEL *KM = KModels[n];
         GetKIdx(symBuf->buf+symBuf->idx, KM);
-        if(++idx >= KM->ctx)
+        if(idx >= KM->ctx)
           UpdateKModelCounter(KM, sym, KM->idx);
         }
+
+      ++idx;
       UpdateCBuffer(symBuf);
       }
  
-  for(n = 0 ; n < P->nModels ; ++n)
-    ResetKModelIdx(KModels[n]);
-  RemoveCBuffer(symBuf);
-  Free(readBuf);
-  RemoveParser(PA);
-  fclose(Reader);
-  }
-
-
-//////////////////////////////////////////////////////////////////////////////
-// - - - - - R E F E R E N C E   W I T H   K M O D E L S   I N   R E V - - - -
-
-void LoadRevReferenceWKM(char *refName){
-  FILE     *Reader = Fopen(refName, "r");
-  uint32_t n;
-  uint64_t idx = 0, k, idxPos;
-  PARSER   *PA = CreateParser();
-  CBUF     *symBuf  = CreateCBuffer(BUFFER_SIZE, BGUARD);
-  uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t)), sym;
-  FileType(PA, Reader);
-  rewind(Reader);
-
-  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
-    for(idxPos = 0 ; idxPos < k ; ++idxPos){
-      if(ParseSym(PA, (sym = readBuf[idxPos])) == -1){ idx = 0; continue; }
-      symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
-      for(n = 0 ; n < P->nModels ; ++n){
-        KMODEL *KM = KModels[n];
-        GetKIdx(symBuf->buf+symBuf->idx, KM);
-        if(++idx >= KM->ctx)
-          UpdateKModelCounter(KM, sym, KM->idx);
-        }
-      UpdateCBuffer(symBuf);
-      }
-
-  for(n = 0 ; n < P->nModels ; ++n)
-    ResetKModelIdx(KModels[n]);
-  RemoveCBuffer(symBuf);
-  Free(readBuf);
-  RemoveParser(PA);
-  fclose(Reader);
-  }
-
-
-//////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - - - - - R E F E R E N C E   I N   R E V - - - - - - - - - -
-
-void LoadRevReference(char *refName){
-  FILE     *Reader = Fopen(refName, "r");
-  uint32_t n;
-  uint64_t idx = 0, k, idxPos;
-  PARSER   *PA = CreateParser();
-  CBUF     *symBuf  = CreateCBuffer(BUFFER_SIZE, BGUARD);
-  uint8_t  *readBuf = Calloc(BUFFER_SIZE, sizeof(uint8_t)), sym;
-  FileType(PA, Reader);
-  rewind(Reader);
-
-  while((k = fread(readBuf, 1, BUFFER_SIZE, Reader)))
-    for(idxPos = 0 ; idxPos < k ; ++idxPos){
-      if(ParseSym(PA, (sym = readBuf[idxPos])) == -1){ idx = 0; continue; }
-      symBuf->buf[symBuf->idx] = sym = DNASymToNum(sym);
-      for(n = 0 ; n < P->nModels ; ++n){
-        KMODEL *KM = KModels[n];
-        GetKIdx(symBuf->buf+symBuf->idx, KM);
-        if(++idx >= KM->ctx)
-          UpdateKModelCounter(KM, sym, KM->idx);
-        }
-      UpdateCBuffer(symBuf);
-      }
-
   for(n = 0 ; n < P->nModels ; ++n)
     ResetKModelIdx(KModels[n]);
   RemoveCBuffer(symBuf);
@@ -1427,62 +807,12 @@ void CompressAction(Threads *T, char *refName, char *baseName){
   fprintf(stderr, "Done!\n");
   #endif
 
-  #ifdef DOUBLESIDE
-  fprintf(stderr, "  [+] Running Right side ........... ");
-  for(n = 0 ; n < P->nThreads ; ++n)
-    pthread_create(&(t[n+1]), NULL, CompressThreadRight, (void *) &(T[n]));
-  for(n = 0 ; n < P->nThreads ; ++n) // DO NOT JOIN FORS!
-    pthread_join(t[n+1], NULL);
-  fprintf(stderr, "Done!\n");
-
-  fprintf(stderr, "  [+] Freeing compression models ... ");
-  for(n = 0 ; n < P->nModels ; ++n)
-    #ifdef KMODELSUSAGE
-    FreeKModel(KModels[n]);
-    #else
-    FreeCModel(Models[n]);
-    #endif
-  #ifdef KMODELSUSAGE
-  Free(KModels);
-  #else
-  Free(Models);
-  #endif
-  fprintf(stderr, "Done!\n");
-
-    #ifdef KMODELSUSAGE
-    KModels = (KMODEL **) Malloc(P->nModels * sizeof(KMODEL *));
-    for(n = 0 ; n < P->nModels ; ++n)
-      KModels[n] = CreateKModel(T[0].model[n].ctx, T[0].model[n].den,
-      T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
-      T[0].model[n].eDen);
-    fprintf(stderr, "  [+] Loading reverse file ......... ");
-    LoadRevReferenceWKM(refName);
-    fprintf(stderr, "Done!\n");
-    #else
-    Models = (CModel **) Malloc(P->nModels * sizeof(CModel *));
-    for(n = 0 ; n < P->nModels ; ++n)
-      Models[n] = CreateCModel(T[0].model[n].ctx, T[0].model[n].den,
-      T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits,
-      T[0].model[n].eDen);
-    fprintf(stderr, "  [+] Loading reverse file ......... ");
-    LoadRevReference(refName);
-    fprintf(stderr, "Done!\n");
-    #endif
-
-  fprintf(stderr, "  [+] Running Left side ............ ");
-  for(n = 0 ; n < P->nThreads ; ++n)
-    pthread_create(&(t[n+1]), NULL, CompressThreadLeft, (void *) &(T[n]));
-  for(n = 0 ; n < P->nThreads ; ++n) // DO NOT JOIN FORS!
-    pthread_join(t[n+1], NULL);
-  fprintf(stderr, "Done!\n");
-  #else  
   fprintf(stderr, "  [+] Compressing database ......... ");
   for(n = 0 ; n < P->nThreads ; ++n)
     pthread_create(&(t[n+1]), NULL, CompressThread, (void *) &(T[n]));
   for(n = 0 ; n < P->nThreads ; ++n) // DO NOT JOIN FORS!
     pthread_join(t[n+1], NULL);
   fprintf(stderr, "Done!\n");
-  #endif
   }
 
 
