@@ -20,7 +20,7 @@ void ModelsExplanation(void){
 void PrintMenu(void){
   fprintf(stderr,
   "Usage: FALCON [OPTION]... [FILE1] [FILE2]                                \n"
-  "A compression-based method to infer metagenomic sample composition.      \n"
+  "A method to infer metagenomic sample composition.                        \n"
   "                                                                         \n"
   "Non-mandatory arguments:                                                 \n"
   "                                                                         \n"
