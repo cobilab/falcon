@@ -127,7 +127,7 @@ Non-mandatory arguments:
   -v                       verbose mode (more information),              
   -Z                       database local similarity,                    
   -s                       show compression levels,                      
-  -l <level>               compression level [1;46],                    
+  -l <level>               compression level [1;47],                    
   -p <sample>              subsampling (default: 1),                    
   -t <top>                 top of similarity (default: 20),              
   -n <nThreads>            number of threads (default: 2),              
