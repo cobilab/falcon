@@ -227,7 +227,8 @@ Create the following bash script:
 </pre>
 Name it Run.sh, then run it using:
 <pre>
-. Run.sh Eagle.fna virus.fna
+chmod +x Run.sh
+./Run.sh Eagle.fna virus.fna
 </pre>
 Eagle.fna and virus.fna are only two examples.
 See folder examples for more.
