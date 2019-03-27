@@ -87,7 +87,7 @@ FALCON is the main program, FALCON-FILTER is used to filter local interactions a
 
 ## 2. DEMO ##
 
-After install, search for the top 10 similar virus in sample reads:
+Search for the top 10 similar viruses in sample reads that we provide in folder test:
 <pre>
 cd test
 gunzip reads.fq.gz
