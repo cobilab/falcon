@@ -33,13 +33,13 @@ An example of a viral reference database (FASTA) can be downloaded from <a href=
 
 ## 1. INSTALLATION ##
 
-### A. First option: with [Conda](https://conda.io/miniconda)
+### A. First option: with [Conda](https://conda.io/miniconda) ###
 
 ```
 conda install -c maxibor falcon
 ```
 
-### B. Second option: manual installation  
+### B. Second option: manual installation ###
 
 [![Install and Demo Video](imgs/demo.png)](https://www.youtube.com/watch?v=eLqXE2ghFNk)
 
@@ -87,22 +87,14 @@ FALCON is the main program, FALCON-FILTER is used to filter local interactions a
 
 ## 2. DEMO ##
 
-After install, search for the top 10 similar virus in Chimpanzee chromosome 7:
+After install, search for the top 10 similar virus in sample reads:
 <pre>
-cp falcon/scripts/DownloadViruses.pl .
-perl DownloadViruses.pl
-wget  --trust-server-names -q \
-ftp://ftp.ncbi.nlm.nih.gov/genomes/Pan_troglodytes/CHR_18/ptr_ref_Clint_PTRv2_chr18.fa.gz \
--O PT18.fa.gz
-gunzip PT18.fa.gz
-./FALCON -v -n 4 -c 20 -t 10 -l 15 PT18.fa viruses.fa
+cd test
+gunzip reads.fq.gz
+gunzip VDB.fa.gz
+./FALCON -v -F -t 10 -l 47 reads.fq VDB.fa
 </pre>
-It will use less than 3.5 GB of RAM memory and about 1 minute (in a common laptop) to run the FALCON.
-
-In the case of problems with perl, run the following:
-<pre>
-perl -MCPAN -e'install "LWP::Simple"'
-</pre>
+It will identify Zaire Ebolavirus in the samples.
 
 ## 3. USAGE ##
 
@@ -117,7 +109,7 @@ or
 These will print the following options:
 ```
 Usage: FALCON [OPTION]... [FILE1] [FILE2]                                
-A compression-based method to infer metagenomic sample composition.      
+A tool to infer metagenomic sample composition.      
                                                                          
 Non-mandatory arguments:                                                 
                                                                          
@@ -229,7 +221,7 @@ Mandatory arguments:
 Create the following bash script:
 <pre>
 #!/bin/bash
-./FALCON -v -n 4 -t 200 -F -Z -m 20:100:1:5/10 -c 30 -y complexity.com $1 $2
+./FALCON -v -n 4 -t 200 -F -Z -l 47 -c 20 -y complexity.com $1 $2
 ./FALCON-FILTER -v -F -t 0.5 -o positions.pos complexity.com
 ./FALCON-EYE -v -F -o draw.map positions.pos
 </pre>
