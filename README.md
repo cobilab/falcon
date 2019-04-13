@@ -208,13 +208,13 @@ Create the following bash script:
 ./FALCON-FILTER -v -F -t 0.5 -o positions.pos complexity.com
 ./FALCON-EYE -v -F -o draw.map positions.pos
 ```
-Name it Run.sh, then run it using:
+Name it FALCON-meta.sh and run it using:
 ```
-chmod +x Run.sh
-./Run.sh Eagle.fna virus.fna
+chmod +x FALCON-meta.sh
+./FALCON-meta.sh reads.fastq VDB.fa
 ```
-Eagle.fna and virus.fna are only two examples.
-See folder examples for more.
+reads.fastq and VDB.fa are only two examples.
+For more, see folder examples.
 
 ## 6. CITATION ##
 
