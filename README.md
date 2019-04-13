@@ -25,13 +25,13 @@ The tool is also able to <b>identify locally where, in each reference sequence, 
 
 ## 1. INSTALLATION ##
 
-### 1.1 First option: with [Conda](https://conda.io/miniconda) ###
+### 1.1 Automatic installation with [Conda](https://conda.io/miniconda) ###
 
 ```
 conda install -c maxibor falcon
 ```
 
-### 1.2 Second option: manual installation ###
+### 1.2 Manual installation ###
 
 <pre>
 git clone https://github.com/pratas/falcon.git
