@@ -15,13 +15,11 @@ The core of the method is based on <b>relative data compression</b>. FALCON uses
 The tool is also able to <b>identify locally where, in each reference sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-FILTER)</b> and <b>to visualize the results (FALCON-EYE)</b>. <b>Several running modes</b> are available for different hardware and speed specifications. 
 </p>
 
-<p align="center">
 <br>
 
 [![Install and Demo Video](imgs/demo.png)](https://www.youtube.com/watch?v=eLqXE2ghFNk)
 
 <br>
-</p>
 
 ## 1. INSTALLATION ##
 
@@ -33,7 +31,7 @@ conda install -c maxibor falcon
 
 ### 1.2 Manual installation ###
 
-<pre>
+```
 git clone https://github.com/pratas/falcon.git
 cd falcon/src/
 cmake .
@@ -42,18 +40,18 @@ cp FALCON ../../
 cp FALCON-FILTER ../../
 cp FALCON-EYE ../../
 cd ../../
-</pre>
+```
 [Cmake](http://www.cmake.org/) is needed for installation. The download it directly available from (http://www.cmake.org/cmake/resources/software.html).
 
 ## 2. DEMO ##
 
 Search for the top 10 similar viruses in sample reads that we provide in folder test:
-<pre>
+```
 cd test
 gunzip reads.fq.gz
 gunzip VDB.fa.gz
 ./FALCON -v -F -t 10 -l 47 reads.fq VDB.fa
-</pre>
+```
 It will identify Zaire Ebolavirus in the samples.
 
 ## 3. BUILD A REFERENCE DATABASE ## 
@@ -82,13 +80,13 @@ An already reference viral database is available <a href="http://sweet.ua.pt/pra
 ## 4. USAGE ##
 
 To see the possible options of FALCON type
-<pre>
+```
 ./FALCON
-</pre>
+```
 or
-<pre>
+``` 
 ./FALCON -h
-</pre>
+```
 These will print the following options:
 ```
 Usage: FALCON [OPTION]... [FILE1] [FILE2]                                
@@ -117,18 +115,19 @@ Mandatory arguments:
 
 ### 4.1 Local detection
 
-<b>For local interactions detection and visualization</b> the package provides <b>FALCON-FILTER</b> and <b>FALCON-EYE</b>.
+For local interactions detection and visualization the FALCON package provides <b>FALCON-FILTER</b> and <b>FALCON-EYE</b>.
 
 #### 4.1.1 Filtering
 
 To see the possible options of FALCON-FILTER type
-<pre>
+
+``` 
 ./FALCON-FILTER
-</pre>
+```
 or
-<pre>
+```
 ./FALCON-FILTER -h
-</pre>
+```
 These will print the following options:
 
 ```
@@ -159,13 +158,13 @@ Mandatory arguments:
 #### 4.1.2 Visualization
 
 To see the possible options of FALCON-EYE type
-<pre>
+```
 ./FALCON-EYE
-</pre>
+```
 or
-<pre>
+```
 ./FALCON-EYE -h
-</pre>
+```
 These will print the following options:
 
 ```
