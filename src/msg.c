@@ -116,12 +116,20 @@ void PrintMenuEye(void){
 void PrintVersion(void){
   fprintf(stderr,
   "                                                                         \n"
+  "                                                                         \n"
+  "           ███████╗ █████╗ ██╗      ██████╗ ██████╗ ███╗   ██╗           \n"
+  "           ██╔════╝██╔══██╗██║     ██╔════╝██╔═══██╗████╗  ██║           \n"
+  "           █████╗  ███████║██║     ██║     ██║   ██║██╔██╗ ██║           \n"
+  "           ██╔══╝  ██╔══██║██║     ██║     ██║   ██║██║╚██╗██║           \n"
+  "           ██║     ██║  ██║███████╗╚██████╗╚██████╔╝██║ ╚████║           \n"
+  "           ╚═╝     ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝           \n"
+  "                                                                         \n"
   "                          ==================                             \n"
   "                          |   FALCON %u.%u   |                           \n"
   "                          ==================                             \n"
   "                                                                         \n"
-  "                     A compression-based method to                       \n"
-  "                 infer metagenomic sample composition.                   \n"
+  "                      An ultra-fast tool to infer                        \n"
+  "                    metagenomic sample composition.                      \n"
   "                                                                         \n"
   "              Copyright (C) 2014-2019 University of Aveiro.              \n"
   "                                                                         \n"
@@ -129,8 +137,6 @@ void PrintVersion(void){
   "                                                                         \n"
   "You may redistribute copies of it under the terms of the GNU - General   \n"
   "Public License v3 <http://www.gnu.org/licenses/gpl.html>. There is NOT   \n"
-  "ANY WARRANTY, to the extent permitted by law. Developed and Written by   \n"
-  "Diogo Pratas, Armando J. Pinho, Paulo J. S. G. Ferreira and Joao M. O.   \n"
-  "S. Rodrigues.\n\n", VERSION, RELEASE);
+  "ANY WARRANTY, to the extent permitted by law.\n\n", VERSION, RELEASE);
   }
 
