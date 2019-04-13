@@ -15,6 +15,8 @@ The core of the method is based on <b>relative data compression</b>. FALCON uses
 The tool is also able to <b>identify locally where, in each reference sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-FILTER)</b> and <b>to visualize the results (FALCON-EYE)</b>. <b>Several running modes</b> are available for different hardware and speed specifications. 
 </p>
 
+[![Install and Demo Video](imgs/demo.png)](https://www.youtube.com/watch?v=eLqXE2ghFNk)
+
 <br>
 
 ## 1. INSTALLATION ##
@@ -26,8 +28,6 @@ conda install -c maxibor falcon
 ```
 
 ### B. Second option: manual installation ###
-
-[![Install and Demo Video](imgs/demo.png)](https://www.youtube.com/watch?v=eLqXE2ghFNk)
 
 <pre>
 git clone https://github.com/pratas/falcon.git
