@@ -16,9 +16,11 @@ The tool is also able to <b>identify locally where, in each reference sequence, 
 </p>
 
 <br>
+<p align="center">
 
 [![Install and Demo Video](imgs/demo.png)](https://www.youtube.com/watch?v=eLqXE2ghFNk)
 
+</p>
 <br>
 
 ## 1. INSTALLATION ##
