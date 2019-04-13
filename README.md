@@ -21,7 +21,7 @@ The tool is also able to <b>identify locally where, in each reference sequence, 
 
 <br>
 
-## 1. INSTALLATION ##
+## 1. Installation ##
 
 ### 1.1 Automatic installation with [Conda](https://conda.io/miniconda) ###
 
@@ -43,7 +43,7 @@ cd ../../
 ```
 [Cmake](http://www.cmake.org/) is needed for installation. 
 
-## 2. DEMO ##
+## 2. Demo ##
 
 Search for the top 10 similar viruses in sample reads that we provide in folder test:
 ```
@@ -54,7 +54,7 @@ gunzip VDB.fa.gz
 ```
 It will identify Zaire Ebolavirus in the samples.
 
-## 3. BUILD A REFERENCE DATABASE ## 
+## 3. Building a reference database ## 
 
 ### 3.1 Build the latest NCBI viral database
 
@@ -77,7 +77,7 @@ zcat GB_DB_VIRAL/*.fna.g > VDB.fa
 An already reference viral database is available <a href="http://sweet.ua.pt/pratas/datasets/VDB.fa.gz">here</a>. With this example, you only need to uncompress it, namely through: gunzip VDB.fa.gz, and use it in FALCON along with the FASTQ reads.
 </p>
 
-## 4. USAGE ##
+## 4. Usage ##
 
 To see the possible options of FALCON type
 ```
@@ -198,7 +198,7 @@ Mandatory arguments:
   [FILE]                   profile filename (from FALCON-FILTER).
 ```
 
-## 5. COMMON USE ##
+## 5. Common use ##
 
 Create the following bash script:
 
@@ -216,19 +216,32 @@ chmod +x FALCON-meta.sh
 reads.fastq and VDB.fa are only two examples.
 For more, see folder examples.
 
-## 6. CITATION ##
+## 6. Citation ##
 
 On using this software/method please cite:
 
+```
 D. Pratas, M. Hosseini, G. Grilo, A. J. Pinho, R. M. Silva, T. Caetano, J. Carneiro, F. Pereira. (2018). Metagenomic Composition Analysis of an Ancient Sequenced Polar Bear Jawbone from Svalbard. Genes, 9(9), 445.
+```
+Bibtex:
+```
+@article{Pratas-2018a,
+  title={Metagenomic Composition Analysis of an Ancient Sequenced Polar Bear Jawbone from Svalbard},
+  author={Pratas, Diogo and Hosseini, Morteza and Grilo, Gon{\c{c}}alo and Pinho, Armando and Silva, Raquel and Caetano, T{\^a}nia and Carneiro, Jo{\~a}o and Pereira, Filipe},
+  journal={Genes},
+  volume={9},
+  number={9},
+  pages={445},
+  year={2018},
+  publisher={Multidisciplinary Digital Publishing Institute}
+}
+```
 
-D. Pratas, A. J. Pinho, R. M. Silva, J. M. O. S. Rodrigues, M. Hosseini, T. Caetano, P. J. S. G. Ferreira. FALCON-meta: a method to infer metagenomic composition of ancient DNA. BioRxiv preprint, 2018.
-
-## 7. ISSUES ##
+## 7. Issues ##
 
 For any issue let us know at [issues link](https://github.com/pratas/falcon/issues).
 
-## 8. LICENSE ##
+## 8. License ##
 
 GPL v3.
 
