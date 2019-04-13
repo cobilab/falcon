@@ -15,14 +15,6 @@ The core of the method is based on <b>relative data compression</b>. FALCON uses
 The tool is also able to <b>identify locally where, in each reference sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-FILTER)</b> and <b>to visualize the results (FALCON-EYE)</b>. <b>Several running modes</b> are available for different hardware and speed specifications. 
 </p>
 
-<p align="justify">
-An example of the FALCON-EYE, program to visualize FALCON output, can be seen in the following figure:
-</p>
-<p align="center"><img src="imgs/ex1.png" alt="FALCON-EYE example" height="400" border="0" /></p>
-
-<p align="justify">
-An example of a viral reference database (FASTA) can be downloaded from <a href="http://sweet.ua.pt/pratas/datasets/VDB.fa.gz">here</a>. With this example, you only need to uncompress it, namely through: gunzip VDB.fa.gz, and use it in FALCON along with the FASTQ reads.
-</p>
 <br>
 
 ## 1. INSTALLATION ##
@@ -37,7 +29,6 @@ conda install -c maxibor falcon
 
 [![Install and Demo Video](imgs/demo.png)](https://www.youtube.com/watch?v=eLqXE2ghFNk)
 
-Cmake is needed for installation (http://www.cmake.org/). You can download it directly from (http://www.cmake.org/cmake/resources/software.html) or use an appropriate packet manager. In the following instructions we show the procedure to install FALCON:
 <pre>
 git clone https://github.com/pratas/falcon.git
 cd falcon/src/
@@ -48,13 +39,7 @@ cp FALCON-FILTER ../../
 cp FALCON-EYE ../../
 cd ../../
 </pre>
-This will create three binary files:
-<pre>
-FALCON
-FALCON-FILTER
-FALCON-EYE
-</pre>
-FALCON is the main program, FALCON-FILTER is used to filter local interactions and FALCON-EYE is used to visualize the output from FALCON-FILTER program.
+[Cmake](http://www.cmake.org/) is needed for installation. The download it directly available from (http://www.cmake.org/cmake/resources/software.html).
 
 ## 2. DEMO ##
 
@@ -67,7 +52,14 @@ gunzip VDB.fa.gz
 </pre>
 It will identify Zaire Ebolavirus in the samples.
 
-## 3. USAGE ##
+## 3. BUILD A REFERENCE DATABASE ## 
+
+<p align="justify">
+An example of a viral reference database (FASTA) can be downloaded from <a href="http://sweet.ua.pt/pratas/datasets/VDB.fa.gz">here</a>. With this example, you only need to uncompress it, namely through: gunzip VDB.fa.gz, and use it in FALCON along with the FASTQ reads.
+</p>
+
+
+## 4. USAGE ##
 
 To see the possible options of FALCON type
 <pre>
@@ -103,11 +95,11 @@ Mandatory arguments:
   [FILE2]                  database filename (FASTA or Multi-FASTA).     
 ```
 
-### 3.1 Local detection
+### 4.1 Local detection
 
 <b>For local interactions detection and visualization</b> the package provides <b>FALCON-FILTER</b> and <b>FALCON-EYE</b>.
 
-#### 3.1.1 Filtering
+#### 4.1.1 Filtering
 
 To see the possible options of FALCON-FILTER type
 <pre>
@@ -144,7 +136,7 @@ Mandatory arguments:
   [FILE]                   profile filename (from FALCON).
 ```
 
-#### 3.1.2 Visualization
+#### 4.1.2 Visualization
 
 To see the possible options of FALCON-EYE type
 <pre>
@@ -187,7 +179,7 @@ Mandatory arguments:
   [FILE]                   profile filename (from FALCON-FILTER).
 ```
 
-## 4. COMMON USE ##
+## 5. COMMON USE ##
 
 Create the following bash script:
 <pre>
@@ -204,7 +196,7 @@ chmod +x Run.sh
 Eagle.fna and virus.fna are only two examples.
 See folder examples for more.
 
-## 5. CITATION ##
+## 6. CITATION ##
 
 On using this software/method please cite:
 
@@ -212,11 +204,11 @@ D. Pratas, M. Hosseini, G. Grilo, A. J. Pinho, R. M. Silva, T. Caetano, J. Carne
 
 D. Pratas, A. J. Pinho, R. M. Silva, J. M. O. S. Rodrigues, M. Hosseini, T. Caetano, P. J. S. G. Ferreira. FALCON-meta: a method to infer metagenomic composition of ancient DNA. BioRxiv preprint, 2018.
 
-## 6. ISSUES ##
+## 7. ISSUES ##
 
 For any issue let us know at [issues link](https://github.com/pratas/falcon/issues).
 
-## 7. LICENSE ##
+## 8. LICENSE ##
 
 GPL v3.
 
