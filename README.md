@@ -25,13 +25,13 @@ The tool is also able to <b>identify locally where, in each reference sequence, 
 
 ## 1. INSTALLATION ##
 
-### A. First option: with [Conda](https://conda.io/miniconda) ###
+### 1.1 First option: with [Conda](https://conda.io/miniconda) ###
 
 ```
 conda install -c maxibor falcon
 ```
 
-### B. Second option: manual installation ###
+### 1.2 Second option: manual installation ###
 
 <pre>
 git clone https://github.com/pratas/falcon.git
@@ -58,10 +58,26 @@ It will identify Zaire Ebolavirus in the samples.
 
 ## 3. BUILD A REFERENCE DATABASE ## 
 
-<p align="justify">
-An example of a viral reference database (FASTA) can be downloaded from <a href="http://sweet.ua.pt/pratas/datasets/VDB.fa.gz">here</a>. With this example, you only need to uncompress it, namely through: gunzip VDB.fa.gz, and use it in FALCON along with the FASTQ reads.
-</p>
+### 3.1 Build the latest NCBI viral database
 
+An example of building a reference database from NCBI:
+```
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/assembly_summary.txt
+awk -F '\t' '{if($12=="Complete Genome") print $20}' assembly_summary.txt > ASCG.txt
+mkdir -p GB_DB_VIRAL
+mkdir -p GB_DB_VIRAL_CDS
+mkdir -p GB_DB_VIRAL_RNA
+cat ASCG.txt | xargs -I{} -n1 -P8 wget -P GB_DB_VIRAL {}/*_genomic.fna.gz
+mv GB_DB_VIRAL/*_cds_from_genomic.fna.gz GB_DB_VIRAL_CDS/
+mv GB_DB_VIRAL/*_rna_from_genomic.fna.gz GB_DB_VIRAL_RNA/
+zcat GB_DB_VIRAL/*.fna.g > VDB.fa
+```
+
+### 3.2 Download an existing database ###
+
+<p align="justify">
+An already reference viral database is available <a href="http://sweet.ua.pt/pratas/datasets/VDB.fa.gz">here</a>. With this example, you only need to uncompress it, namely through: gunzip VDB.fa.gz, and use it in FALCON along with the FASTQ reads.
+</p>
 
 ## 4. USAGE ##
 
@@ -186,17 +202,18 @@ Mandatory arguments:
 ## 5. COMMON USE ##
 
 Create the following bash script:
-<pre>
+
+```
 #!/bin/bash
 ./FALCON -v -n 4 -t 200 -F -Z -l 47 -c 20 -y complexity.com $1 $2
 ./FALCON-FILTER -v -F -t 0.5 -o positions.pos complexity.com
 ./FALCON-EYE -v -F -o draw.map positions.pos
-</pre>
+```
 Name it Run.sh, then run it using:
-<pre>
+```
 chmod +x Run.sh
 ./Run.sh Eagle.fna virus.fna
-</pre>
+```
 Eagle.fna and virus.fna are only two examples.
 See folder examples for more.
 
