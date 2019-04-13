@@ -6,19 +6,13 @@
 alt="FALCON" width="204" height="204" border="0" /></p>
 
 <p align="justify">
-<b>FALCON is a method to infer metagenomic sample composition</b>. FALCON measures <b>similarity between any FASTA or FASTQ file</b>, independently from the size, <b>against any multi-FASTA database</b>, such as the entire viral and bacterial NCBI database (scripts are available for multiple database downloads).</p>
+<b>FALCON is an ultra-fast method to infer metagenomic composition of sequenced reads</b>. FALCON measures <b>similarity between any FASTQ</b> file (or FASTA), independently from the size, <b>against any multi-FASTA database</b>, such as the entire set of complete genomes from the NCBI.</p>
 
 <p align="justify">
-As a <b>personalized medicine</b> example, FALCON can <b>detect the viral and bacterial genomes having similarity with a sequenced human genome</b> (for instance by NGS). Moreover, it can <b>run in a common laptop</b>.</p>
+The core of the method is based on <b>relative data compression</b>. FALCON uses <b>variable multi-threading</b>, without multiplying the memory for each thread, being able to <b>run efficiently in a common laptop</b>.</p>
 
 <p align="justify">
-The core of the method is based on the estimation of <b>relative algorithmic information</b>, a notion that uses model-freezing and exclusive information from a reference, allowing to use <b>much lower computational resources</b>. Moreover, it uses <b>variable multi-threading</b>, without multiplying the memory for each thread, being able to <b>run efficiently from a powerful server to a common laptop</b>.</p>
-
-<p align="justify">
-To measure the similarity, the system will build <b>multiple finite-context models</b> that at the end of the reference sequence will be kept frozen. The target reads will, then, be measured using a mixture of the frozen models. The <b>mixture</b> estimates the probabilities assuming dependency from model performance, and thus, it will allow to adapt the usage of the models according to the nature of the target sequence. Furthermore, it uses <b>substitutional tolerant context models</b> and, hence, efficiently handle ancient DNA.</p>
-
-<p align="justify">
-The tool is also able to <b>identify locally where, in each database sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-FILTER)</b> and <b>to visualize the results (FALCON-EYE)</b>. <b>Several running modes</b> are available for different hardware and speed specifications. <b>The system is able to automatically learn to measure relative similarity</b>.
+The tool is also able to <b>identify locally where, in each reference sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-FILTER)</b> and <b>to visualize the results (FALCON-EYE)</b>. <b>Several running modes</b> are available for different hardware and speed specifications. 
 </p>
 
 <p align="justify">
@@ -43,34 +37,11 @@ conda install -c maxibor falcon
 
 [![Install and Demo Video](imgs/demo.png)](https://www.youtube.com/watch?v=eLqXE2ghFNk)
 
-Cmake is needed for installation (http://www.cmake.org/) for systems not using Linux. You can download it directly from (http://www.cmake.org/cmake/resources/software.html) or use an appropriate packet manager. In the following instructions we show the procedure to install FALCON:
+Cmake is needed for installation (http://www.cmake.org/). You can download it directly from (http://www.cmake.org/cmake/resources/software.html) or use an appropriate packet manager. In the following instructions we show the procedure to install FALCON:
 <pre>
 git clone https://github.com/pratas/falcon.git
 cd falcon/src/
 cmake .
-make
-cp FALCON ../../
-cp FALCON-FILTER ../../
-cp FALCON-EYE ../../
-cd ../../
-</pre>
-Alternatively to git use wget:
-<pre>
-wget https://github.com/pratas/falcon/archive/master.zip
-unzip master.zip
-cd falcon-master/src
-cmake .
-make
-cp FALCON ../../
-cp FALCON-FILTER ../../
-cp FALCON-EYE ../../
-cd ../../
-</pre>
-or alternatively to cmake, for Linux, use the following:
-<pre>
-git clone https://github.com/pratas/falcon.git
-cd falcon/src/
-cp Makefile.linux Makefile
 make
 cp FALCON ../../
 cp FALCON-FILTER ../../
