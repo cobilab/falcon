@@ -235,8 +235,7 @@ Bibtex:
   volume={9},
   number={9},
   pages={445},
-  year={2018},
-  publisher={Multidisciplinary Digital Publishing Institute}
+  year={2018}
 }
 ```
 </sup>
