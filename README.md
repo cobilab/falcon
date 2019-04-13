@@ -41,7 +41,7 @@ cp FALCON-FILTER ../../
 cp FALCON-EYE ../../
 cd ../../
 ```
-[Cmake](http://www.cmake.org/) is needed for installation. The download it directly available from (http://www.cmake.org/cmake/resources/software.html).
+[Cmake](http://www.cmake.org/) is needed for installation. 
 
 ## 2. DEMO ##
 
