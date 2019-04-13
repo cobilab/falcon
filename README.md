@@ -230,7 +230,7 @@ Bibtex:
 ```
 @article{Pratas-2018a,
   title={Metagenomic Composition Analysis of an Ancient Sequenced Polar Bear Jawbone from Svalbard},
-  author={Pratas, Diogo and Hosseini, Morteza and Grilo, Gon{\c{c}}alo and Pinho, Armando and Silva, Raquel and Caetano, T{\^a}nia and Carneiro, Jo{\~a}o and Pereira, Filipe},
+  author={D. Pratas, M. Hosseini, G. Grilo, A. J. Pinho, R. M. Silva, T. Caetano, J. Carneiro, F. Pereira},
   journal={Genes},
   volume={9},
   number={9},
