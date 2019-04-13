@@ -224,6 +224,7 @@ On using this software/method please cite:
 D. Pratas, M. Hosseini, G. Grilo, A. J. Pinho, R. M. Silva, T. Caetano, J. Carneiro, F. Pereira. (2018). Metagenomic Composition Analysis of an Ancient Sequenced Polar Bear Jawbone from Svalbard. Genes, 9(9), 445.
 ```
 Bibtex:
+<sup>
 ```
 @article{Pratas-2018a,
   title={Metagenomic Composition Analysis of an Ancient Sequenced Polar Bear Jawbone from Svalbard},
@@ -236,6 +237,7 @@ Bibtex:
   publisher={Multidisciplinary Digital Publishing Institute}
 }
 ```
+</sup>
 
 ## 7. Issues ##
 
