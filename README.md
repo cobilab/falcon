@@ -37,8 +37,9 @@ cd falcon/src/
 cmake .
 make
 cp FALCON ../../
-cp FALCON-FILTER ../../
-cp FALCON-EYE ../../
+cp FALCON-filter ../../
+cp FALCON-inter  ../../
+cp FALCON-visual ../../
 cd ../../
 ```
 [Cmake](http://www.cmake.org/) is needed for installation. 
@@ -112,18 +113,18 @@ Mandatory arguments:
 
 ### 4.1 Local detection
 
-For local interactions detection and visualization the FALCON package provides <b>FALCON-FILTER</b> and <b>FALCON-EYE</b>.
+For local interactions detection and visualization the FALCON package provides <b>FALCON-filter</b> and <b>FALCON-visual</b>.
 
 #### 4.1.1 Filtering
 
-To see the possible options of FALCON-FILTER type
+To see the possible options of FALCON-filter type
 
 ``` 
-./FALCON-FILTER
+./FALCON-filter
 ```
 or
 ```
-./FALCON-FILTER -h
+./FALCON-filter -h
 ```
 These will print the following options:
 
@@ -151,13 +152,13 @@ Mandatory arguments:
 
 #### 4.1.2 Visualization
 
-To see the possible options of FALCON-EYE type
+To see the possible options of FALCON-visual type
 ```
-./FALCON-EYE
+./FALCON-visual
 ```
 or
 ```
-./FALCON-EYE -h
+./FALCON-visual -h
 ```
 These will print the following options:
 
@@ -186,7 +187,7 @@ Non-mandatory arguments:
                                                                          
 Mandatory arguments:                                                     
                                                                          
-  [FILE]                   profile filename (from FALCON-FILTER).
+  [FILE]                   profile filename (from FALCON-filter).
 ```
 
 ## 5. Common use ##
@@ -196,8 +197,8 @@ Create the following bash script:
 ```
 #!/bin/bash
 ./FALCON -v -n 4 -t 200 -F -Z -l 47 -c 20 -y complexity.com $1 $2
-./FALCON-FILTER -v -F -t 0.5 -o positions.pos complexity.com
-./FALCON-EYE -v -F -o draw.map positions.pos
+./FALCON-filter -v -F -t 0.5 -o positions.pos complexity.com
+./FALCON-visual -v -F -o draw.map positions.pos
 ```
 Name it FALCON-meta.sh and give run access
 ```
