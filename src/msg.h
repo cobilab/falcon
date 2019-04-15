@@ -6,6 +6,7 @@
 void ModelsExplanation  (void);
 void PrintMenu          (void);
 void PrintMenuFilter    (void);
+void PrintMenuInter     (void);
 void PrintMenuEye       (void);
 void PrintVersion       (void);
 

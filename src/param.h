@@ -37,6 +37,12 @@ typedef struct{
   U32      nModels;
   U32      nThreads;
   U8       nFiles;
+  // GULL ADDED ====
+  char     **files;
+  double   **matrix;
+  uint8_t  *labels;
+  uint32_t ref;
+  // ===============
   U64      *size;
   TOP      *top;
   uint8_t  *image;

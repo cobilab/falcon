@@ -869,6 +869,43 @@ void PrintArgsFilter(EYEPARAM *PEYE){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+void PrintArgsInter(Parameters *P, Threads T){
+  uint32_t n;
+
+  fprintf(stderr, "==[ CONFIGURATION ]=================\n");
+  fprintf(stderr, "Verbose mode ....................... %s\n", P->verbose == 0
+  ? "no" : "yes");
+  fprintf(stderr, "Force mode ......................... %s\n", P->force == 0 ?
+  "no" : "yes");
+  fprintf(stderr, "Compression level .................. %u\n", P->level);
+  fprintf(stderr, "Number of threads .................. %u\n", P->nThreads);
+  for(n = 0 ; n < P->nModels ; ++n){
+    fprintf(stderr, "Reference model %d:\n", n+1);
+    fprintf(stderr, "  [+] Context order ................ %u\n",
+    T.model[n].ctx);
+    fprintf(stderr, "  [+] Alpha denominator ............ %u\n",
+    T.model[n].den);
+    fprintf(stderr, "  [+] Inverted repeats ............. %s\n",
+    T.model[n].ir == 0 ? "no" : "yes");
+    fprintf(stderr, "  [+] Allowable substitutions ...... %u\n",
+    T.model[n].edits);
+    if(T.model[n].edits != 0)
+      fprintf(stderr, "  [+] Substitutions alpha den ...... %u\n",
+      T.model[n].eDen);
+    }
+  fprintf(stderr, "Gamma .............................. %.2lf\n", P->gamma);
+  fprintf(stderr, "Maximum Collisions ................. %u\n", P->col);
+  fprintf(stderr, "Files (%u):\n", P->nFiles);
+  for(n = 0 ; n < P->nFiles ; ++n)
+    fprintf(stderr, "  [+] Filename %-2u .................. %s\n", n + 1,
+    P->files[n]);
+  fprintf(stderr, "Matrix filename .................... %s\n", P->output);
+  fprintf(stderr, "Labels filename .................... %s\n", P->labels);
+  fprintf(stderr, "\n");
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 void PrintArgsEye(EYEPARAM *PEYE){
   fprintf(stderr, "==[ CONFIGURATION ]=================\n");
   fprintf(stderr, "Verbose mode ....................... yes\n");
@@ -888,6 +925,33 @@ void PrintArgsEye(EYEPARAM *PEYE){
   PEYE->enlarge);
   fprintf(stderr, "Output visual filename ............. %s\n",  PEYE->output);
   fprintf(stderr, "\n");
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+uint32_t ReadFNames(Parameters *P, char *arg)
+  {
+  uint32_t nFiles = 1, k = 0, argLen;
+
+  argLen = strlen(arg);
+  for( ; k != argLen ; ++k)
+    if(arg[k] == ':')
+      ++nFiles;
+
+  if(nFiles < 2){
+    fprintf(stderr, "Error: you need at least two input files!\n");
+    exit(1);
+    }
+
+  P->files = (char **) Malloc(nFiles * sizeof(char *));
+  P->files[0] = strtok(arg, ":");
+  TestReadFile(P->files[0]);
+  for(k = 1 ; k < nFiles ; ++k){
+    P->files[k] = strtok(NULL, ":");
+    TestReadFile(P->files[k]);
+    }
+
+  return nFiles;
   }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
