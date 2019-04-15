@@ -32,7 +32,7 @@ conda install -c maxibor falcon
 ### 1.2 Manual installation ###
 
 ```
-git clone https://github.com/pratas/falcon.git
+git clone https://github.com/cobilab/falcon.git
 cd falcon/src/
 cmake .
 make
@@ -89,9 +89,6 @@ or
 ```
 These will print the following options:
 ```
-Usage: FALCON [OPTION]... [FILE1] [FILE2]                                
-A tool to infer metagenomic sample composition.      
-                                                                         
 Non-mandatory arguments:                                                 
                                                                          
   -h                       give this help,                               
@@ -131,9 +128,6 @@ or
 These will print the following options:
 
 ```
-Usage: FALCON-FILTER [OPTION]... [FILE]                                  
-Filter and segment FALCON output.                                        
-                                                                         
 Non-mandatory arguments:                                                 
                                                                          
   -h                       give this help,                               
@@ -168,9 +162,6 @@ or
 These will print the following options:
 
 ```
-Usage: FALCON-EYE [OPTION]... [FILE]                                     
-Visualize FALCON-FILTER output.                                          
-                                                                         
 Non-mandatory arguments:                                                 
                                                                          
   -h                       give this help,                               
@@ -208,9 +199,12 @@ Create the following bash script:
 ./FALCON-FILTER -v -F -t 0.5 -o positions.pos complexity.com
 ./FALCON-EYE -v -F -o draw.map positions.pos
 ```
-Name it FALCON-meta.sh and run it using:
+Name it FALCON-meta.sh and give run access
 ```
 chmod +x FALCON-meta.sh
+```
+The, run FALCON:
+```
 ./FALCON-meta.sh reads.fastq VDB.fa
 ```
 reads.fastq and VDB.fa are only two examples.
@@ -242,7 +236,7 @@ Bibtex:
 
 ## 7. Issues ##
 
-For any issue let us know at [issues link](https://github.com/pratas/falcon/issues).
+For any issue let us know at [issues link](https://github.com/cobilab/falcon/issues).
 
 ## 8. License ##
 
