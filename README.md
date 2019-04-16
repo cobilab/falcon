@@ -12,7 +12,7 @@ alt="FALCON" width="204" height="204" border="0" /></p>
 The core of the method is based on <b>relative data compression</b>. FALCON uses <b>variable multi-threading</b>, without multiplying the memory for each thread, being able to <b>run efficiently in a common laptop</b>.</p>
 
 <p align="justify">
-The tool is also able to <b>identify locally where, in each reference sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-filter)</b> and <b>to visualize the results (FALCON-visual)</b>. <b>Several running modes</b> are available for different hardware and speed specifications. 
+The tool is also able to <b>identify locally where, in each reference sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-filter)</b> and <b>to visualize the results (FALCON-visual)</b>. Also for database inter-similarity analysis (FALCON-inter) and respective visualization (FALCON-inter-visual).
 </p>
 
 <br>
@@ -38,8 +38,9 @@ cmake .
 make
 cp FALCON ../../
 cp FALCON-filter ../../
-cp FALCON-inter  ../../
 cp FALCON-visual ../../
+cp FALCON-inter  ../../
+cp FALCON-inter-visual ../../
 cd ../../
 ```
 [Cmake](http://www.cmake.org/) is needed for installation. 
@@ -80,6 +81,17 @@ An already reference viral database is available <a href="http://sweet.ua.pt/pra
 
 ## 4. Usage ##
 
+The FALCON package includes the following binaries:
+\begin{itemize}
+	\item FALCON (metagenomic composition analysis);
+	\item FALCON-filter (local interations - localization);
+	\item FALCON-visual (visualization of global and local similarities);
+	\item FALCON-inter (inter-similarity between database genomes);
+	\item FALCON-inter-visual (visualization of inter-similarities).
+\end{itemize}
+
+### 4.1 Metagenomic composition analysis ###
+
 To see the possible options of FALCON type
 ```
 ./FALCON
@@ -111,11 +123,11 @@ Mandatory arguments:
   [FILE2]                  database filename (FASTA or Multi-FASTA).     
 ```
 
-### 4.1 Local detection
+### 4.2 Local detection ###
 
 For local interactions detection and visualization the FALCON package provides <b>FALCON-filter</b> and <b>FALCON-visual</b>.
 
-#### 4.1.1 Filtering
+#### 4.2.1 Filtering ####
 
 To see the possible options of FALCON-filter type
 
@@ -150,7 +162,7 @@ Mandatory arguments:
   [FILE]                   profile filename (from FALCON).
 ```
 
-#### 4.1.2 Visualization
+#### 4.2.2 Visualization ####
 
 To see the possible options of FALCON-visual type
 ```
@@ -188,6 +200,70 @@ Non-mandatory arguments:
 Mandatory arguments:                                                     
                                                                          
   [FILE]                   profile filename (from FALCON-filter).
+```
+
+### 4.3 Database inter-similarity ###
+
+#### 4.3.1 Mapping inter-similarity ####
+
+To see the possible options of FALCON-inter type
+```
+./FALCON-inter
+```
+or
+```
+./FALCON-inter -h
+```
+These will print the following options:
+
+```
+Non-mandatory arguments:                                           
+                                                                         
+  -h                   give this help,                               
+  -V                   display version number,                       
+  -v                   verbose mode (more information),              
+  -s                   how compression levels,                       
+  -l <level>           compression level [1;30],                     
+  -n <nThreads>        number of threads,                            
+  -x <FILE>            similarity matrix filename,                   
+  -o <FILE>            labels filename,                              
+                                                                         
+Mandatory arguments:                                               
+                                                                         
+  <FILE>:<FILE>:<...>  input files (last arguments).                 
+                       Use ":" for file splitting.                 
+```
+
+#### 4.3.2 Inter-similarity visualization ####
+
+To see the possible options of FALCON-inter type
+```
+./FALCON-inter-visual
+```
+or
+```
+./FALCON-inter-visual -h
+```
+These will print the following options:
+
+```
+Non-mandatory arguments:                                           
+                                                                         
+  -h             give this help,                                     
+  -V             display version number,                             
+  -v             verbose mode (more information),                    
+  -w             square width (for each value),                      
+  -a             square inter-space (between each value),            
+  -s             index color start,                                  
+  -r             index color rotations,                              
+  -u             color hue,                                          
+  -g             color gamma,                                        
+  -l <FILE>      labels filename,                                    
+  -x <FILE>      heatmap filename,                                   
+                                                                       
+Mandatory arguments:                                               
+                                                                         
+  <FILE>         input matrix file (from FALCON-inter).           
 ```
 
 ## 5. Common use ##
