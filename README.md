@@ -82,13 +82,12 @@ An already reference viral database is available <a href="http://sweet.ua.pt/pra
 ## 4. Usage ##
 
 The FALCON package includes the following binaries:
-\begin{itemize}
-	\item FALCON (metagenomic composition analysis);
-	\item FALCON-filter (local interations - localization);
-	\item FALCON-visual (visualization of global and local similarities);
-	\item FALCON-inter (inter-similarity between database genomes);
-	\item FALCON-inter-visual (visualization of inter-similarities).
-\end{itemize}
+
+* FALCON (metagenomic composition analysis);
+* FALCON-filter (local interations - localization);
+* FALCON-visual (visualization of global and local similarities);
+* FALCON-inter (inter-similarity between database genomes);
+* FALCON-inter-visual (visualization of inter-similarities).
 
 ### 4.1 Metagenomic composition analysis ###
 
