@@ -53,24 +53,25 @@ HsvColor;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-char      *HeatMapColor  (double, char *, COLORS *);
-Painter   *CreatePainter (double, double, double, double, char *);
-void      RemovePainter  (Painter *);
-RgbColor  HsvToRgb       (HsvColor);
-HsvColor  RgbToHsv       (RgbColor);
-char      *GetRgbColor   (uint8_t);
-void      PrintFinal     (FILE *);
-void      PrintHead      (FILE *, double, double);
-void      RectOval       (FILE *, double, double, double, double, char *);
-void      RectOvalIR     (FILE *, double, double, double, double, char *);
-void      Rect           (FILE *, double, double, double, double, char *);
-void      RectWithBorder (FILE *, double, double, double, double, char *);
-void      RectIR         (FILE *, double, double, double, double, char *);
-void      Chromosome     (FILE *, double, double, double, double);
-void      Text           (FILE *, double, double, char *);
-void      Text90d        (FILE *, double, double, char *);
-void      TextFloat      (FILE *, double, double, double);
-double    GetPoint       (Painter *, uint64_t);
+char      *HeatMapColor       (double, char *, COLORS *);
+Painter   *CreatePainter      (double, double, double, double, char *);
+Painter   *CreateBasicPainter (double, double, double);
+void      RemovePainter       (Painter *);
+RgbColor  HsvToRgb            (HsvColor);
+HsvColor  RgbToHsv            (RgbColor);
+char      *GetRgbColor        (uint8_t);
+void      PrintFinal          (FILE *);
+void      PrintHead           (FILE *, double, double);
+void      RectOval            (FILE *, double, double, double, double, char *);
+void      RectOvalIR          (FILE *, double, double, double, double, char *);
+void      Rect                (FILE *, double, double, double, double, char *);
+void      RectWithBorder      (FILE *, double, double, double, double, char *);
+void      RectIR              (FILE *, double, double, double, double, char *);
+void      Chromosome          (FILE *, double, double, double, double);
+void      Text                (FILE *, double, double, char *);
+void      Text90d             (FILE *, double, double, char *);
+void      TextFloat           (FILE *, double, double, double);
+double    GetPoint            (Painter *, uint64_t);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

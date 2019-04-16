@@ -9,7 +9,8 @@ CFLAGS = -O3 -Wall $(CPLP) -DPROGRESS
 #-----------------------------------------------------------------------------
 LIBS   = -lm -lpthread
 DEPS   = defs.h param.h
-PROGS  = $(BIN)/FALCON $(BIN)/FALCON-FILTER $(BIN)/FALCON-EYE
+PROGS  = $(BIN)/FALCON $(BIN)/FALCON-filter $(BIN)/FALCON-visual \
+	 $(BIN)/FALCON-inter $(BIN)/FALCON-inter-visual
 OBJS   = mem.o time.o msg.o parser.o common.o buffer.o levels.o models.o \
          pmodels.o kmodels.o top.o stream.o filters.o paint.o labels.o
 #-----------------------------------------------------------------------------
@@ -18,10 +19,14 @@ all:
 progs: $(PROGS)
 $(BIN)/FALCON: falcon.c $(DEPS) $(OBJS)
 	$(CC) $(CFLAGS) -o $(BIN)/FALCON falcon.c $(OBJS) $(LIBS)
-$(BIN)/FALCON-FILTER: falcon-filter.c $(DEPS) $(OBJS)
-	$(CC) $(CFLAGS) -o $(BIN)/FALCON-FILTER falcon-filter.c $(OBJS) $(LIBS)
-$(BIN)/FALCON-EYE: falcon-eye.c $(DEPS) $(OBJS)
-	$(CC) $(CFLAGS) -o $(BIN)/FALCON-EYE falcon-eye.c $(OBJS) $(LIBS)
+$(BIN)/FALCON-filter: falcon-filter.c $(DEPS) $(OBJS)
+	$(CC) $(CFLAGS) -o $(BIN)/FALCON-filter falcon-filter.c $(OBJS) $(LIBS)
+$(BIN)/FALCON-visual: falcon-visual.c $(DEPS) $(OBJS)
+	$(CC) $(CFLAGS) -o $(BIN)/FALCON-visual falcon-visual.c $(OBJS) $(LIBS)
+$(BIN)/FALCON-inter: falcon-inter.c $(DEPS) $(OBJS)
+	$(CC) $(CFLAGS) -o $(BIN)/FALCON-inter falcon-inter.c $(OBJS) $(LIBS)
+$(BIN)/FALCON-inter-visual: falcon-inter-visual.c $(DEPS) $(OBJS)
+	$(CC) $(CFLAGS) -o $(BIN)/FALCON-inter-visual falcon-inter-visual.c $(OBJS) $(LIBS)
 mem.o: mem.c mem.h $(DEPS)
 	$(CC) -c $(CFLAGS) mem.c
 time.o: time.c time.h $(DEPS)

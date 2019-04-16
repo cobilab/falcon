@@ -39,7 +39,7 @@ int32_t main(int argc, char *argv[]){
   
   PEYE = (EYEPARAM *) Malloc(1 * sizeof(EYEPARAM));
   if((PEYE->help = ArgsState(DEFAULT_HELP, p, argc, "-h")) == 1 || argc < 2){
-    PrintMenuEye();
+    PrintMenuVisual();
     return EXIT_SUCCESS;
     }
 

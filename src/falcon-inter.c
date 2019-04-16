@@ -238,8 +238,8 @@ void CompressAction(Threads *T, uint32_t ref){
 int32_t main(int argc, char *argv[]){
   char        **p = *&argv, **xargv, *xpl = NULL;
   int32_t     xargc = 0;
-  uint32_t    n, k, col, ref, index;
-  double      gamma, threshold;
+  uint32_t    n, k, col, ref;
+  double      gamma;
   Threads     *T;
   
   P = (Parameters *) Malloc(1 * sizeof(Parameters));

@@ -15,9 +15,10 @@ add_executable (FALCON falcon.c mem.c time.c msg.c parser.c common.c buffer.c st
 add_executable (FALCON-filter falcon-filter.c mem.c time.c msg.c parser.c common.c buffer.c pmodels.c models.c kmodels.c filters.c defs.h param.h) 
 add_executable (FALCON-visual falcon-visual.c mem.c time.c msg.c parser.c common.c buffer.c labels.c paint.c defs.h param.h) 
 add_executable (FALCON-inter falcon-inter.c mem.c time.c msg.c parser.c common.c buffer.c levels.c pmodels.c kmodels.c models.c defs.h param.h)
+add_executable (FALCON-inter-visual falcon-inter-visual.c mem.c msg.c parser.c common.c buffer.c paint.c defs.h)
 
 TARGET_LINK_LIBRARIES(FALCON pthread)
 TARGET_LINK_LIBRARIES(FALCON-filter)
 TARGET_LINK_LIBRARIES(FALCON-inter pthread)
 TARGET_LINK_LIBRARIES(FALCON-visual)
-
+TARGET_LINK_LIBRARIES(FALCON-inter-visual)

@@ -94,7 +94,7 @@ void PrintMenuFilter(void){
   "      ./FALCON-filter [OPTION]... [FILE]                                 \n"
   "                                                                         \n"
   "SAMPLE                                                                   \n"
-  "      ./FALCON-filter -v -F -t 1.0 -o out.txt profile.com                \n"
+  "      ./FALCON-filter -v -F -t 1.0 -o seg.txt profile.com                \n"
   "                                                                         \n"
   "DESCRIPTION                                                              \n"
   "      It filter and segments regions identified by FALCON.               \n"
@@ -181,7 +181,7 @@ void PrintMenuInter(void){
   VERSION, RELEASE);
   }
 
-void PrintMenuEye(void){
+void PrintMenuVisual(void){
   fprintf(stderr,
   "                                                                         \n"
   "                                                                         \n"
@@ -199,7 +199,7 @@ void PrintMenuEye(void){
   "      ./FALCON-visual [OPTION]... [FILE]                                 \n"
   "                                                                         \n"
   "SAMPLE                                                                   \n"
-  "      ./FALCON-visual -v -F -o map.svg out.txt                           \n"
+  "      ./FALCON-visual -v -F -o map.svg seg.txt                           \n"
   "                                                                         \n"
   "DESCRIPTION                                                              \n"
   "      It creates an SVG image according to the FALCON analysis.          \n"
@@ -243,6 +243,58 @@ void PrintMenuEye(void){
   VERSION, RELEASE);
   }
 
+void PrintMenuInterVisual(void){
+  fprintf(stderr,
+  "                                                                         \n"
+  "                                                                         \n"
+  "      ███████╗ █████╗ ██╗      ██████╗ ██████╗ ███╗   ██╗                \n"
+  "      ██╔════╝██╔══██╗██║     ██╔════╝██╔═══██╗████╗  ██║                \n"
+  "      █████╗  ███████║██║     ██║     ██║   ██║██╔██╗ ██║                \n"
+  "      ██╔══╝  ██╔══██║██║     ██║     ██║   ██║██║╚██╗██║                \n"
+  "      ██║     ██║  ██║███████╗╚██████╗╚██████╔╝██║ ╚████║                \n"
+  "      ╚═╝     ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝                \n"
+  "                                                                         \n"
+  "NAME                                                                     \n"
+  "      FALCON-inter-visual v%u.%u: a FALCON visualization tool.           \n"
+  "                                                                         \n"
+  "SYNOPSIS                                                                 \n"
+  "      ./FALCON-inter-visual [OPTION]... [FILE]                           \n"
+  "                                                                         \n"
+  "SAMPLE                                                                   \n"
+  "      ./FALCON-inter-visual -F -l lab.txt -o mat.svg mat.txt             \n"
+  "                                                                         \n"
+  "DESCRIPTION                                                              \n"
+  "      It creates an SVG image according to FALCON-inter.                 \n"
+  "      It depicts quantities for inter-similarity analysis.               \n"
+  "                                                                         \n"
+  "      Non-mandatory arguments:                                           \n"
+  "                                                                         \n"
+  "      -h             give this help,                                     \n"
+  "      -V             display version number,                             \n"
+  "      -v             verbose mode (more information),                    \n"
+  "      -w             square width (for each value),                      \n"
+  "      -a             square inter-space (between each value),            \n"
+  "      -s             index color start,                                  \n"
+  "      -r             index color rotations,                              \n"
+  "      -u             color hue,                                          \n"
+  "      -g             color gamma,                                        \n"
+  "      -l <FILE>      labels filename,                                    \n"
+  "      -x <FILE>      heatmap filename,                                   \n"
+  "                                                                         \n"
+  "      Mandatory arguments:                                               \n"
+  "                                                                         \n"
+  "      <FILE>         input matrix file (from FALCON-inter).              \n"
+  "                                                                         \n"
+  "COPYRIGHT                                                                \n"
+  "      Copyright (C) 2014-2019, IEETA, University of Aveiro.              \n"
+  "      This is a Free software, under GPLv3. You may redistribute         \n"
+  "      copies of it under the terms of the GNU - General Public           \n"
+  "      License v3 <http://www.gnu.org/licenses/gpl.html>.                 \n"
+  "                                                                         \n",
+  VERSION, RELEASE);
+  }
+
+
 void PrintVersion(void){
   fprintf(stderr,
   "                                                                         \n"
@@ -259,10 +311,11 @@ void PrintVersion(void){
   "                                                                         \n"
   "      The FALCON package contains the following binaries:                \n"
   "                                                                         \n"
-  "               # FALCON           INFERENCE                              \n"
-  "               # FALCON-filter    SEGMENTATION                           \n"
-  "               # FALCON-inter     EVALUATION                             \n"
-  "               # FALCON-visual    VISUALIZATION                          \n"
+  "             # FALCON                 INFERENCE                          \n"
+  "             # FALCON-filter          SEGMENTATION                       \n"
+  "             # FALCON-inter           EVALUATION                         \n"
+  "             # FALCON-visual          VISUALIZATION                      \n"
+  "             # FALCON-inter-visual    EVAL. VISUAL.                      \n"
   "                                                                         \n"
   "                           AUTHORS:                                      \n"
   "                                                                         \n"

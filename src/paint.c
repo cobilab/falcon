@@ -139,6 +139,21 @@ proportion, char *color){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+Painter *CreateBasicPainter(double size, double width, double space)
+  {
+  Painter *Pa = (Painter *) Malloc(sizeof(Painter));
+  Pa->size    = size;
+  Pa->cx      = DEFAULT_CX;
+  Pa->cy      = DEFAULT_CY;
+  Pa->tx      = DEFAULT_TX;
+  Pa->ty      = DEFAULT_TY;
+  Pa->width   = width;
+  Pa->space   = space;
+  return Pa;
+  }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 void RemovePainter(Painter *Pa){
   Free(Pa);
   }
