@@ -54,7 +54,7 @@ gunzip reads.fq.gz
 gunzip VDB.fa.gz
 ./FALCON -v -F -t 10 -l 47 reads.fq VDB.fa
 ```
-It will identify Zaire Ebolavirus in the samples.
+It will identify Zaire Ebolavirus in the samples (top.csv).
 
 ## 3. Building a reference database ## 
 
