@@ -64,6 +64,8 @@ void PrintMenu(void){
   "      Mandatory arguments:                                               \n"
   "                                                                         \n"
   "      [FILE1]:[FILE2]:...  metagenomic filename (FASTQ),                 \n"
+  "                           Use \":\" for splitting files.                \n"
+  "                                                                         \n"
   "      [FILE]               database filename (Multi-FASTA).              \n"
   "                                                                         \n"
   "COPYRIGHT                                                                \n"

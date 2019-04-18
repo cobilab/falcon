@@ -114,17 +114,21 @@ Non-mandatory arguments:
   -v                       verbose mode (more information),              
   -Z                       database local similarity,                    
   -s                       show compression levels,                      
+                                                                         
   -l <level>               compression level [1;47],                    
   -p <sample>              subsampling (default: 1),                    
   -t <top>                 top of similarity (default: 20),              
   -n <nThreads>            number of threads (default: 2),              
+                                                                         
   -x <FILE>                similarity top filename,                      
   -y <FILE>                local similarities filename,                  
                                                                          
 Mandatory arguments:                                                     
+
+  [FILE1]:[FILE2]:...      metagenomic filename (FASTQ),                 
+                           Use ":" for splitting files.                
                                                                          
-  [FILE1]                  metagenomic filename (FASTA or FASTQ),        
-  [FILE2]                  database filename (FASTA or Multi-FASTA).     
+  [FILE]                   database filename (Multi-FASTA).   
 ```
 
 ### 4.2 Local detection ###
@@ -286,9 +290,9 @@ chmod +x FALCON-meta.sh
 ```
 The, run FALCON:
 ```
-./FALCON-meta.sh reads.fastq VDB.fa
+./FALCON-meta.sh reads1.fastq:reads2.fastq VDB.fa
 ```
-reads.fastq and VDB.fa are only two examples.
+reads1.fastq, reads2.fastq and VDB.fa is only an example.
 For more, see folder examples.
 
 ## 6. Citation ##
