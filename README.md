@@ -73,6 +73,11 @@ mv GB_DB_VIRAL/*_rna_from_genomic.fna.gz GB_DB_VIRAL_RNA/
 zcat GB_DB_VIRAL/*.fna.g > VDB.fa
 ```
 
+For building reference databases for multiple domains/kingdoms (bacterial, fungi, protozoa, plant, etc), use:
+```
+https://raw.githubusercontent.com/cobilab/gto/master/scripts/BUILD_DB.sh
+```
+
 ### 3.2 Download an existing database ###
 
 <p align="justify">
