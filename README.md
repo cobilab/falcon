@@ -12,7 +12,7 @@ alt="FALCON" width="204" height="204" border="0" /></p>
 The core of the method is based on <b>relative data compression</b>. FALCON uses <b>variable multi-threading</b>, without multiplying the memory for each thread, being able to <b>run efficiently in a common laptop</b>.</p>
 
 <p align="justify">
-The tool is also able to <b>identify locally where, in each reference sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-filter)</b> and <b>to visualize the results (FALCON-visual)</b>. Also for database inter-similarity analysis (FALCON-inter) and respective visualization (FALCON-inter-visual).
+The tool is also able to <b>identify locally where, in each reference sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-filter)</b> and <b>to visualize the results (FALCON-filter-visual)</b>. Also for database inter-similarity analysis (FALCON-inter) and respective visualization (FALCON-inter-visual).
 </p>
 
 <br>
@@ -38,7 +38,7 @@ cmake .
 make
 cp FALCON ../../
 cp FALCON-filter ../../
-cp FALCON-visual ../../
+cp FALCON-filter-visual ../../
 cp FALCON-inter  ../../
 cp FALCON-inter-visual ../../
 cd ../../
@@ -90,7 +90,7 @@ The FALCON package includes the following binaries:
 
 * <b>FALCON</b>: metagenomic composition analysis;
 * <b>FALCON-filter</b>: local interations - localization;
-* <b>FALCON-visual</b>: visualization of global and local similarities;
+* <b>FALCON-filter-visual</b>: visualization of global and local similarities;
 * <b>FALCON-inter</b>: inter-similarity between database genomes;
 * <b>FALCON-inter-visual</b>: visualization of inter-similarities.
 
@@ -172,13 +172,13 @@ Mandatory arguments:
 
 #### 4.2.2 Visualization ####
 
-To see the possible options of FALCON-visual type
+To see the possible options of FALCON-filter-visual type
 ```
-./FALCON-visual
+./FALCON-filter-visual
 ```
 or
 ```
-./FALCON-visual -h
+./FALCON-filter-visual -h
 ```
 These will print the following options:
 
@@ -282,7 +282,7 @@ Create the following bash script:
 #!/bin/bash
 ./FALCON -v -n 4 -t 200 -F -Z -l 47 -c 20 -y complexity.com $1 $2
 ./FALCON-filter -v -F -t 0.5 -o positions.pos complexity.com
-./FALCON-visual -v -F -o draw.map positions.pos
+./FALCON-filter-visual -v -F -o draw.map positions.pos
 ```
 Name it FALCON-meta.sh and give run access
 ```
