@@ -133,7 +133,7 @@ Mandatory arguments:
 
 ### 4.2 Local detection ###
 
-For local interactions detection and visualization the FALCON package provides <b>FALCON-filter</b> and <b>FALCON-visual</b>.
+For local interactions detection and visualization the FALCON package provides <b>FALCON-filter</b> and <b>FALCON-filter-visual</b>.
 
 #### 4.2.1 Filtering ####
 
