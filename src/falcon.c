@@ -802,9 +802,14 @@ void CompressAction(Threads *T, char *refName, char *baseName){
     Models[n] = CreateCModel(T[0].model[n].ctx, T[0].model[n].den, 
     T[0].model[n].ir, REFERENCE, P->col, T[0].model[n].edits, 
     T[0].model[n].eDen);
-  fprintf(stderr, "  [+] Loading metagenomic file ..... ");
-  LoadReference(refName);
-  fprintf(stderr, "Done!\n");
+  fprintf(stderr, "  [+] Loading %u metagenomic file(s):\n", P->nFiles);
+
+  for(n = 0 ; n < P->nFiles ; ++n){
+    fprintf(stderr, "      [+] Loading %u ... ", n+1);
+    LoadReference(P->files[n]);
+    fprintf(stderr, "Done! \n");
+    }
+  fprintf(stderr, "  [+] Done! Learning phase complete!\n");
   #endif
 
   fprintf(stderr, "  [+] Compressing database ......... ");
@@ -883,7 +888,7 @@ int32_t main(int argc, char *argv[]){
 
   P->col       = ArgsNum    (col,   p, argc, "-c", 1, 253);
   P->gamma     = ArgsDouble (gamma, p, argc, "-g");
-  P->gamma     = ((int)(P->gamma * 65536)) / 65536.0;
+  P->gamma     = ((int) (P->gamma * 65536)) / 65536.0;
   P->output    = ArgsFileGen(p, argc, "-x", "top", ".csv");
   #ifdef LOCAL_SIMILARITY
   if(P->local == 1){
@@ -927,12 +932,13 @@ int32_t main(int argc, char *argv[]){
       }
     }
 
+  P->base    = argv[argc-1];
+  P->nFiles  = ReadFNames (P, argv[argc-2], 0);
   fprintf(stderr, "\n");
   if(P->verbose) PrintArgs(P, T[0], argv[argc-2], argv[argc-1], topSize);
 
   fprintf(stderr, "==[ PROCESSING ]====================\n");
   TIME *Time = CreateClock(clock());
-  P->base = argv[argc-1];
   CompressAction(T, argv[argc-2], P->base);
 
   k = 0;

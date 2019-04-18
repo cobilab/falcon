@@ -293,7 +293,7 @@ int32_t main(int argc, char *argv[]){
   P->col       = ArgsNum    (col,   p, argc, "-c", 1, 200);
   P->gamma     = ArgsDouble (gamma, p, argc, "-g");
   P->gamma     = ((int)(P->gamma * 65536)) / 65536.0;
-  P->nFiles    = ReadFNames (P, argv[argc-1]);
+  P->nFiles    = ReadFNames (P, argv[argc-1], 1);
   P->output    = ArgsFileGen(p, argc, "-x", "matrix", ".csv");
   P->labels    = ArgsFileGen(p, argc, "-o", "labels", ".csv");
   FILE *OUTPUT = Fopen(P->output, "w");

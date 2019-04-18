@@ -843,7 +843,10 @@ void PrintArgs(Parameters *P, Threads T, char *ref, char *tar, uint32_t top){
     fprintf(stderr, "Output local filename .............. %s\n", P->outLoc);
     }
   #endif
-  fprintf(stderr, "Metagenomic filename ............... %s\n", ref);
+  fprintf(stderr, "Number of metagenomic files ........ %u\n", P->nFiles);
+  for( n = 0 ; n < P->nFiles ; ++n){
+    fprintf(stderr, "  [+] Metagenomic filename ......... %s\n", P->files[n]);
+    }
   fprintf(stderr, "Database filename .................. %s\n", tar);
   fprintf(stderr, "\n");
   }
@@ -929,7 +932,7 @@ void PrintArgsEye(EYEPARAM *PEYE){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-uint32_t ReadFNames(Parameters *P, char *arg)
+uint32_t ReadFNames(Parameters *P, char *arg, int x)
   {
   uint32_t nFiles = 1, k = 0, argLen;
 
@@ -938,7 +941,7 @@ uint32_t ReadFNames(Parameters *P, char *arg)
     if(arg[k] == ':')
       ++nFiles;
 
-  if(nFiles < 2){
+  if(x == 1 && nFiles < 2){
     fprintf(stderr, "Error: you need at least two input files!\n");
     exit(1);
     }
