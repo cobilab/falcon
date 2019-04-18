@@ -42,7 +42,7 @@ void PrintMenu(void){
   "      The core of the method uses a cooperation between multiple         \n"
   "      context and tolerant context models with several depths.           \n"
   "      The reference sequences must be in a multi-FASTA format.           \n"
-  "      The sequences reads must be trimmed and in FASTQ format.           \n"
+  "      The sequenced reads must be trimmed and in FASTQ format.           \n"
   "                                                                         \n"
   "      Non-mandatory arguments:                                           \n"
   "                                                                         \n"

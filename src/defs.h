@@ -34,7 +34,7 @@ typedef int8_t   I8;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#define RELEASE                2
+#define RELEASE                3
 #define VERSION                2
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
