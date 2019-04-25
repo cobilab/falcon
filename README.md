@@ -26,7 +26,7 @@ The tool is also able to <b>identify locally where, in each reference sequence, 
 ### 1.1 Automatic installation with [Conda](https://conda.io/miniconda) ###
 
 ```
-conda install -c maxibor falcon
+conda install -c cobilab falcon --yes
 ```
 
 ### 1.2 Manual installation ###
