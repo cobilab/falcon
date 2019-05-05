@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/pratas/falcon.svg?branch=master)](https://travis-ci.org/pratas/falcon)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/873d4398da914abab8ae5c2a124e3d94)](https://www.codacy.com/app/pratas/falcon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pratas/falcon&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/cobilab/falcon.svg?branch=master)](https://travis-ci.org/cobilab/falcon)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/873d4398da914abab8ae5c2a124e3d94)](https://www.codacy.com/app/cobilab/falcon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cobilab/falcon&amp;utm_campaign=Badge_Grade)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
-[![DOI](https://zenodo.org/badge/46284685.svg)](https://zenodo.org/badge/latestdoi/46284685)
+<!--[![DOI](https://zenodo.org/badge/46284685.svg)](https://zenodo.org/badge/latestdoi/46284685)-->
 
 <p align="center"><img src="imgs/logoTrans.png"
 alt="FALCON" width="204" height="204" border="0" /></p>
@@ -319,6 +319,8 @@ Bibtex:
 }
 ```
 </sup>
+
+In addition, we would like to list your publications that use our software on our website. Please email the reference, the name of your lab, department, and institution to co.bi.laboratory@gmail.com
 
 ## 7. Issues ##
 
