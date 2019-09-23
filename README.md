@@ -76,7 +76,7 @@ zcat GB_DB_VIRAL/*.fna.g > VDB.fa
 
 For building reference databases for multiple domains/kingdoms (bacterial, fungi, protozoa, plant, etc), use:
 ```
-https://raw.githubusercontent.com/cobilab/gto/master/scripts/BUILD_DB.sh
+https://raw.githubusercontent.com/cobilab/gto/master/scripts/gto_build_dbs.sh
 ```
 
 ### 3.2 Download an existing database ###
