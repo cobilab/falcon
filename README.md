@@ -16,7 +16,7 @@ The core of the method is based on <b>relative data compression</b>. FALCON uses
 The tool is also able to <b>identify locally where, in each reference sequence, the similarity occur</b>. FALCON provides programs to <b>filter the local results (FALCON-filter)</b> and <b>to visualize the results (FALCON-filter-visual)</b>. Also for database inter-similarity analysis (FALCON-inter) and respective visualization (FALCON-inter-visual).
 </p>
 
-<align="justify">Find additional information <a href="https://www.biorxiv.org/content/biorxiv/suppl/2018/02/27/267179.DC1/267179-1.pdf">here</a>.</p>
+<p align="justify">Find additional information <a href="https://www.biorxiv.org/content/biorxiv/suppl/2018/02/27/267179.DC1/267179-1.pdf">here</a>.</p>
 
 <br>
 
@@ -277,7 +277,7 @@ Mandatory arguments:
   <FILE>         input matrix file (from FALCON-inter).           
 ```
 
-<align="justify">Find additional information <a href="https://www.biorxiv.org/content/biorxiv/suppl/2018/02/27/267179.DC1/267179-1.pdf">here</a>.</p>
+<p align="justify">Find additional information <a href="https://www.biorxiv.org/content/biorxiv/suppl/2018/02/27/267179.DC1/267179-1.pdf">here</a>.</p>
 
 ## 5. Common use ##
 
