@@ -7,7 +7,7 @@
 alt="FALCON" width="204" height="204" border="0" /></p>
 
 <p align="justify">
-<b>FALCON is an ultra-fast method to infer metagenomic composition of sequenced reads</b>. FALCON measures <b>similarity between any FASTQ</b> file (or FASTA), independently from the size, <b>against any multi-FASTA database</b>, such as the entire set of complete genomes from the NCBI.</p>
+<b>FALCON is an ultra-fast method to infer metagenomic composition of sequenced reads</b>. FALCON measures <b>similarity between any FASTQ</b> file (or FASTA), independently from the size, <b>against any multi-FASTA database</b>, such as the entire set of complete genomes from the NCBI. FALCON supports single reads, paired-end reads, and compositions of both. It has been tested in many plataforms, such as Illumina MySeq, HiSeq, Novaseq, IonTorrent.</p>
 
 <p align="justify">
 The core of the method is based on <b>relative data compression</b>. FALCON uses <b>variable multi-threading</b>, without multiplying the memory for each thread, being able to <b>run efficiently in a common laptop</b>.</p>
