@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/cobilab/falcon.svg?branch=master)](https://travis-ci.org/cobilab/falcon)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/873d4398da914abab8ae5c2a124e3d94)](https://www.codacy.com/app/cobilab/falcon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cobilab/falcon&amp;utm_campaign=Badge_Grade)
+<!--[![Codacy Badge](https://api.codacy.com/project/badge/Grade/873d4398da914abab8ae5c2a124e3d94)](https://www.codacy.com/app/cobilab/falcon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cobilab/falcon&amp;utm_campaign=Badge_Grade)-->
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 <!--[![DOI](https://zenodo.org/badge/46284685.svg)](https://zenodo.org/badge/latestdoi/46284685)-->
 
@@ -10,6 +10,7 @@ alt="FALCON" width="204" height="204" border="0" /></p>
 <b>FALCON is an ultra-fast method to infer metagenomic composition of sequenced reads</b>. FALCON measures <b>similarity between any FASTQ</b> file (or FASTA), independently from the size, <b>against any multi-FASTA database</b>, such as the entire set of complete genomes from the NCBI. FALCON supports single reads, paired-end reads, and compositions of both. It has been tested in many plataforms, such as Illumina MySeq, HiSeq, Novaseq, IonTorrent.</p>
 
 <p align="justify">
+FALCON is efficient to detect the presence and authenticate a given species in the FASTQ reads.
 The core of the method is based on <b>relative data compression</b>. FALCON uses <b>variable multi-threading</b>, without multiplying the memory for each thread, being able to <b>run efficiently in a common laptop</b>.</p>
 
 <p align="justify">
@@ -55,9 +56,14 @@ Search for the top 10 similar viruses in sample reads that we provide in folder 
 cd test
 gunzip reads.fq.gz
 gunzip VDB.fa.gz
-./FALCON -v -F -t 10 -l 47 reads.fq VDB.fa
+./FALCON -v -F -t 10 -l 47 -x top.csv reads.fq VDB.fa
 ```
 It will identify Zaire Ebolavirus in the samples (top.csv).
+
+The following image shows the top.csv file
+
+<p align="center"><img src="imgs/top2.pdf"
+alt="Top" width="604" border="0" /></p>
 
 ## 3. Building a reference database ## 
 
