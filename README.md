@@ -56,13 +56,13 @@ Search for the top 10 similar viruses in sample reads that we provide in folder 
 cd test
 gunzip reads.fq.gz
 gunzip VDB.fa.gz
-./FALCON -v -F -t 10 -l 47 -x top.csv reads.fq VDB.fa
+./FALCON -v -F -t 10 -l 47 -x top.txt reads.fq VDB.fa
 ```
-It will identify Zaire Ebolavirus in the samples (top.csv).
+It will identify Zaire Ebolavirus in the samples (top.txt).
 
-The following image shows the top.csv file
+The following image shows the top.txt file
 
-<p align="center"><img src="imgs/top2.pdf"
+<p align="center"><img src="imgs/top.png"
 alt="Top" width="604" border="0" /></p>
 
 ## 3. Building a reference database ## 
