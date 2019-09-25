@@ -51,14 +51,14 @@ cd ../../
 
 ## 2. Demo ##
 
-Search for the top 10 similar viruses in sample reads that we provide in folder test:
+Search for the top 15 similar viruses in sample reads that we provide in folder test:
 ```
 cd test
 gunzip reads.fq.gz
 gunzip VDB.fa.gz
-./FALCON -v -F -t 10 -l 47 -x top.txt reads.fq VDB.fa
+./FALCON -v -F -t 15 -l 47 -x top.txt reads.fq VDB.fa
 ```
-It will identify Zaire Ebolavirus in the samples (top.txt). The following image shows the top.txt file
+It will identify Zaire Ebolavirus in the samples (top.txt) according to the following image
 
 <p align="center"><img src="imgs/top.png"
 alt="Top" width="604" border="0" /></p>
