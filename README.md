@@ -58,9 +58,7 @@ gunzip reads.fq.gz
 gunzip VDB.fa.gz
 ./FALCON -v -F -t 10 -l 47 -x top.txt reads.fq VDB.fa
 ```
-It will identify Zaire Ebolavirus in the samples (top.txt).
-
-The following image shows the top.txt file
+It will identify Zaire Ebolavirus in the samples (top.txt). The following image shows the top.txt file
 
 <p align="center"><img src="imgs/top.png"
 alt="Top" width="604" border="0" /></p>
