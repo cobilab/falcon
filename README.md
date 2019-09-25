@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/cobilab/falcon.svg?branch=master)](https://travis-ci.org/cobilab/falcon)
-<!--[![Codacy Badge](https://api.codacy.com/project/badge/Grade/873d4398da914abab8ae5c2a124e3d94)](https://www.codacy.com/app/cobilab/falcon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cobilab/falcon&amp;utm_campaign=Badge_Grade)-->
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
+<!--[![Codacy Badge](https://api.codacy.com/project/badge/Grade/873d4398da914abab8ae5c2a124e3d94)](https://www.codacy.com/app/cobilab/falcon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cobilab/falcon&amp;utm_campaign=Badge_Grade)-->
 <!--[![DOI](https://zenodo.org/badge/46284685.svg)](https://zenodo.org/badge/latestdoi/46284685)-->
 
 <p align="center"><img src="imgs/logoTrans.png"
