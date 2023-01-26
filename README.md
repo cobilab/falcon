@@ -328,8 +328,6 @@ Bibtex:
 ```
 </sup>
 
-In addition, we would like to list your publications that use our software on our website. Please email the reference, the name of your lab, department, and institution to co.bi.laboratory@gmail.com
-
 ## 7. Issues ##
 
 For any issue let us know at [issues link](https://github.com/cobilab/falcon/issues).
