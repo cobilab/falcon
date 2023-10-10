@@ -375,10 +375,10 @@ void CorrectCModelSUBS(CModel *M, PModel *P, uint8_t sym){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-void CorrectXModels(CModel **Shadow, PModel **PM, uint8_t sym){
+void CorrectXModels(CModel **Shadow, PModel **PM, uint8_t sym, uint32_t nm){
   uint32_t n = 0, m;
         
-  for(m = 0 ; m < P->nModels ; ++m){
+  for(m = 0 ; m < nm ; ++m){
     if(Shadow[m]->edits != 0)
       CorrectCModelSUBS(Shadow[m], PM[++n], sym);
     ++n;

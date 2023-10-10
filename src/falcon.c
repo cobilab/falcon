@@ -29,10 +29,12 @@
 #include "stream.h"
 
 //////////////////////////////////////////////////////////////////////////////
-// - - - - - - - - - - - - - - - - M O D E L S - - - - - - - - - - - - - - - -
+// - - - - - - - M O D E L S   A N D   P A R A M E T E R S - - - - - - - - - -
 
-CModel **Models;   // MEMORY SHARED BY THREADING
-KMODEL **KModels;  // MEMORY SHARED BY THREADING
+CModel     **Models;   // MEMORY SHARED BY THREADING
+KMODEL     **KModels;  // MEMORY SHARED BY THREADING
+Parameters *P;
+EYEPARAM   *PEYE;
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -151,7 +153,7 @@ void LocalComplexity(Threads T, TOP *Top, uint64_t topSize, FILE *OUT){
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
-        CorrectXModels(Shadow, pModel, sym);
+        CorrectXModels(Shadow, pModel, sym, P->nModels);
         UpdateCBuffer(symBuf);
         }
 
@@ -489,7 +491,7 @@ void CompressTargetWKM(Threads T){
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
-        // CorrectXModels(Shadow, pModel, sym);
+        // CorrectXModels(Shadow, pModel, sym, P->nModels);
         UpdateCBuffer(symBuf);
         }
       }
@@ -629,7 +631,7 @@ void CompressTarget(Threads T){
         ++nBase;
         CalcDecayment(CMW, pModel, sym, P->gamma);
         RenormalizeWeights(CMW);
-        CorrectXModels(Shadow, pModel, sym);
+        CorrectXModels(Shadow, pModel, sym, P->nModels);
         UpdateCBuffer(symBuf);
         }
       }

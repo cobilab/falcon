@@ -117,8 +117,8 @@ typedef struct{
   }
 Param;
 
-Parameters *P;
-EYEPARAM   *PEYE;
+//Parameters *P;
+//EYEPARAM   *PEYE;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

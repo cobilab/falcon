@@ -261,13 +261,13 @@ FILE *DNA){
   for(x = 0 ; x < 8 ; ++x){
     char c = fgetc(DNA); //FIXME: extra chars
     sum = 0;
-    for(ref = 0 ; ref < P->nFiles ; ++ref)
+    //for(ref = 0 ; ref < P->nFiles ; ++ref) XXX: P does not exist here
       if(ref != tar)
         sum += (int) bin[ref][x];
 
-    if(sum < P->index)
+    //if(sum < P->index) XXX: neither here (pass by argument)
       min = 0;
-    else if(++min >= P->blockSize)
+    //else if(++min >= P->blockSize) XXX: here too
       fprintf(Writter, "%c", c);
     }
 

@@ -25,7 +25,8 @@
 #include "pmodels.h"
 #include "kmodels.h"
 
-CModel **Models;  // MEMORY SHARED BY THREADING
+CModel     **Models;  // MEMORY SHARED BY THREADING
+Parameters *P;
 
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - C O M P R E S S I N G - - - - - - - - - - - - - 
